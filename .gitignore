@@ -27,3 +27,7 @@
 *.exe
 *.out
 *.app
+Release/
+avl.mk
+avl.project
+avl.txt
