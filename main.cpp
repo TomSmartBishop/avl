@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include "inc/avl.h"
 
-//#include  <cstdint>
-
 int main(int /*argc*/, char ** /* argv */)
 {
 	//std::int64_t vec0;
