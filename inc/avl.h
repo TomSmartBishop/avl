@@ -93,8 +93,10 @@ namespace avl {
     #endif
 }
 
+#include <cassert>
 #include <type_traits>
 #include <cstdint>
+
 
 #include "cfg/cfg.h"
 #include "traits/traits.h"
