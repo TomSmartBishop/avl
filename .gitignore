@@ -27,7 +27,8 @@
 *.exe
 *.out
 *.app
-Release/
-avl.mk
-avl.project
-avl.txt
+
+# Directories
+build/
+workspace/
+inc/cfg/

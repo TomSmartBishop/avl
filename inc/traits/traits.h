@@ -93,8 +93,8 @@ namespace avl {
 	}
 
 	/// Vector component type equals scalar type
-	template <typename _Vec, typename _Sclr>
-	struct vec_cmp_eq_s : s::is_same<s::add_const_t< s::remove_reference_t<_Vec> >, _Sclr> {};
+	template <typename _Cmp, typename _Sclr>
+	struct eq : s::is_same<s::remove_const_t< s::remove_reference_t<_Cmp> >, s::remove_const_t< s::remove_reference_t<_Sclr> > > {};
 
 	/// @}
 	
@@ -105,54 +105,37 @@ namespace avl {
 	/// Concept for scalar types
 	template <typename _Tp>
 	concept bool sc = is_sc<_Tp>::value;
-
+	
+	/// Concept for wrapped foreign or wrapped vectors.
+	/// There needs to be a static member 'dim' of size_t, a type cmp_t for the vectors component type
+	/// and the components need to be accessible via the operator[] (const & non-const).
+	template <typename _Tp>
+	concept bool wrapped_v = requires(_Tp v)
+							{
+								{ _Tp::dim } -> s::size_t;
+								{ v[0] } -> typename _Tp::cmp_t;
+								{ v[0] = v[1] }
+							};
+							
 	/// Concept for vectors (no specific dimension requirement)
 	template <typename _Tp>
-	concept bool v = 	(is_eu_vec<_Tp>::value && s::extent<_Tp>::value>1) || //for plain arrays
-						//for anything wrapped (needs a static dim field and a component type named cmp_t)
-						(	requires(_Tp v)
-							{
-								{_Tp::dim} -> s::size_t;
-								{v[0]} -> typename _Tp::cmp_t
-							}
-							&& _Tp::dim>1
-						);
+	concept bool v = 	( is_eu_vec<_Tp>::value && s::extent<_Tp>::value>1) || //for plain arrays
+						( wrapped_v<_Tp> && _Tp::dim>1 ); //for anything wrapped
 
 	/// Concept for a 2D vector
 	template <typename _Tp>
 	concept bool v2 = 	(is_eu_vec<_Tp>::value && s::extent<_Tp>::value==2) || //for plain arrays
-						//for anything wrapped (needs a static dim field and a component type named cmp_t)
-						(	requires(_Tp v)
-							{
-								{_Tp::dim} -> s::size_t;
-								{v[0]} -> typename _Tp::cmp_t
-							}
-							&& _Tp::dim==2
-						);
+						( wrapped_v<_Tp> && _Tp::dim==2 ); //for anything wrapped
 
 	/// Concept for a 3D vector
 	template <typename _Tp>
 	concept bool v3 = 	(is_eu_vec<_Tp>::value && s::extent<_Tp>::value==3) || //for plain arrays
-						//for anything wrapped (needs a static dim field and a component type named cmp_t)
-						(	requires(_Tp v)
-							{
-								{_Tp::dim} -> s::size_t;
-								{v[0]} -> typename _Tp::cmp_t
-							}
-							&& _Tp::dim==3
-						);
+						( wrapped_v<_Tp> && _Tp::dim==3 ); //for anything wrapped
 
 	/// Concept for a 4E vector
 	template <typename _Tp>
 	concept bool v4 =	(is_eu_vec<_Tp>::value && s::extent<_Tp>::value==4) || //for plain arrays
-						//for anything wrapped (needs a static dim field and a component type named cmp_t)
-						(	requires(_Tp v)
-							{
-								{_Tp::dim} -> s::size_t;
-								{v[0]} -> typename _Tp::cmp_t
-							}
-							&& _Tp::dim==4
-						);
+						( wrapped_v<_Tp> && _Tp::dim==4 ); //for anything wrapped
 
 	/// @}
 }

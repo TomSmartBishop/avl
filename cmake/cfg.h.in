@@ -3,6 +3,11 @@
 
 #pragma once
 
+#define VERSION_NUMBER @VERSION_NUMBER@
+#ifndef @PLATFORM@
+#  define @PLATFORM@
+#endif
+
 #define AVL_ALLOW_SIMD
 
 #ifdef AVL_ALLOW_SIMD
@@ -28,4 +33,4 @@
 //#define avl_stl_alias(s)
 namespace s = std;
 
-#endif // AVL_CFG_H
+#endif // AVL_CFG_H_
