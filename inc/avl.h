@@ -101,6 +101,10 @@ namespace avl {
 #include "cfg/cfg.h"
 #include "traits/traits.h"
 #include "vec/v.h"
+#include "vec/v2.h"
+#include "vec/v3.h"
+#include "vec/v4.h"
+#include "vec/v4_simd.h"
 
 //clean up again
 #undef avl_a_if_pow2_or_b

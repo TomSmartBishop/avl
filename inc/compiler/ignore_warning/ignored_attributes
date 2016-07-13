@@ -1,0 +1,9 @@
+#if defined(__clang__)
+# if __has_warning("-Wignored-attributes")
+#  pragma clang diagnostic ignored "-Wignored-attributes"
+# endif
+#endif
+
+#if defined(__GNUC__) || defined(__GNUG__)
+# pragma GCC diagnostic ignored "-Wignored-attributes"
+#endif
