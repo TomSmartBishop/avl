@@ -80,9 +80,12 @@ namespace avl {
 	/// @name Helpers
 	/// @{
 
+    template <typename _Tp>
+	using rem_const_ref_t = s::remove_const_t< s::remove_reference_t<_Tp> >;
+    
 	/// Vector component type equals scalar type
 	template <typename _Cmp, typename _Sclr>
-	struct eq : s::is_same<s::remove_const_t< s::remove_reference_t<_Cmp> >, s::remove_const_t< s::remove_reference_t<_Sclr> > > {};
+	struct eq : s::is_same< rem_const_ref_t<_Cmp> , rem_const_ref_t<_Sclr> > {};
 
 	#include "../compiler/push"
 	#include "../compiler/ignore_warning/ignored_attributes"
