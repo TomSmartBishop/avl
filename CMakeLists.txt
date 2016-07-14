@@ -7,7 +7,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON) # For VS to organize the project in
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++1z")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -Wall -Wextra -Weffc++ -pedantic -Wshadow -Wsign-compare -Wunused-function  -Wunused-label  -Wunused-parameter -Wunused-value  -Wunused-variable -fconcepts -std=c++1z")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Weffc++ -pedantic -Wshadow -Wsign-compare -Wunused-function  -Wunused-label  -Wunused-parameter -Wunused-value  -Wunused-variable -fconcepts -std=c++1z -flto")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
   message ("Untested compiler, muild might fail.")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
@@ -28,6 +28,12 @@ message ("cxx flags: " ${CMAKE_CXX_FLAGS})
 
 #configuration file
 set (VERSION_NUMBER 0.1)
+
+if(CMAKE_BUILD_TYPE MATCHES "Debug")
+		set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/debug)
+else()
+		set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/release)
+endif()
 
 if (WIN32)
 	set(PLATFORM _WIN32)
