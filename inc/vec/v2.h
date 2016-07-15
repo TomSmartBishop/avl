@@ -52,12 +52,12 @@ namespace avl {
 
 	// add
 
-	avl_ainl_res constexpr auto add_get(const v2& vec, const v2& other) noexcept -> rem_const_ref_t<decltype(vec)> {
-		return rem_const_ref_t<decltype(vec)>{ get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other) };
+	avl_ainl_res constexpr auto add_mk(const v2& vec, const v2& other) noexcept -> v2 {
+		return decltype(vec){ get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other) };
 	}
 
-	avl_ainl_res constexpr auto add_get(const v2& vec, const sc scalar) noexcept -> rem_const_ref_t<decltype(vec)> {
-		return rem_const_ref_t<decltype(vec)>{ get<0>(vec) + scalar, get<1>(vec) + scalar };
+	avl_ainl_res constexpr auto add_mk(const v2& vec, const sc scalar) noexcept -> v2 {
+		return decltype(vec){ get<0>(vec) + scalar, get<1>(vec) + scalar };
 	}
 
 	avl_ainl constexpr auto add_set(v2& vec, const v2& other) noexcept -> void {
@@ -68,24 +68,24 @@ namespace avl {
 		set(vec, get<0>(vec) + scalar, get<1>(vec) + scalar );
 	}
 
-	avl_ainl_res constexpr auto add(v2& vec, const v2& other) noexcept -> decltype(vec) {
+	avl_ainl_res constexpr auto add(v2& vec, const v2& other) noexcept -> v2 {
 		set(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other) );
 		return vec;
 	}
 
-	avl_ainl_res constexpr auto add(v2& vec, const sc scalar) noexcept -> decltype(vec) {
+	avl_ainl_res constexpr auto add(v2& vec, const sc scalar) noexcept -> v2 {
 		set(vec, get<0>(vec) + scalar, get<1>(vec) + scalar );
 		return vec;
 	}
 
 	//sub
 
-	avl_ainl_res constexpr auto sub_get(const v2& vec, const v2& other) noexcept -> rem_const_ref_t<decltype(vec)> {
-		return rem_const_ref_t<decltype(vec)>{ get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other) };
+	avl_ainl_res constexpr auto sub_mk(const v2& vec, const v2& other) noexcept -> v2 {
+		return decltype(vec){ get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other) };
 	}
 
-	avl_ainl_res constexpr auto sub_get(const v2& vec, const sc scalar) noexcept -> rem_const_ref_t<decltype(vec)> {
-		return rem_const_ref_t<decltype(vec)>{ get<0>(vec) - scalar, get<1>(vec) - scalar };
+	avl_ainl_res constexpr auto sub_mk(const v2& vec, const sc scalar) noexcept -> v2 {
+		return decltype(vec){ get<0>(vec) - scalar, get<1>(vec) - scalar };
 	}
 
 	avl_ainl constexpr auto sub_set(v2& vec, const v2& other) noexcept -> void {
@@ -96,24 +96,24 @@ namespace avl {
 		set(vec, get<0>(vec) - scalar, get<1>(vec) - scalar );
 	}
 
-	avl_ainl_res constexpr auto sub(v2& vec, const v2& other) noexcept -> decltype(vec) {
+	avl_ainl_res constexpr auto sub(v2& vec, const v2& other) noexcept -> v2 {
 		set(vec, get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other) );
 		return vec;
 	}
 
-	avl_ainl_res constexpr auto sub(v2& vec, const sc scalar) noexcept -> decltype(vec) {
+	avl_ainl_res constexpr auto sub(v2& vec, const sc scalar) noexcept -> v2 {
 		set(vec, get<0>(vec) - scalar, get<1>(vec) - scalar );
 		return vec;
 	}
 
 	// mul
 
-	avl_ainl_res constexpr auto mul_get(const v2& vec, const v2& other) noexcept -> rem_const_ref_t<decltype(vec)> {
-		return rem_const_ref_t<decltype(vec)>{ get<0>(vec) * get<0>(other), get<1>(vec) * get<1>(other) };
+	avl_ainl_res constexpr auto mul_mk(const v2& vec, const v2& other) noexcept -> v2 {
+		return decltype(vec){ get<0>(vec) * get<0>(other), get<1>(vec) * get<1>(other) };
 	}
 
-	avl_ainl_res constexpr auto mul_get(const v2& vec, const sc scalar) noexcept -> rem_const_ref_t<decltype(vec)> {
-		return rem_const_ref_t<decltype(vec)>{ get<0>(vec) * scalar, get<1>(vec) * scalar };
+	avl_ainl_res constexpr auto mul_mk(const v2& vec, const sc scalar) noexcept -> v2 {
+		return decltype(vec){ get<0>(vec) * scalar, get<1>(vec) * scalar };
 	}
 
 	avl_ainl constexpr auto mul_set(v2& vec, const v2& other) noexcept -> void {
@@ -124,27 +124,27 @@ namespace avl {
 		set(vec, get<0>(vec) * scalar, get<1>(vec) * scalar );
 	}
 
-	avl_ainl_res constexpr auto mul(v2& vec, const v2& other) noexcept -> decltype(vec) {
+	avl_ainl_res constexpr auto mul(v2& vec, const v2& other) noexcept -> v2 {
 		set(vec, get<0>(vec) * get<0>(other), get<1>(vec) * get<1>(other) );
 		return vec;
 	}
 
-	avl_ainl_res constexpr auto mul(v2& vec, const sc scalar) noexcept -> decltype(vec) {
+	avl_ainl_res constexpr auto mul(v2& vec, const sc scalar) noexcept -> v2 {
 		set(vec, get<0>(vec) * scalar, get<1>(vec) * scalar );
 		return vec;
 	}
 
 	//div
 
-	avl_ainl_res constexpr auto div_get(const v2& vec, const v2& other) noexcept(ndebug) -> rem_const_ref_t<decltype(vec)> {
+	avl_ainl_res constexpr auto div_mk(const v2& vec, const v2& other) noexcept(ndebug) -> v2 {
 		assert(get<0>(other)!=decltype(other[0]){0});
 		assert(get<1>(other)!=decltype(other[1]){0});
-		return rem_const_ref_t<decltype(vec)>{ get<0>(vec) / get<0>(other), get<1>(vec) / get<1>(other) };
+		return decltype(vec){ get<0>(vec) / get<0>(other), get<1>(vec) / get<1>(other) };
 	}
 
-	avl_ainl_res constexpr auto div_get(const v2& vec, const sc scalar) noexcept(ndebug) -> rem_const_ref_t<decltype(vec)>  {
+	avl_ainl_res constexpr auto div_mk(const v2& vec, const sc scalar) noexcept(ndebug) -> v2  {
 		assert(scalar!=decltype(scalar){0});
-		return rem_const_ref_t<decltype(vec)>{ get<0>(vec) / scalar, get<1>(vec) / scalar };
+		return decltype(vec){ get<0>(vec) / scalar, get<1>(vec) / scalar };
 	}
 
 	avl_ainl constexpr auto div_set(v2& vec, const v2& other) noexcept(ndebug) -> void {
@@ -158,117 +158,69 @@ namespace avl {
 		set(vec, get<0>(vec) / scalar, get<1>(vec) / scalar );
 	}
 
-	avl_ainl_res constexpr auto div(v2& vec, const v2& other) noexcept(ndebug) -> decltype(vec) {
+	avl_ainl_res constexpr auto div(v2& vec, const v2& other) noexcept(ndebug) -> v2 {
 		assert(get<0>(other)!=decltype(other[0]){0});
 		assert(get<1>(other)!=decltype(other[0]){0});
 		set(vec, get<0>(vec) / get<0>(other), get<1>(vec) / get<1>(other) );
 		return vec;
 	}
 
-	avl_ainl_res constexpr auto div(v2& vec, const sc scalar) noexcept(ndebug) -> decltype(vec) {
+	avl_ainl_res constexpr auto div(v2& vec, const sc scalar) noexcept(ndebug) -> v2 {
 		assert(scalar!=decltype(scalar){0});
 		set(vec, get<0>(vec) / scalar, get<1>(vec) / scalar );
 		return vec;
 	}
 
-//	/// Returns the inverse of the vector
-//	template<typename cmp, typename st>
-//	avl_check_result
-//	avl_may_inline constexpr v2<cmp, st> inv(const v2<cmp, st>& vec) noexcept {
-//		return v2<cmp, st>{ -get<0>(vec), -get<1>(vec) };
-//	}
-//
-//	/// Inverse the current vector
-//	template<typename cmp, typename st>
-//	avl_may_inline avl_constexpr_void invSet(v2<cmp, st>& vec) noexcept {
-//		set(vec,  -get<0>(vec), -get<1>(vec) );
-//	}
-//
-//	//no cross product in 2D space
-//
-//	/// Calculate the area of the spawned triangel
-//	template<typename cmp, typename st>
-//	avl_check_result
-//	avl_may_inline constexpr cmp area(const v2<cmp, st>& vec, const v2<cmp, st>& other) noexcept {
-//		const cmp area = cmp{0.5}*(get<0>(vec) * get<1>(other) - get<1>(vec) * get<0>(other));
-//		return area < cmp{0}
-//			? -area
-//			: area;
-//	}
-//
-//	/// @}
-//	/// @name Vector Length Operations
-//	/// @{
-//
-//	/// Calculate the square length of the vector
-//	template<typename cmp, typename st>
-//	avl_check_result
-//	avl_may_inline constexpr cmp lenSqr(const v2<cmp, st>& vec) noexcept {
-//		const cmp comp1 = get<0>(vec);
-//		const cmp comp2 = get<1>(vec);
-//		return comp1 * comp1 + comp2 * comp2;
-//	}
-//
-//	/// Calculate the length of the vector, prefere lenSqr when comparing distances (faster)
-//	template<typename cmp, typename st>
-//	avl_check_result
-//	avl_may_inline constexpr cmp len(const v2<cmp, st>& vec) avl_may_except {
-//		return std::sqrt( lenSqr(vec) );
-//	}
-//
-//	/// Returns a new vector with the requested length
-//	template<typename cmp, typename st>
-//	avl_check_result
-//	avl_may_inline constexpr v2<cmp, st> lenVec(const v2<cmp, st>& vec, const cmp newLen) avl_may_except {
-//		return mul(vec, len(vec));
-//	}
-//
-//	/// Set the length of the vector
-//	template<typename cmp, typename st>
-//	avl_may_inline avl_constexpr_void lenSet(v2<cmp, st>& vec, const cmp newLen) avl_may_except {
-//		mulSet(vec, newLen/len(vec));
-//	}
-//
-//	/// Returns a normalized vector
-//	template<typename cmp, typename st>
-//	avl_check_result
-//	avl_may_inline constexpr v2<cmp, st> norm(const v2<cmp, st>& vec) avl_may_except {
-//		return div(vec, len(vec));
-//	}
-//
-//	/// Normalize the current vector
-//	template<typename cmp, typename st>
-//	avl_may_inline avl_constexpr_void normSet(v2<cmp, st>& vec) avl_may_except {
-//		divSet(vec, len(vec));
-//	}
-//
-//	/// @}
-//	/// @name Vector Operations With Scalar Results
-//	/// @{
-//
-//	template<typename cmp, typename st, template<typename, typename> typename v>
-//	avl_check_result
-//	avl_no_inline constexpr cmp angleRd(const v<cmp, st>& vec, const v<cmp, st>& other) avl_may_except {
-//		return std::acos( dot(vec, other) / (len(vec) * len(other)) );
-//	}
-//
-//	template<typename cmp, typename st, template<typename, typename> typename v>
-//	avl_check_result
-//	avl_no_inline constexpr cmp angleDg(const v<cmp, st>& vec, const v<cmp, st>& other) avl_may_except {
-//		return std::acos( dot(vec, other) / (len(vec) * len(other)) ) * cnst<cmp>::toDeg;
-//	}
-//
-//	template<typename cmp, typename st>
-//	avl_check_result
-//	avl_may_inline constexpr cmp dot(const v2<cmp, st>& vec, const v2<cmp, st>& other) noexcept {
-//		return get<0>(vec) * get<0>(other) + get<1>(vec) * get<1>(other);
-//	}
-//
-//	template<typename cmp, typename st>
-//	avl_check_result
-//	avl_may_inline constexpr cmp dot(const v2<cmp, st>& vec, const cmp xVal, const cmp yVal) noexcept {
-//		return get<0>(vec) * xVal + get<1>(vec) * yVal;
-//	}
+	/// Returns the inverse of the vector
+	avl_ainl_res constexpr auto inv_mk(const v2& vec) noexcept -> v2 {
+		return decltype(vec){ -get<0>(vec), -get<1>(vec) };
+	}
+
+	/// Inverse the current vector
+	avl_ainl constexpr auto inv_set(v2& vec) noexcept -> void {
+		set(vec, -get<0>(vec), -get<1>(vec) );
+	}
+	
+	/// Inverse the current vector
+	avl_ainl_res constexpr auto inv(v2& vec) noexcept -> v2 {
+		set(vec,  -get<0>(vec), -get<1>(vec) );
+		return vec;
+	}
+
+	//no cross product in 2D space
+
+	/// Calculate the area of the spawned triangel
+	avl_inl_res constexpr auto area(const v2& vec, const v2& other) noexcept -> cmp_t<v2> {
+		using scalar = decltype(get<0>(vec)); //not sure about this
+		const auto area = scalar{0.5}*(get<0>(vec) * get<1>(other) - get<1>(vec) * get<0>(other));
+		return area < scalar{0}
+			? -area
+			: area;
+	}
+
+	/// @}
+	/// @name Vector Length Operations
+	/// @{
+
+	/// Calculate the square length of the vector
+	avl_ainl_res constexpr auto len_sqr(const v2& vec) noexcept -> cmp_t<v2> {
+		const auto comp1 = get<0>(vec);
+		const auto comp2 = get<1>(vec);
+		return comp1 * comp1 + comp2 * comp2;
+	}
+
+	/// @}
+	/// @name Vector Operations With Scalar Results
+	/// @{
+
+	avl_ainl_res constexpr auto dot(const v2& vec, const v2& other) noexcept -> cmp_t<v2> {
+		return get<0>(vec) * get<0>(other) + get<1>(vec) * get<1>(other);
+	}
+
+	avl_ainl_res constexpr auto dot(const v2& vec, const sc xVal, const sc yVal) noexcept -> cmp_t<v2> {
+		return get<0>(vec) * xVal + get<1>(vec) * yVal;
+	}
+	
 	/// @}
 
 	/// @}

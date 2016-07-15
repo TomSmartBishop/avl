@@ -42,6 +42,16 @@ namespace avl {
 	/// @name Shortcuts
 	/// @{
 
+			/// Get the component type of the vector	
+//  	template<typename _Tp>
+//  	struct cmp_ret { decltype(s::declval<_Tp>()[0]) type; };
+	
+//  	//template<>
+//  	//struct cmp_ret<__m128> { float type; };
+	
+// 	template<typename _Tp>
+// 	using cmp_ret_t = typename cmp_ret<_Tp>::type;
+	
 	/// Get the component type of the vector (remove extent)
 	template<typename _Tp>
 	using cmp_t = s::remove_extent_t<_Tp>;

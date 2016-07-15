@@ -7,7 +7,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON) # For VS to organize the project in
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++1z")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Weffc++ -pedantic -Wshadow -Wsign-compare -Wunused-function  -Wunused-label  -Wunused-parameter -Wunused-value  -Wunused-variable -fconcepts -std=c++1z -flto")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Weffc++ -pedantic -Wshadow -Wsign-compare -Wunused-function -Wunused-label  -Wunused-parameter -Wunused-value  -Wunused-variable -fconcepts -std=c++1z") #-v -save-temps
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
   message ("Untested compiler, muild might fail.")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
