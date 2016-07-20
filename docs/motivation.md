@@ -37,44 +37,45 @@ Apart from the points mentioned no library has been written with modern C++ in m
 
 * To avoid code duplication and also allow constexpr I rely on the "Uniform Call Syntax" proposal: http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0301r1.html
 >```[C++]
-add_set(v1,v2); //will be the same as
-v1.add_set(v2);
-```
-Since this is not supported yet by any compiler I have to stick to the add(v1,v2) syntax style for now. This change has been proposed for C++17 but unfortunately didn't make it into the standard, so we might see it maybe in C++20 at the earliest (maybe as TS). That's also the reason why the library got the subtitel "for C++20... maybe".
+>add_set(v1,v2); //will be the same as
+>v1.add_set(v2);
+>```
+>Since this is not supported yet by any compiler I have to stick to the add(v1,v2) syntax style for now. This change has been proposed for C++17 but unfortunately didn't make it into the standard, so we might see it maybe in C++20 at the earliest (maybe as TS). That's also the reason why the library got the subtitel "for C++20... maybe".
 
 * Issue a warning if there is an unused return value.
 
 * Simple interfaces, operations should offer to modify the actual vector or create a new vector
 >```[C++]
-//result will create (make) a new vector
-auto v3 = add_mk(v1,v2); //I didn't want to use add_new since 'new' has another meaning in C++
-auto v4 = v1.add_mk(v2);
-//result will be applied to the vector
-add_set(v1,v2); //result of v1 + v2 written to v1
-v1.add_set(v2);
-```
+>//result will create (make) a new vector
+>auto v3 = add_mk(v1,v2); //I didn't want to use add_new since 'new' has another meaning in C++
+>auto v4 = v1.add_mk(v2);
+>//result will be applied to the vector
+>add_set(v1,v2); //result of v1 + v2 written to v1
+>v1.add_set(v2);
+>```
 
 * Allow operator chaining:
 > ```[C++]
 > vec_a.add(vec_b).mul(scalar_x).sub(vec_c).div_set(scalar_y);
-//note that the last operation uses div_set instead of div, since div would return the 'this' reference again and therefore produce a warning (unused return value)
-```
+>//note that the last operation uses div_set instead of div, since div would return the 'this' reference again and therefore produce a warning (unused return value)
+>```
 
 * Evaluate types of parameters
 > No double precision argumetns if the vector's components are of type single precision (be explicit, specify the type and don't let the compiler implicitly convert)
 
 * Use trailing return types everywhere
 > In a lot of cases I need trailing return types and mixing both styles is quite ugly. Of course since C++14 we could just entirly skip the return type and just write "auto" Also it feels quite natural to first specify the input and then the ouput.
-```[C++]
-auto func1(float in1, float in2) -> float; //first two float inputs and then the float output
-//VS
-float func2(float in1, float in2); //first the float output and then the two float inputs
-```
-* To achieve max compatiblity while still being explicit about all used types + the desire to get simple interfaces I decided to use C++ concepts (currently only supported by GCC-6 with the -fconcepts switch).
-> ```[C++]
-//instead of complicated function signatues like this:
-template<typename T, std::enable_if<std::is_same<T, MyVec>>>
-constexpr auto add(T& v1, const T& v2) -> T;
-//concepts allow us to shorten the same to:
-constexpr auto add(MyVec& v1, const MyVec& v2) -> MyVec; //MyVec is a concept
-```
+>```[C++]
+>auto func1(float in1, float in2) -> float; //first two float inputs and then the float output
+>//VS
+>float func2(float in1, float in2); //first the float output and then the two float inputs
+>```
+
+* To achieve max compatiblity while still being explicit about all used types + the desire to get simple interfaces I decided to use C++ concepts. (currently only supported by GCC-6 with the -fconcepts switch).
+>```[C++]
+>//instead of complicated function signatues like this:
+>template<typename T, std::enable_if<std::is_same<T, MyVec>>>
+>constexpr auto add(T& v1, const T& v2) -> T;
+>//concepts allow us to shorten the same to:
+>constexpr auto add(MyVec& v1, const MyVec& v2) -> MyVec; //MyVec is a concept
+>```
