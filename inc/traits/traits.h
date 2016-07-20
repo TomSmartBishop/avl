@@ -9,9 +9,36 @@
 namespace avl {
 
 
+	//temp vec
+	template<typename _Ty, s::size_t _Dim>
+	struct vec {
+		static constexpr s::size_t dim = _Dim;
+		using cmp_t = _Ty;
+		_Ty val[_Dim];
+
+		avl_ainl_res auto operator[](const s::size_t idx) const noexcept -> const _Ty
+		{
+			return val[idx];
+		}
+
+		avl_ainl_res auto operator[](const s::size_t idx) noexcept -> _Ty &
+		{
+			return val[idx];
+		}
+	};
+	
+	template<typename _Ty>
+	using vec2 = vec<_Ty,2>;
+
+	template<typename _Ty>
+	using vec3 = vec<_Ty,3>;
+
+	template<typename _Ty>
+	using vec4 = vec<_Ty,4>;
+	
 	//temp wrapper
 	template<typename _Ty, s::size_t _Dim>
-	struct vec_t {
+	struct vec_w {
 		static constexpr s::size_t dim = _Dim;
 		using cmp_t = _Ty;
 		_Ty * val;
@@ -28,13 +55,13 @@ namespace avl {
 	};
 
 	template<typename _Ty>
-	using vec2_t = vec_t<_Ty,2>;
+	using vec2_w = vec_w<_Ty,2>;
 
 	template<typename _Ty>
-	using vec3_t = vec_t<_Ty,3>;
+	using vec3_w = vec_w<_Ty,3>;
 
 	template<typename _Ty>
-	using vec4_t = vec_t<_Ty,4>;
+	using vec4_w = vec_w<_Ty,4>;
 
 	/// \defgroup Type Traits
 	/// @{
@@ -106,24 +133,53 @@ namespace avl {
 	template <typename _Tp, typename _Sclr>
 	struct is_m128f : true_false_t_if<is_simd<_Tp>::value &&  eq<_Sclr, float>::value> {};
 
-	template<typename _Tp, s::size_t _Size>
-	avl_inl constexpr auto dim(_Tp(&)[_Size]) noexcept -> s::size_t
-	{
-		return _Size;
-	}
+// 	template<typename _Tp, s::size_t _Size>
+// 	avl_inl constexpr auto dim(_Tp(&)[_Size]) noexcept -> s::size_t
+// 	{
+// 		return _Size;
+// 	}
 
-	template<typename _Tp>
-	avl_inl constexpr auto dim(_Tp vec) noexcept -> s::size_t
-	{
-		return decltype(vec)::dim;
-	}
+// 	template<typename _Tp>
+// 	avl_inl constexpr auto dim() noexcept -> s::size_t
+// 	{
+// 		return decltype(vec)::dim;
+// 	}
 
+// 	template<>
+// 	avl_inl constexpr auto dim(__m128) noexcept -> s::size_t
+// 	{
+// 		return 4;
+// 	}
+
+
+	
+	template<typename T>   // primary template
+	struct dim
+	{
+		static constexpr s::size_t value = T::dim;
+	};
+	
+		template<typename _Tp, s::size_t _Size>   // array
+	struct dim<_Tp[_Size]>
+	{
+		static constexpr s::size_t value = _Size;
+	};
+	
+	#include "../compiler/push"
+	#include "../compiler/ignore_warning/ignored_attributes"
 	template<>
-	avl_inl constexpr auto dim(__m128) noexcept -> s::size_t
+	struct dim<__m128>
 	{
-		return 4;
-	}
-
+		static constexpr s::size_t value = 4;
+	};
+	#include "../compiler/pop"
+	
+// 		template<>
+// 	struct dim<__m128&>
+// 	{
+// 		static constexpr s::size_t value = 4;
+// 	};
+	
 	/// @}
 
 	/// @}

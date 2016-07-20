@@ -1,6 +1,6 @@
 #ifndef AVL_V_H
 #define AVL_V_H
-
+#include <iostream>
 #pragma once
 
 /// avl: A Vector Library
@@ -15,7 +15,7 @@ namespace avl {
 	/// Set a single component by index from 0 to dim-1
 	avl_ainl constexpr auto set(v& vec, const s::size_t idx, const sc scalar) noexcept(ndebug) -> void {
 		static_assert(eq<decltype(vec[0]), decltype(scalar)>::value, "Supply a scalar of the vectors element type.");
-		assert(idx < dim(vec));
+		assert(idx < dim< rem_const_ref_t< decltype(vec) > >::value);
 		vec[idx] = scalar;
 	}
 
@@ -23,7 +23,7 @@ namespace avl {
 	avl_ainl_res constexpr auto get(const v& vec, const s::size_t idx) noexcept(ndebug) ->
 		decltype(vec[idx]) {
 		//cmp_t<v> { //causes the compiler to crash
-		assert(idx < dim(vec));
+		assert(idx < dim< rem_const_ref_t< decltype(vec) > >::value);
 		return vec[idx];
 	}
 	
@@ -31,7 +31,7 @@ namespace avl {
 	template<s::size_t _Idx>
 	avl_ainl constexpr auto set(v& vec, const sc scalar) noexcept -> void {
 		static_assert(eq<decltype(vec[_Idx]), decltype(scalar)>::value, "Supply a scalar of the vectors element type.");
-		static_assert(is_simd<decltype(vec)>::value || _Idx < dim(vec), "Index out of range");
+		static_assert(/*is_simd<decltype(vec)>::value ||*/ _Idx < dim< rem_const_ref_t< decltype(vec) > >::value, "Index out of range");
 		vec[_Idx] = scalar;
 	}
 
@@ -40,7 +40,7 @@ namespace avl {
 	avl_ainl_res constexpr auto get(const v& vec) noexcept ->
 		decltype(vec[_Idx]) {
 		//cmp_t<v>  { //also yields a compiler problem (but not a segfault)
-		static_assert(is_simd<decltype(vec)>::value || _Idx < dim(vec), "Index out of range");
+		static_assert(/*is_simd<decltype(vec)>::value ||*/ _Idx < dim< rem_const_ref_t< decltype(vec) > >::value, "Index out of range");
 		return vec[_Idx];
 	}
 
