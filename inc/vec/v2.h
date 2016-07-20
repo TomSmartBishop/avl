@@ -52,12 +52,12 @@ namespace avl {
 
 	// add
 
-	avl_ainl_res constexpr auto add_mk(const v2& vec, const v2& other) noexcept {//} -> v2 {
-		return decltype(vec) { get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other) };
+	avl_ainl_res constexpr auto add_mk(const v2& vec, const v2& other) noexcept {//-> rem_const_ref_t<decltype(vec)> { // -> v2
+		return rem_const_ref_t< decltype(vec) > { get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other) };
 	}
 
-	avl_ainl_res constexpr auto add_mk(const v2& vec, const sc scalar) noexcept {//-> v2 {
-		return decltype(vec) { get<0>(vec) + scalar, get<1>(vec) + scalar };
+	avl_ainl_res constexpr auto add_mk(const v2& vec, const sc scalar) noexcept {//-> rem_const_ref_t<decltype(vec)> { // -> v2
+		return rem_const_ref_t< decltype(vec) > { get<0>(vec) + scalar, get<1>(vec) + scalar };
 	}
 
 	avl_ainl constexpr auto add_set(v2& vec, const v2& other) noexcept -> void {
@@ -68,12 +68,12 @@ namespace avl {
 		set_all(vec, get<0>(vec) + scalar, get<1>(vec) + scalar );
 	}
 
-	avl_ainl_res constexpr auto add(v2& vec, const v2& other) noexcept -> v2& {
+	avl_ainl_res constexpr auto add(v2& vec, const v2& other) noexcept -> decltype(vec) {
 		set_all(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other) );
 		return vec;
 	}
 
-	avl_ainl_res constexpr auto add(v2& vec, const sc scalar) noexcept -> v2& {
+	avl_ainl_res constexpr auto add(v2& vec, const sc scalar) noexcept -> decltype(vec) {
 		set_all(vec, get<0>(vec) + scalar, get<1>(vec) + scalar );
 		return vec;
 	}
