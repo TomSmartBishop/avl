@@ -7,15 +7,17 @@ IGNORE_JINJA_TEMPLATES = [
     '.*tests/.*'
 ]
 
-
 # Do you have any additional variables to the templates? Put 'em here! (use dictionary ('key': value) format)
 EXTRA_VARIABLES = {
-    'name': 'v3',
-    'dim': 3,
-	'param': [ 'x', 'y', 'z']
+    'test_type': 'Array',
+    'name': 'float',
+    'dim': 4,
+    'type': 'float',
+    'suffix': 'f',
+    'extends': '[4]'
 }
 
 OUTPUT_OPTIONS = {
-    'extension': '3.h', # Including leading '.', example '.html'
-    'remove_double_extension': True
+    'extension': '4_arr.cpp', # Including leading '.', example '.html'
+    'remove_double_extension': False
 }

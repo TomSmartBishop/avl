@@ -1,10 +1,12 @@
 	//no cross product in 2D space
 	
 	/// Calculate the area of the spawned triangel
-	avl_inl_res constexpr auto area(const v2& vec, const v2& other) noexcept -> cmp_t<v2> {
+	avl_inl_res constexpr auto area(const v2& vec, const v2& other) noexcept -> decltype(cmp(vec)){% if type=='h' %};
+	{% else %} {
 		using scalar = decltype(get<0>(vec)); //not sure about this
 		const auto area = scalar{0.5}*(get<0>(vec) * get<1>(other) - get<1>(vec) * get<0>(other));
 		return area < scalar{0}
 			? -area
 			: area;
 	}
+	{% endif %}

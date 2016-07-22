@@ -106,6 +106,11 @@ namespace avl {
 #include "vec/v4.h"
 #include "vec/v4_simd.h"
 
+#include "vec/v.inl"
+#include "vec/v2.inl"
+#include "vec/v3.inl"
+#include "vec/v4.inl"
+
 //clean up again
 #undef avl_a_if_pow2_or_b
 #undef avl_noinl_res
