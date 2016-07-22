@@ -1,0 +1,28 @@
+	/// Calculate the cross product
+	avl_ainl_res constexpr auto cross_mk(const v3& vec, const v3& other) noexcept {//-> rem_const_ref_t<decltype(vec)> { // -> v3 {
+		return rem_const_ref_t<decltype(vec)> {
+				get<1>(vec) * get<2>(other) - get<2>(vec) * get<1>(other),
+				get<2>(vec) * get<0>(other) - get<0>(vec) * get<2>(other),
+				get<0>(vec) * get<1>(other) - get<1>(vec) * get<0>(other)
+			};
+	}
+	
+	/// Calculate the cross product and assign it to the current vector
+	avl_ainl constexpr auto cross_set(v3& vec, const v3& other) noexcept -> void {
+		set_all(get<1>(vec) * get<2>(other) - get<2>(vec) * get<1>(other),
+				get<2>(vec) * get<0>(other) - get<0>(vec) * get<2>(other),
+				get<0>(vec) * get<1>(other) - get<1>(vec) * get<0>(other) );
+	}
+	
+	/// Calculate the cross product and assign it to the current vector
+	avl_ainl_res constexpr auto cross(v3& vec, const v3& other) noexcept -> decltype(vec) {
+		set_all(get<1>(vec) * get<2>(other) - get<2>(vec) * get<1>(other),
+				get<2>(vec) * get<0>(other) - get<0>(vec) * get<2>(other),
+				get<0>(vec) * get<1>(other) - get<1>(vec) * get<0>(other) );
+		return vec;
+	}
+	
+	/// Calculate the area of the spawned triangle (using the cross product 0.5*|(a x b)|)
+	avl_ainl_res constexpr auto area(v3 vec, const v3& other) noexcept -> cmp_t<v3> {
+		return decltype(vec[0]){0.5}*len(cross(vec, other));
+	}
