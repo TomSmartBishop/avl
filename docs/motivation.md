@@ -1,7 +1,3 @@
-.remark-container {
-  background-color: red;
-}
-
 #Motivation
 
 A few words before we start: All comments and constructive critics are very welcome. Just let me know your point and I'm happy to discuss about it.
@@ -35,7 +31,9 @@ I'm not sure if all my goal are achievable, so this is also part of my private r
 *"Perhaps when we find ourselves wanting everything, it is because we are dangerously close to wanting nothing."*
 -- Sylvia Plath
 
-### Goals Part I
+---
+
+## Goals Part I
 Apart from learning...
 
 * No code duplication
@@ -53,7 +51,7 @@ Apart from learning...
 
 ---
 
-### Goals Part II
+## Goals Part II
 
 * Check and calculate as much as possible during compile time (also support constexpr where possible).
 * Compatible to arbitrary vector and matrix formats, only requirements are:
@@ -68,7 +66,7 @@ Apart from learning...
 
 ---
 
-##Design Decisions
+#Design Decisions
 
 * Use trailing return types everywhere
   When using templates or concepts there are a lot of cases where we need trailing return types. And mixing the 'old style' and trailing return types is quite ugly. Of course since C&plus;&plus;14 we could just entirely skip the return type and just write "auto", but I find that confusing for the API user if you cannot see the return type from the function signature. Also it feels quite natural to first specify the input and then the output.
@@ -84,13 +82,14 @@ Apart from learning...
 
 ---
 
-* To avoid code duplication and also allow constexpr I rely on the "Uniform Call Syntax" proposal: http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0301r1.html
+* To avoid code duplication and also allow `constexpr` I rely on the "Uniform Call Syntax" proposal:
+  http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0301r1.html
   ```[C++]
   add_set(v1,v2);
   //will be the same as
   v1.add_set(v2);
   ```
->Since this is not supported yet by any compiler I have to stick to the add(v1,v2) syntax style for now. This change has been proposed for C&plus;&plus;17 but unfortunately didn't make it into the standard, so we might see it maybe in C&plus;&plus;20 at the earliest (maybe as TS). That's also the reason why the library got the subtitel "for C&plus;&plus;20... maybe".
+  Since this is not supported yet by any compiler I have to stick to the add(v1,v2) syntax style for now. This change has been proposed for C&plus;&plus;17 but unfortunately didn't make it into the standard, so we might see it maybe in C&plus;&plus;20 at the earliest (maybe as TS). That's also the reason why the library got the subtitel "for C&plus;&plus;20... maybe".
 
 ---
 
@@ -123,9 +122,9 @@ Apart from learning...
     constexpr auto add_set(v2& vec, const v2& other) noexcept -> void;
  ```
  
- ---
+---
  
- And I still want to control wheater the compiler should inline a function and also warn the user about unused return types and therefore need one more additional token, sp that my current interface looks like:
+* (Simple interfaces cont.) And I still want to control wheater the compiler should inline a function and also warn the user about unused return types and therefore need one more additional token, sp that my current interface looks like:
  ```[C++]
  //               Trailing return
  //  Inline and       type                           Won't trough an exception
@@ -148,7 +147,9 @@ Apart from learning...
 
 * Use const whenever possible.
 
-* No read/write access to class members inside loops, better use local to calculate and then assign to the member: https://www.youtube.com/watch?v=qYN6eduU06s (CppCon 2014: Nicolas Fleury "C++ in Huge AAA Games")
+* No read/write access to class members inside loops, better use local to calculate and then assign to the member:
+  https://www.youtube.com/watch?v=qYN6eduU06s
+  (CppCon 2014: Nicolas Fleury "C++ in Huge AAA Games")
 
 ---
 
@@ -179,15 +180,7 @@ Apart from learning...
 
 ---
 
-### 3rd Party dependencies
-
-* Catch: As test framework. That unfortunately increased compile time by 8(!) sec, but it is easy to use and there is no library needed.
-
-* As mentioned: Currently I'm alsoo using Jinja (+Python) for my stencils but I plan to move to clang's libTooling.
-
----
-
-# Drawbacks
+## Drawbacks
  * Small errors sometimes cause a lot and very confusing error messages (with concepts).
  * Concepts syntax might change in the future.
  * No sample material for concepts.
@@ -196,11 +189,21 @@ Apart from learning...
 
 ---
 
-# Testing
+# Other Things...
+
+## 3rd Party dependencies
+
+* Catch: As test framework. That unfortunately increased compile time by 8(!) sec, but it is easy to use and there is no library needed.
+
+* As mentioned: Currently I'm alsoo using Jinja (+Python) for my stencils but I plan to move to clang's libTooling.
+
+---
+
+## Testing
  * Apart from my own philosophy, concepts (templates) also reuqire a 100% coverage in the test cases since otherwise the template code is never instantiated (compiled).
 
 ---
 
-# Current Status
+## Current Status
 
 Currently the code is in a very early experimental stage. I just need to put my code somewhere :)
