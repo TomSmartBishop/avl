@@ -1,45 +1,53 @@
 #Motivation
 
-A few words before we start: All comments and constructive critics are very welcome. Just let me know you point and I'm happy to discuss about it.
+A few words before we start: All comments and constructive critics are very welcome. Just let me know your point and I'm happy to discuss about it.
 
+---
 
 ##Why another vector library?
 
 For me personally it is about learning, existing libraries are for sure mature, usable and well performing, but I want to make my own experience, especially with all the new additions to the C++ language which cannot be found in most of today's libraries.
 
+---
+
 Looking at existing 3D vector libraries we can see the following limitations I try to overcome:
 
-* [Unreal Math](https://github.com/EpicGames/UnrealEngine/blob/release/Engine/Source/Runtime/Core/Public/Math/) : Fixed to float, code duplication in vector 2~4.
+* [Unreal Math](https://github.com/EpicGames/UnrealEngine/blob/release/Engine/Source/Runtime/Core/Public/Math/) : Fixed to float, code duplication in vector 2~4 (couldn't see any SIMD support).
 
-* [Eigen](https://bitbucket.org/eigen/eigen) : Difficult to read and explore the code because it uses template meta programming quite extensively
+* [Eigen](https://bitbucket.org/eigen/eigen) : Difficult to read and explore the code because it uses template meta programming quite extensively (good or bad depending on your point of view - I personally find it difficult to dig into the code)
 
 * [MSFT DirectXMath](https://github.com/Microsoft/DirectXMath): Difficult to use, mostly constrained to float and int32.
 
-Apart from the points mentioned no library has been written with modern C&plus;&plus; in mind(eg. using constexpr, concepts, ...) - but that might change any time soon.
+* [CML](https://github.com/demianmnave/CML/) : API usage looks quite nice, but no SIMD support. Internally also makes havy use of template code (which again is either good or bad).
+
+Apart from the points mentioned no library has been written with modern C&plus;&plus; in mind(eg. using constexpr, noexcept, concepts, ...) - but that might change any time soon.
 
 I'm not sure if all my goal are achievable, so this is also part of my private reseach... let's see.
+
+---
 
 #Goals
 
 Apart from learning...
 
-* Can be used with arbitrary floating point type.
-* Supports 2 to 4 dimensions for vectors and matrices.
+* Can be used with arbitrary floating point type (and maybe also ints).
+* Supports 2 to 4 dimensions for vectors, matrices and quaternions.
 * Minimum runtime costs: Don't pay for something you don't use (eg. no virtual inheritance)
 * Check and calculate as much as possible during compile time (also support constexpr where possible).
 * No code duplication
 * Compatible to arbitrary vector and matrix formats, only requirements are:
- + Component accessor a la "[]"
- + Ideally a static member "dim" for the dimension, otherwise the right function needs to be called (eg. add3 vs add).
- + also plain 2~4 element arrays should work (for all possible cases, eg, returning an array is not possible in C&plus;&plus;, not sure if 'structured binding' will change anything about that).
- + Compatible to OpenGL, DirectX formats.
- + Support SIMD formats like __m128.
- + If a 3rd party vector format does not match the specifications a template wrapper can be used to encapsulate (so the byte size of the vector stays the same)
+ + Component accessor a la "[]" (as a backup this can be always forced with something like `static_cast<float *>(&vector_instance)[idx]`)
+ + also plain 2~4 element arrays should work for ad-hoc calculations (for all possible cases, eg, returning an array is not possible in C&plus;&plus;, not sure if 'structured binding' will change anything about that).
+* Provide default vector formats compatible to OpenGL, DirectX.
+* Support SIMD formats like `__m128`.
+* If a 3rd party vector format does not match the specifications a template wrapper can be used to encapsulate (so the byte size of the vector stays the same)
 * Configurable to either use asserts or exceptions
 * Supports all basic vector operations you might expect from a 3D vector library (dot, cross, angle_between, ...)
 
+---
+
 ##Design Decisions
-* No operator overloading apart from "[]" for the component access (and maybe equals).
+* No operator overloading apart from `[]` for the component access (and maybe equals).
 > The reason for this is that I try to be explicit as much as possible, operator overloading is sometimes confusing with operator priorities.
 
 * To avoid code duplication and also allow constexpr I rely on the "Uniform Call Syntax" proposal: http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0301r1.html
