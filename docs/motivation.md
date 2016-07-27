@@ -68,7 +68,7 @@ Apart from learning...
 
 #Design Decisions
 
-* Use trailing return types everywhere
+* Use trailing return types everywhere.
   When using templates or concepts there are a lot of cases where we need trailing return types. And mixing the 'old style' and trailing return types is quite ugly. Of course since C&plus;&plus;14 we could just entirely skip the return type and just write "auto", but I find that confusing for the API user if you cannot see the return type from the function signature. Also it feels quite natural to first specify the input and then the output.
   ```[C++]
   //first two float inputs and then the float output
@@ -93,7 +93,7 @@ Apart from learning...
 
 ---
 
-* Operations should offer a way to modify the actual vector or create a new vector
+* Operations should offer a way to modify the actual vector or create a new vector.
   ```[C++]
   //result will create (make) a new vector
   auto v3 = add_mk(v1,v2);
@@ -112,30 +112,30 @@ Apart from learning...
 
 ---
 
-* Simple interfaces, **really simple!** Headers should look clean.
+* Simple interfaces **really simple!** Headers should look clean.
   This would ideally look somewhat like this
- ```[C++]
-    void add_set(v2& vec, const v2& other);
- ```
+  ```[C++]
+  void add_set(v2& vec, const v2& other);
+  ```
  But I already explained about the trailing return types and we also want to take advantage of other C&plus;&plus; features like `noexcept` and `constexpr`, so let's refine the minimum:
   ```[C++]
-    constexpr auto add_set(v2& vec, const v2& other) noexcept -> void;
- ```
- 
+  constexpr auto add_set(v2& vec, const v2& other) noexcept -> void;
+  ```
+
 ---
- 
+
 * (Simple interfaces cont.) And I still want to control wheater the compiler should inline a function and also warn the user about unused return types and therefore need one more additional token, sp that my current interface looks like:
  ```[C++]
- //               Trailing return
- //  Inline and       type                           Won't trough an exception
- //return options       |                                 neither asserts
- //    |                |                                       |
- //    V                V                                       V
-    avl_ainl constexpr auto add_set(v2& vec, const v2& other) noexcept -> void;
- //             ^                   ^              ^                       ^
- //             |                   `--------------'                       |
- //   As mentioned, constexpr               |                              |
- //      whenever possible        In: Accepts 2 vector2              Out: nothing
+ //             Trailing return
+ //  Inline and     type                          Won't trough an exception
+ //return options     |                                neither asserts
+ //    |              |                                       |
+ //    V              V                                       V
+ avl_ainl constexpr auto add_set(v2& vec, const v2& other) noexcept -> void;
+ //           ^                   ^              ^                       ^
+ //           |                   `--------------'                       |
+ // As mentioned, constexpr               |                              |
+ //     whenever possible        In: Accepts 2 vector2             Out: nothing
  ```
 
 ---
@@ -173,9 +173,109 @@ Apart from learning...
 
 ---
 
-* Eliminate "copy &amp; paste + modify" code. This unfortunately happens frequently when creating similar classes (but not the same) eg. vec2, vec3, vec4:
+* Eliminate "copy &amp; paste &plus; modify" code. This unfortunately happens frequently when creating similar classes (but not the same).
+  A short sample:
   ```[C++]
-  [TODO]
+  avl_ainl_res constexpr auto add(v2& vec, const v2& other) noexcept -> decltype(vec) {
+    set_all(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other) );
+    return vec;
+  }
+  ```
+  ```[C++]
+  avl_ainl_res constexpr auto sub(v2& vec, const v2& other) noexcept -> decltype(vec) {
+    set_all(vec, get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other) );
+    return vec;
+  }
+  ```
+  And there are even tricker versions...
+
+---
+* (Eliminate "copy &amp; paste &plus; modify" cont. 1) The difference between v2 and v3  (and v4) is often only one parameter following a pettern.
+
+  ```[C++]
+  avl_ainl_res constexpr auto add(v2& vec, const v2& other) noexcept -> decltype(vec) {
+    set_all(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other) );
+    return vec;
+  }
+  ```
+  ```[C++]
+  avl_ainl_res constexpr auto add(v3& vec, const v3& other) noexcept -> decltype(vec) {
+	set_all(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other), get<2>(vec) + get<2>(other) );
+	return vec;
+  }
+  ```
+  So for add, sub, mul and div we end up writing individual versions without significant difference. Changing the interface at a later time is horrible and error prone.
+
+---
+
+* (Eliminate "copy &amp; paste &plus; modify" cont. 2) All these functions could be expressed like this:
+  ```[C++]
+  avl_ainl_res constexpr auto __OP_NAME__(VEC_T& vec, const VEC_T& other) noexcept -> decltype(vec) {
+	set_all(vec, __FOR__(__DIM__){ get<__IDX__>(vec) __OP__ get<__IDX__>(other)) } );
+	return vec;
+  }
+  ```
+  So I first started into looking at existing template engines. After some research I found that Jinja could be a fit for this: http://jinja.pocoo.org/ It is a python based template engine API (also used by Mozilla, Instagram, Google, ...) and there is also a stand-alone version (if you don't want to work directly with the API): https://github.com/filwaitman/jinja2-standalone-compiler
+
+---
+* (Eliminate "copy &amp; paste &plus; modify" cont. 3) Writing this in Jinja looks like this:
+  ```[C++]
+  avl_ainl_res constexpr auto {{op_name}}({{vec_type}}& vec, const {{vec_type}}& other) noexcept -> decltype(vec) {
+    set_all(vec, {{ helper.cmp_wise_op("get<?>(vec) @ get<?>(other)", op, ", ", dim) }} );
+    return vec;
+  }
+  ```
+  With Jinja I can loop over this template for eg. add, sub, mul and div for every vector type and output the result into a source file - so all vector types and operations are always in sync, also when changing the interface. Seemed good at the beginning but unfortunately we are not done yet.
+
+---
+* (Eliminate "copy &amp; paste &plus; modify" cont. 4) At some point it is not possible any to implment everything in the header (cyclic depndencies) so I have to seperate header and inline files and also handle asserts/exceptions, so the intial template changes a bit:
+  ```[C++]
+  avl_ainl_res constexpr auto {{op_name}}({{vec_type}}& vec, const {{vec_type}}& other) noexcept -> decltype(vec){% if type=='h' %};
+	{% else %} {
+        {% if op_name=="div" %}
+		{% for idx in range(dim) %}
+		assert(get<{{idx}}>(other)!=decltype(other[{{idx}}]){0});
+		{% endfor %}
+		{% endif %}
+		set_all(vec, {{ helper.cmp_wise_op("get<?>(vec) @ get<?>(other)", op, ", ", dim) }} );
+		return vec;
+	}
+    {% endif %}
+  ```
+  Ok... now it's getting a bit more complicated. This is hard to read and maintain.
+---
+* (Eliminate "copy &amp; paste &plus; modify" cont. 5) But when forgetting a second about the complexity I could additionally append a test block to every function and generate testcases like it is possible in dlang:
+  ```[C++]
+    ...
+    return vec;
+  }
+  {% else type=='test' %}
+  SECTION("Testcase for {{op_name}} operation") {
+    {{help.create_vec("vec1")}};
+    {{help.create_vec("vec2")}};
+
+    ...
+  }
+  {% endcall %}
+  ```
+  Yeah, would be nice but it is already really complicated and I actually wanted to keep it simple. Additionally the syntax is quite alienating C&plus;&plus; programmers.
+
+---
+* (Eliminate "copy &amp; paste &plus; modify" cont. 6) So I'm currently contemplating how to get a nice, native syntax and still achieve the same. Maybe I can use the C&plus;&plus; macro expansion to achieve the same or use clang's libTooling to preprocess the source code. Anyway the syntax I want to achieve looks like this:
+  ```[C++]
+  _repeat(_op, {"add","+"}, {"sub", "-"}, {"mul","*"}, {"div", "/"}) {
+		avl_ainl_res constexpr auto _op[0]##_mk(const _vec_t& vec, const _scalar_t& other) noexcept {
+			return _vec_ret_t(vec) { _for(_idx, _dim, ", ") {get<_idx>(vec) _op[1] get<_idx>(other) } };
+		} test {
+			_test_scalar_t var1[_dim] = { random_seq(_dim) };
+			_test_scalar_t var2[_dim] = { random_seq(_dim) };
+			_test_scalar_t result[_dim] = { _for(_idx, _dim, ", ") {var1[_idx] _op[1] var2[_idx]} };
+			auto res = _op[0]##_mk(var_1, var_2);
+			_for(_idx, _dim) {
+				REQUIRE( res[_idx] == Approx(result[_idx]) );
+			}
+		}
+	}
   ```
 
 ---
