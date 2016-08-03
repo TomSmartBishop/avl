@@ -22,11 +22,11 @@ Looking at existing 3D vector libraries we can see the following limitations I t
 
 Apart from the points mentioned no library has been written with modern C&plus;&plus; in mind(eg. using constexpr, noexcept, concepts, ...) - but that might change any time soon.
 
-I'm not sure if all my goal are achievable, so this is also part of my private reseach... let's see.
-
 ---
 
 #Goals
+
+I'm not sure if all my goals are achievable, so this is also part of my private reseach... let's see.
 
 *"Perhaps when we find ourselves wanting everything, it is because we are dangerously close to wanting nothing."*
 -- Sylvia Plath
@@ -42,11 +42,14 @@ Apart from learning...
 
 * Can be used with arbitrary floating point type (and maybe also ints)
 
-* Supports 2 to 4 dimensions for vectors, matrices and quaternions
+* Supports 2 to 4 dimensions for vectors, matrices and quaternions (Of course there is loop unrolling in which case the dimension could be abstracted, unfortunately this very compiler specific and not guranteed by all compilers https://msdn.microsoft.com/en-us/library/hh923901.aspx)
 
-* Support SIMD formats like `__m128`
+* Support SIMD formats like `__m128`. There is an very interesting talk wheter or not to use the auto vectorization from the compiler (eg. with `-O3 -msse3` and similar):
+  https://www.youtube.com/watch?v=c-hZpChQKe0
+  (While the author Timur Doumler suggests to rely on the compilers vectorization the company's product actually does implement SSE intrinsics)
 
 * Configurable to either use asserts or exceptions
+
 * Minimum runtime costs: Don't pay for something you don't use (eg. no virtual inheritance)
 
 ---
@@ -54,11 +57,12 @@ Apart from learning...
 ## Goals Part II
 
 * Check and calculate as much as possible during compile time (also support constexpr where possible).
+
 * Compatible to arbitrary vector and matrix formats, only requirements are:
  + Component accessor a la `[]` (as a backup this can be always forced with something like `static_cast<float *>(&vector_instance)[idx]`)
  + also plain 2~4 element arrays should work for ad-hoc calculations (for all possible cases, eg, returning an array is not possible in C&plus;&plus;, not sure if 'structured binding' will change anything about that).
 
-* Provide default vector formats compatible to OpenGL, DirectX.
+* Provide default vector formats compatible to OpenGL, DirectX (also this requires fixed size vectors).
 
 * If a 3rd party vector format does not match the specifications a template wrapper can be used to encapsulate (so the byte size of the vector stays the same)
 
@@ -70,12 +74,12 @@ Apart from learning...
 
 * Use trailing return types everywhere.
   When using templates or concepts there are a lot of cases where we need trailing return types. And mixing the 'old style' and trailing return types is quite ugly. Of course since C&plus;&plus;14 we could just entirely skip the return type and just write "auto", but I find that confusing for the API user if you cannot see the return type from the function signature. Also it feels quite natural to first specify the input and then the output.
-  ```[C++]
+  ```[JavaScript]
   //first two float inputs and then the float output
   auto func1(float in1, float in2) -> float;
   ```
   VS
-  ```[C++]
+  ```[JavaScript]
   //first the float output and then the two float inputs
   float func2(float in1, float in2);
   ```
@@ -84,7 +88,7 @@ Apart from learning...
 
 * To avoid code duplication and also allow `constexpr` I rely on the "Uniform Call Syntax" proposal:
   http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0301r1.html
-  ```[C++]
+  ```[JavaScript]
   add_set(v1,v2);
   //will be the same as
   v1.add_set(v2);
@@ -94,18 +98,18 @@ Apart from learning...
 ---
 
 * Operations should offer a way to modify the actual vector or create a new vector.
-  ```[C++]
+  ```[JavaScript]
   //result will create (make) a new vector
   auto v3 = add_mk(v1,v2);
   ```
   Comment: I didn't want to use `add_new` since `new` has another meaning in C++
-  ```[C++]
+  ```[JavaScript]
   //result will be applied to the vector
   add_set(v1,v2);
   ```
 
 * And also allow operator chaining:
-  ```[C++]
+  ```[JavaScript]
   vec_a.add(vec_b).mul(scalar_x).sub(vec_c).div_set(scalar_y);
   ```
   >Note that the last operation uses div_set instead of div, since div would return the 'this' reference again and therefore produce a warning (unused return value).
@@ -114,18 +118,18 @@ Apart from learning...
 
 * Simple interfaces **really simple!** Headers should look clean.
   This would ideally look somewhat like this
-  ```[C++]
+  ```[JavaScript]
   void add_set(v2& vec, const v2& other);
   ```
  But I already explained about the trailing return types and we also want to take advantage of other C&plus;&plus; features like `noexcept` and `constexpr`, so let's refine the minimum:
-  ```[C++]
+  ```[JavaScript]
   constexpr auto add_set(v2& vec, const v2& other) noexcept -> void;
   ```
 
 ---
 
 * (Simple interfaces cont.) And I still want to control wheater the compiler should inline a function and also warn the user about unused return types and therefore need one more additional token, sp that my current interface looks like:
- ```[C++]
+ ```[JavaScript]
  //             Trailing return
  //  Inline and     type                          Won't trough an exception
  //return options     |                                neither asserts
@@ -135,7 +139,7 @@ Apart from learning...
  //           ^                   ^              ^                       ^
  //           |                   `--------------'                       |
  // As mentioned, constexpr               |                              |
- //     whenever possible        In: Accepts 2 vector2             Out: nothing
+ //     whenever possible        In: Accepts 2 vector2           Out: nothing
  ```
 
 ---
@@ -161,12 +165,12 @@ Apart from learning...
 
 * To achieve max compatiblity while still being explicit about all used types &plus; the desire to get simple interfaces I initially decided to use C&plus;&plus; concepts (currently only supported by GCC-6 with the -fconcepts switch).
   Instead of complicated function signatues like this:
-  ```[C++]
+  ```[JavaScript]
   template<typename T, std::enable_if<std::is_same<T, MyVec>>>
   constexpr auto add(T& v1, const T& v2) -> T;
   ```
   Concepts allow us to shorten the same to:
-  ```[C++]
+  ```[JavaScript]
   constexpr auto add(MyVec& v1, const MyVec& v2) -> MyVec; //MyVec is a concept
   ```
   However there is another factor about that made me rethink that approach.
@@ -175,13 +179,13 @@ Apart from learning...
 
 * Eliminate "copy &amp; paste &plus; modify" code. This unfortunately happens frequently when creating similar classes (but not the same).
   A short sample:
-  ```[C++]
+  ```[JavaScript]
   avl_ainl_res constexpr auto add(v2& vec, const v2& other) noexcept -> decltype(vec) {
     set_all(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other) );
     return vec;
   }
   ```
-  ```[C++]
+  ```[JavaScript]
   avl_ainl_res constexpr auto sub(v2& vec, const v2& other) noexcept -> decltype(vec) {
     set_all(vec, get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other) );
     return vec;
@@ -192,13 +196,13 @@ Apart from learning...
 ---
 * (Eliminate "copy &amp; paste &plus; modify" cont. 1) The difference between v2 and v3  (and v4) is often only one parameter following a pettern.
 
-  ```[C++]
+  ```[JavaScript]
   avl_ainl_res constexpr auto add(v2& vec, const v2& other) noexcept -> decltype(vec) {
     set_all(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other) );
     return vec;
   }
   ```
-  ```[C++]
+  ```[JavaScript]
   avl_ainl_res constexpr auto add(v3& vec, const v3& other) noexcept -> decltype(vec) {
 	set_all(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other), get<2>(vec) + get<2>(other) );
 	return vec;
@@ -209,17 +213,19 @@ Apart from learning...
 ---
 
 * (Eliminate "copy &amp; paste &plus; modify" cont. 2) All these functions could be expressed like this:
-  ```[C++]
+  ```[JavaScript]
   avl_ainl_res constexpr auto __OP_NAME__(VEC_T& vec, const VEC_T& other) noexcept -> decltype(vec) {
 	set_all(vec, __FOR__(__DIM__){ get<__IDX__>(vec) __OP__ get<__IDX__>(other)) } );
 	return vec;
   }
   ```
+  Another side effect of this would be more flexibility on the vector type. While my inital requirement was concepts (to keep the interfaces simple) I could now just generate the needed formats (and still also concpets if the compiler supports that) just as it is needed from user side (maybe too much templating?).
+
   So I first started into looking at existing template engines. After some research I found that Jinja could be a fit for this: http://jinja.pocoo.org/ It is a python based template engine API (also used by Mozilla, Instagram, Google, ...) and there is also a stand-alone version (if you don't want to work directly with the API): https://github.com/filwaitman/jinja2-standalone-compiler
 
 ---
 * (Eliminate "copy &amp; paste &plus; modify" cont. 3) Writing this in Jinja looks like this:
-  ```[C++]
+  ```[JavaScript]
   avl_ainl_res constexpr auto {{op_name}}({{vec_type}}& vec, const {{vec_type}}& other) noexcept -> decltype(vec) {
     set_all(vec, {{ helper.cmp_wise_op("get<?>(vec) @ get<?>(other)", op, ", ", dim) }} );
     return vec;
@@ -228,8 +234,8 @@ Apart from learning...
   With Jinja I can loop over this template for eg. add, sub, mul and div for every vector type and output the result into a source file - so all vector types and operations are always in sync, also when changing the interface. Seemed good at the beginning but unfortunately we are not done yet.
 
 ---
-* (Eliminate "copy &amp; paste &plus; modify" cont. 4) At some point it is not possible any to implment everything in the header (cyclic depndencies) so I have to seperate header and inline files and also handle asserts/exceptions, so the intial template changes a bit:
-  ```[C++]
+* (Eliminate "copy &amp; paste &plus; modify" cont. 4) At some point it is not possible any more to implement everything in the header (cyclic depndencies) so I have to seperate header and inline files and also handle asserts/exceptions, so the intial template changes a bit:
+  ```[JavaScript]
   avl_ainl_res constexpr auto {{op_name}}({{vec_type}}& vec, const {{vec_type}}& other) noexcept -> decltype(vec){% if type=='h' %};
 	{% else %} {
         {% if op_name=="div" %}
@@ -245,7 +251,7 @@ Apart from learning...
   Ok... now it's getting a bit more complicated. This is hard to read and maintain.
 ---
 * (Eliminate "copy &amp; paste &plus; modify" cont. 5) But when forgetting a second about the complexity I could additionally append a test block to every function and generate testcases like it is possible in dlang:
-  ```[C++]
+  ```[JavaScript]
     ...
     return vec;
   }
@@ -258,26 +264,49 @@ Apart from learning...
   }
   {% endcall %}
   ```
-  Yeah, would be nice but it is already really complicated and I actually wanted to keep it simple. Additionally the syntax is quite alienating C&plus;&plus; programmers.
+  This would be nice because I could create test for multiple types as well (eg. flost, double, long double, ...). Unfortunately the syntax is quite alienating for C&plus;&plus; programmers.
 
 ---
-* (Eliminate "copy &amp; paste &plus; modify" cont. 6) So I'm currently contemplating how to get a nice, native syntax and still achieve the same. Maybe I can use the C&plus;&plus; macro expansion to achieve the same or use clang's libTooling to preprocess the source code. Anyway the syntax I want to achieve looks like this:
-  ```[C++]
-  _repeat(_op, {"add","+"}, {"sub", "-"}, {"mul","*"}, {"div", "/"}) {
-		avl_ainl_res constexpr auto _op[0]##_mk(const _vec_t& vec, const _scalar_t& other) noexcept {
-			return _vec_ret_t(vec) { _for(_idx, _dim, ", ") {get<_idx>(vec) _op[1] get<_idx>(other) } };
-		} test {
-			_test_scalar_t var1[_dim] = { random_seq(_dim) };
-			_test_scalar_t var2[_dim] = { random_seq(_dim) };
-			_test_scalar_t result[_dim] = { _for(_idx, _dim, ", ") {var1[_idx] _op[1] var2[_idx]} };
-			auto res = _op[0]##_mk(var_1, var_2);
-			_for(_idx, _dim) {
-				REQUIRE( res[_idx] == Approx(result[_idx]) );
-			}
-		}
-	}
-  ```
+* (Eliminate "copy &amp; paste &plus; modify" cont. 6) So I was looking into alternatives to make it more readable and maintainable. C&plus;&plus; macros don't work since you cannot pass arbitraty argumnets into a macro (eg. the comma). And after some time I already through away the idea of an own templating engine with clang libTooling or boost.sprit/boost.wave. So i looked into ways how to customize jinja to feel more C&plus;&plus; native.
 
+  So I reconfigure the start and end tags to be embedded into C++ comments
+  ```[JavaScript]
+  {% jinja statement %}
+  /*% jinja statement %*/
+  ```
+  
+  ```[JavaScript]
+  # jinja line statement 
+  //% jinja line statement
+  ```
+  
+---
+* (Eliminate "copy &amp; paste &plus; modify" cont. 7) For expressions it's not so simple (since I don't want them to dissappear in comments). Jinja requires the start and stop symbol(s) to be differnt (the default `{{` and `}}` is quite confusing). First I was thinking about `[[` and `]]`, but this is already used for C&plus;&plus; attributes, eg. `[[Fallthrough]]`. After quite some time of experimentation I turned to a single character approch (shorter is simpler) and used the only still available wildcards in C&plus;&plus;: `$` and `@`
+  ```[JavaScript]
+  {{jinja expression}}
+  $jinja expression@
+  ```
+  So let's take a look how this looks in code...
+---
+* (Eliminate "copy &amp; paste &plus; modify" cont. 8)
+  ```[JavaScript]
+  //% for op, s in [("add", "+"), ("sub", "-"), ("mul", "*"), ("div", "/")]
+	
+	//% call func([2,3,4], '//make ' + op)
+	avl_ainl_res constexpr auto $op@_mk(const $vecParam@& vec, const $vecParam@& other) noexcept$if_then(op=="div", '(ndebug|exude)')@
+	{
+		//% call loop_if(op=="div", range(dim), '')
+		assert(get<?>(other)!=decltype(other[?]){0});
+		//% endcall
+		return rem_const_ref_t< decltype(vec) >
+			{/*% call loop_(range(dim)) %*/get<?>(vec) $s@ get<?>(other)/*% endcall %*/};
+	}
+	test_case
+	{ ... }
+	//% endcall
+    ...
+  //% endfor
+  ```
 ---
 
 ## Drawbacks
@@ -295,7 +324,7 @@ Apart from learning...
 
 * Catch: As test framework. That unfortunately increased compile time by 8(!) sec, but it is easy to use and there is no library needed.
 
-* As mentioned: Currently I'm alsoo using Jinja (+Python) for my stencils but I plan to move to clang's libTooling.
+* As mentioned: Currently I'm also using Jinja (+Python) for my preprocessing but I plan to move to clang's libTooling.
 
 ---
 
