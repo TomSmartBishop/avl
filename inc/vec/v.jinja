@@ -1,140 +1,211 @@
-#ifndef AVL_{{name.upper()}}_{{type.upper()}}
-#define AVL_{{name.upper()}}_{{type.upper()}}
+###-
+###- Import jinja helpers
+###-
+//%- import 'helpers.jin' as h
+//%- from 'avl.jin' import func, section, endSection with context
+//%- from 'avl.jin' import vecReadCmp, vecWriteCmp, vecRetCmp with context
+//%- from 'avl.jin' import checkDim, checkCmpType with context
+//%- from 'avl.jin' import vecCreate, vecCreateRnd, vecCreateSeq with context
+//%- from 'avl.jin' import arrCreate, arrCreateRnd, arrCreateSeq with context
+//%- from 'avl.jin' import getRndInt, getRndFloat with context
+//%- from 'avl.jin' import loop_, loop_if, if_then with context
+###-
+###- Define global strings so that they can be used like variables
+###-
+//%- set vec = 'vec'
+//%- set arr = 'arr'
+//%- set _Idx = '_Idx'
+//%- set idx = 'idx'
+//%- set scalar = 'scalar'
+//%- set supplyScalar = '"Supply a scalar of the vectors element type."'
+//%- if type!="test"
+#ifndef AVL_$name.upper()@_$type.upper()@
+#define AVL_$name.upper()@_$type.upper()@
 
 #pragma once
-{% import 'helpers.jin' as h %}
 
 /// avl: A Vector Library
 /// \author Thomas Pollak
-namespace avl {
+namespace avl
+$'{\n'@
+//%- else
+#include "../../ext/catch/catch.hpp"
+#include "../../inc/avl.h"
+
+using namespace avl;
+
+//% endif
+$section("Helper functions")@
 	
-	{% if dim==0 %}
-	/// \defgroup Free functions for arbitrary vectors
-	/// @{
-	
-	//component type helper
-	avl_ainl_res constexpr auto cmp(const v& vec) noexcept -> rem_const_ref_t<decltype(vec[0])>{% if type=='h' %};
-	{% else %} {
-		return vec[0];
+	//% call func([0], "//Component type helper")
+	avl_ainl_res constexpr auto cmp(const $vecParam@& vec) noexcept -> $vecRetCmp(vec)@
+	{
+		return $vecReadCmp(vec, 0)@;
 	}
-	{% endif %}
-	
-	/// @name Getters and Setters
-	/// @{
-	
-	/// Set a single component by index from 0 to dim-1
-	avl_ainl constexpr auto set(v& vec, const s::size_t idx, const sc scalar) noexcept(ndebug) -> void{% if type=='h' %};
-	{% else %} {
-		static_assert(eq<decltype(vec[0]), decltype(scalar)>::value, "Supply a scalar of the vectors element type.");
-		assert(idx < dim< rem_const_ref_t< decltype(vec) > >::value);
-		vec[idx] = scalar;
+	test_case
+	{
+		$vecCreate(vec)@;
+		static_assert($checkCmpType(vec, 0, "cmp(vec)")@, $supplyScalar@);
 	}
-	{% endif %}
+	//% endcall
 	
-	/// Access the vector components as value by a range checked index (assert) from 0 to dim-1
-	avl_ainl_res constexpr auto get(const v& vec, const s::size_t idx) noexcept(ndebug) ->decltype(cmp(vec)){% if type=='h' %};
-	{% else %} {
-		//decltype(cmp(vec)) { //causes the compiler to crash
-		assert(idx < dim< rem_const_ref_t< decltype(vec) > >::value);
-		return vec[idx];
+$endSection()@
+$section("Getters and setters for all vectors")@
+	
+	//% call func([0], "///Access the vector components by a range checked index from 0 to dim-1")
+	avl_ainl_res constexpr auto get($vecParam@& vec, const s::size_t idx) noexcept(ndebug||exuse) -> decltype(cmp(vec))
+	{
+		assert($checkDim(vec, idx)@);
+		return $vecReadCmp(vec, idx)@;
 	}
-	{% endif %}
-	
-	/// Set a single component by index from 0 to dim-3
-	template<s::size_t _Idx>
-	avl_ainl constexpr auto set(v& vec, const sc scalar) noexcept -> void{% if type=='h' %};
-	{% else %} {
-		static_assert(eq<decltype(vec[_Idx]), decltype(scalar)>::value, "Supply a scalar of the vectors element type.");
-		static_assert(/*is_simd<decltype(vec)>::value ||*/ _Idx < dim< rem_const_ref_t< decltype(vec) > >::value, "Index out of range");
-		vec[_Idx] = scalar;
+	test_case
+	{
+		$vecCreateSeq(vec)@;
+		
+		//% for i in range(dim)
+		REQUIRE( get(vec, $i@) == Approx( $i@ ) );
+		//% endfor
 	}
-	{% endif %}
+	//% endcall
 	
-	/// Access the vector components as value by a range checked index (assert) from 0 to dim-1
-	template<s::size_t _Idx>
-	avl_ainl_res constexpr auto get(const v& vec) noexcept -> decltype(cmp(vec)){% if type=='h' %};
-	{% else %} {
-		//decltype(cmp(vec))  { //also yields a compiler problem (but not a segfault)
-		static_assert(/*is_simd<decltype(vec)>::value ||*/ _Idx < dim< rem_const_ref_t< decltype(vec) > >::value, "Index out of range");
-		return vec[_Idx];
+	//% call func([0], "/// Access the vector components by a static range checked index from 0 to dim-1")
+	template<s::size_t _Idx> avl_ainl_res constexpr auto get(const $vecParam@& vec) noexcept -> decltype(cmp(vec))
+	{
+		static_assert($checkDim(vec, _Idx)@, "Index is out of range");
+		return $vecReadCmp(vec, _Idx)@;
 	}
-	{% endif %}
+	test_case
+	{
+		$vecCreateSeq(vec)@;
+		
+		//% for i in range(dim)
+		REQUIRE( get<$i@>(vec) == Approx( $i@ ) );
+		//% endfor
+	}
+	//% endcall
 	
-	/// @}
-	/// @name Vector Length Operations
-	/// @{
+	//% call func([0], "///Set a single component by index from 0 to dim-1")
+	avl_ainl constexpr auto set($vecParam@& vec, const s::size_t idx, const $scalarParam@ scalar) noexcept(ndebug||exuse) -> void
+	{
+		static_assert($checkCmpType(vec, idx, scalar)@, $supplyScalar@);
+		assert($checkDim(vec, idx)@);
+		$vecWriteCmp(vec, idx, scalar)@;
+	}
+	test_case
+	{
+		$vecCreate(vec)@;
+		$arrCreateRnd(arr)@;
+		
+		//% for i in range(dim)
+		set(vec, $i@, arr[$i@]);
+		REQUIRE( get(vec, $i@) == Approx( arr[$i@] ) );
+		//% endfor
+	}
+	//% endcall
 	
-	/// Returns a new vector with the requested length
-	avl_ainl_res constexpr auto len_mk(const v& vec, const sc new_len) noexcept(ndebug){% if type=='h' %};
-	{% else %} {
-		assert(new_len!=decltype(new_len){0});
+	//% call func([0], "/// Set a single component by static index from 0 to dim-1")
+	template<s::size_t _Idx> avl_ainl constexpr auto set($vecParam@& vec, const $scalarParam@ scalar) noexcept -> void
+	{
+		static_assert($checkCmpType(vec, _Idx, scalar)@, $supplyScalar@);
+		static_assert($checkDim(vec, _Idx)@, "Index is out of range");
+		$vecWriteCmp(vec, _Idx, scalar)@;
+	}
+	test_case
+	{
+		$vecCreateSeq(vec)@;
+		$arrCreateRnd(arr)@;
+		
+		//% for i in range(dim)
+		set<$i@>(vec, arr[ $i@ ]);
+		REQUIRE( get(vec, $i@) == Approx( arr[$i@] ) );
+		//% endfor
+	}
+	//% endcall
+	
+$endSection()@
+$section("Dimension independent vector length operations")@
+	
+	//% call func([0], "/// Returns a new vector with the requested length")
+	avl_ainl_res constexpr auto len_mk(const $vecParam@& vec, const $scalarParam@ new_len) noexcept(ndebug|exuse)
+	{
+		const decltype(newlen) len = len(vec);
+		assert(len!=decltype(len){0});
 		return mul_mk(vec, new_len / len(vec));
 	}
-	{% endif %}
+	test_case
+	{
+		$vecCreateSeq(vec)@;
+		auto new_len = $getRndFloat()@;
+		auto len_vec = len_mk(vec, new_len);
+		auto res = len(len_vec);
+		
+		REQUIRE( res == Approx(new_len) );
+	}
+	//% endcall
 	
 	/// Set the length of the vector
-	avl_ainl constexpr auto len_set(v& vec, const sc new_len) noexcept -> void{% if type=='h' %};
-	{% else %} {
+	avl_ainl constexpr auto len_set(v& vec, const sc new_len) noexcept -> void/*% if type=='h' %*/;
+	/*% else %*/ {
 		assert(new_len!=decltype(new_len){0});
 		mul_set(vec, new_len / len(vec));
 	}
-	{% endif %}
+	/*% endif %*/
 	
 	/// Calculate the length of the vector, prefere len_sqr when comparing distances (faster)
-	avl_ainl_res constexpr auto len(const v& vec) noexcept -> decltype(cmp(vec)){% if type=='h' %};
-	{% else %} {
+	avl_ainl_res constexpr auto len(const v& vec) noexcept -> decltype(cmp(vec))/*% if type=='h' %*/;
+	/*% else %*/ {
 		//len_sqr will never return any negativ values so we can gurantee noexcept
 		return static_cast<decltype(cmp(vec))>( s::sqrt( len_sqr(vec) ) );
 	}
-	{% endif %}
+	/*% endif %*/
 	
 	/// Returns a normalized vector
-	avl_ainl_res constexpr auto norm_mk(const v& vec) noexcept(ndebug){% if type=='h' %};
-	{% else %} {
+	avl_ainl_res constexpr auto norm_mk(const v& vec) noexcept(ndebug)/*% if type=='h' %*/;
+	/*% else %*/ {
 		return div_mk(vec, len(vec)); //div might assert in debug
 	}
-	{% endif %}
+	/*% endif %*/
 	
 	/// Returns a normalized vector
-	avl_inl_res constexpr auto norm_mk(const v& vec, const v& vec_if_zero_len) noexcept(ndebug){% if type=='h' %};
-	{% else %} {
+	avl_inl_res constexpr auto norm_mk(const v& vec, const v& vec_if_zero_len) noexcept(ndebug)/*% if type=='h' %*/;
+	/*% else %*/ {
 		auto l = len(vec);
 		if(l==decltype(l){0})
 			return vec_if_zero_len;
 		else
 			return div_mk(vec, l); //div might assert in debug
 	}
-	{% endif %}
+	/*% endif %*/
 	
 	/// Normalize the current vector
-	avl_ainl constexpr auto norm_set(v& vec) noexcept(ndebug) -> void{% if type=='h' %};
-	{% else %} {
+	avl_ainl constexpr auto norm_set(v& vec) noexcept(ndebug) -> void/*% if type=='h' %*/;
+	/*% else %*/ {
 		div_set(vec, len(vec));
 	}
-	{% endif %}
+	/*% endif %*/
 	
 	/// Normalize the current vector
-	avl_inl constexpr auto norm_set(v& vec, const v& vec_if_zero_len) noexcept(ndebug) -> void{% if type=='h' %};
-	{% else %} {
+	avl_inl constexpr auto norm_set(v& vec, const v& vec_if_zero_len) noexcept(ndebug) -> void/*% if type=='h' %*/;
+	/*% else %*/ {
 		auto l = len(vec);
 		if(l==decltype(l){0})
 			set_all(vec, vec_if_zero_len);
 		else
 			div_set(vec, len(vec));
 	}
-	{% endif %}
+	/*% endif %*/
 	
 	/// Normalize the current vector
-	avl_ainl_res constexpr auto norm(v& vec) noexcept(ndebug) -> decltype(vec){% if type=='h' %};
-	{% else %} {
+	avl_ainl_res constexpr auto norm(v& vec) noexcept(ndebug) -> decltype(vec)/*% if type=='h' %*/;
+	/*% else %*/ {
 		div_set(vec, len(vec));
 		return vec;
 	}
-	{% endif %}
+	/*% endif %*/
 	
 	/// Normalize the current vector
-	avl_inl_res constexpr auto norm(v& vec, const v& vec_if_zero_len) noexcept(ndebug) -> decltype(vec){% if type=='h' %};
-	{% else %} {
+	avl_inl_res constexpr auto norm(v& vec, const v& vec_if_zero_len) noexcept(ndebug) -> decltype(vec)/*% if type=='h' %*/;
+	/*% else %*/ {
 		auto l = len(vec);
 		if(l==decltype(l){0})
 			set_all(vec, vec_if_zero_len);
@@ -142,190 +213,182 @@ namespace avl {
 			div_set(vec, len(vec));
 		return vec;
 	}
-	{% endif %}
+	/*% endif %*/
+
+$endSection()@
+$section("Dimension independent vector operations with scalar results")@
 	
-	/// @}
-	/// @name Vector Operations With Scalar Results
-	/// @{
-	
-	avl_ainl_res constexpr auto angle_rd(const v& vec, const v& other) noexcept -> decltype(cmp(vec)){% if type=='h' %};
-	{% else %} {
+	avl_ainl_res constexpr auto angle_rd(const v& vec, const v& other) noexcept -> decltype(cmp(vec))/*% if type=='h' %*/;
+	/*% else %*/ {
 		return s::acos( dot(vec, other) / (len(vec) * len(other)) );
 	}
-	{% endif %}
+	/*% endif %*/
 	
-// 	avl_ainl_res constexpr auto angle_dg(const v& vec, const v& other) noexcept -> decltype(cmp(vec)){% if type=='h' %};
-	{% else %} {
+// 	avl_ainl_res constexpr auto angle_dg(const v& vec, const v& other) noexcept -> decltype(cmp(vec))/*% if type=='h' %*/;
+	/*% else %*/ {
 // 		return s::acos( dot(vec, other) / (len(vec) * len(other)) ) * cnst<cmp>::to_deg;
 // 	}
-	{% endif %}
+	/*% endif %*/
 	
-	/// @}
-	
-	/// @}
-	{% else %}
-	/// \defgroup Free functions for {{dim}} component vectors
-	/// @{
-	
-	/// @name Getters and Setters
-	/// @{
+$endSection()@
+$section("Getter and setters for "+dim|string+" component vectors")@
 	
 	/// Set all vector components to the same scalar
-	avl_ainl constexpr auto set_all({{name}}& vec, const sc scalar) noexcept -> void{% if type=='h' %};
-	{% else %} {
+	avl_ainl constexpr auto set_all($name@& vec, const sc scalar) noexcept -> void/*% if type=='h' %*/;
+	/*% else %*/ {
 		static_assert(eq<decltype(vec[0]), decltype(scalar)>::value, "Supply a scalar of the vectors element type.");
-		{% for idx in range(dim) %}
-		vec[{{idx}}] = scalar;
-		{% endfor %}
-	} {% endif %}
+		/*% for idx in range(dim) %*/
+		vec[ $idx@ ] = scalar;
+		/*% endfor %*/
+	} /*% endif %*/
 	
 	/// Set all vector components individually
-	avl_ainl constexpr auto set_all({{name}}& vec{% for cmp in param %}, const sc {{cmp}}{% endfor %}) noexcept -> void{% if type=='h' %};
-	{% else %} {
-		{% for idx in range(dim) %}
-		static_assert(eq<decltype(vec[{{idx}}]), decltype({{param[idx]}})>::value, "Supply a scalar of the vectors element type for {{param[idx]}}.");
-		{% endfor %}
-		{% for idx in range(dim) %}
-		vec[{{idx}}] = {{param[idx]}};
-		{% endfor %}
+	avl_ainl constexpr auto set_all($name@& vec/*% for cmp in param %*/, const sc $cmp@/*% endfor %*/) noexcept -> void/*% if type=='h' %*/;
+	/*% else %*/ {
+		/*% for idx in range(dim) %*/
+		static_assert(eq<decltype(vec[ $idx@ ]), decltype($param[idx]@)>::value, "Supply a scalar of the vectors element type for $param[idx]@.");
+		/*% endfor %*/
+		/*% for idx in range(dim) %*/
+		vec[ $idx@ ] = $param[idx]@;
+		/*% endfor %*/
 	}
-	{% endif %}
+	/*% endif %*/
 	
 	/// Set all vector components individually
-	avl_ainl constexpr auto set_all({{name}}& vec, const sc scalars[{{dim}}]) noexcept -> void{% if type=='h' %};
-	{% else %} {
-		{% for idx in range(dim) %}
-		static_assert(eq<decltype(vec[{{idx}}]), decltype(scalars[{{idx}}])>::value, "Supply a scalar of the vectors element type.");
-		{% endfor %}
-		{% for idx in range(dim) %}
-		vec[{{idx}}] = scalars[{{idx}}];
-		{% endfor %}
+	avl_ainl constexpr auto set_all($name@& vec, const sc scalars[ $dim@ ]) noexcept -> void/*% if type=='h' %*/;
+	/*% else %*/ {
+		/*% for idx in range(dim) %*/
+		static_assert(eq<decltype(vec[ $idx@ ]), decltype(scalars[ $idx@ ])>::value, "Supply a scalar of the vectors element type.");
+		/*% endfor %*/
+		/*% for idx in range(dim) %*/
+		vec[ $idx@ ] = scalars[ $idx@ ];
+		/*% endfor %*/
 	}
-	{% endif %}
+	/*% endif %*/
 	
 	/// Set all vector components individually
 	template <s::size_t _Dim>
-	avl_ainl constexpr auto set_all({{name}}& vec, const sc* scalars) noexcept -> void{% if type=='h' %};
-	{% else %} {
-		static_assert(_Dim>={{dim}}, "Supply at least {{dim}} scalars.");
-		{% for idx in range(dim) %}
-		static_assert(eq<decltype(vec[{{idx}}]), decltype(scalars[{{idx}}])>::value, "Supply a scalar of the vectors element type.");
-		{% endfor %}
-		{% for idx in range(dim) %}
-		vec[{{idx}}] = scalars[{{idx}}];
-		{% endfor %}
+	avl_ainl constexpr auto set_all($name@& vec, const sc* scalars) noexcept -> void/*% if type=='h' %*/;
+	/*% else %*/ {
+		static_assert(_Dim>=$dim@, "Supply at least $dim@ scalars.");
+		/*% for idx in range(dim) %*/
+		static_assert(eq<decltype(vec[ $idx@ ]), decltype(scalars[ $idx@ ])>::value, "Supply a scalar of the vectors element type.");
+		/*% endfor %*/
+		/*% for idx in range(dim) %*/
+		vec[ $idx@ ] = scalars[ $idx@ ];
+		/*% endfor %*/
 	}
-	{% endif %}
+	/*% endif %*/
 	
-	/// @}
-	/// @name General Vector Operations
-	/// @{
-	{% for op_name, op in [("add", "+"), ("sub", "-"), ("mul", "*"), ("div", "/")] %}
+$endSection()@
+$section("General vector operations for "+dim|string+" component vectors")@
 	
-	// {{op_name}} make
+//% for op, s in [("add", "+"), ("sub", "-"), ("mul", "*"), ("div", "/")]
 	
-	avl_ainl_res constexpr auto {{op_name}}_mk(const {{name}}& vec, const {{name}}& other) noexcept{% if type=='h' %};
-	{% else %} {
-		{% if op_name=="div" %}
-		{% for idx in range(dim) %}
-		assert(get<{{idx}}>(other)!=decltype(other[{{idx}}]){0});
-		{% endfor %}
-		{% endif %}
-		return rem_const_ref_t< decltype(vec) > { {{ h.cmp_wise_op("get<?>(vec) @ get<?>(other)", op, ", ", dim) }} };
+	//% call func([2,3,4], '//make ' + op)
+	avl_ainl_res constexpr auto $op@_mk(const $vecParam@& vec, const $vecParam@& other) noexcept$if_then(op=="div", '(ndebug|exude)')@
+	{
+		//% call loop_if(op=="div", range(dim), '')
+		assert(get<?>(other)!=decltype(other[?]){0});
+		//% endcall
+		return rem_const_ref_t< decltype(vec) >
+			{/*% call loop_(range(dim)) %*/get<?>(vec) $s@ get<?>(other)/*% endcall %*/};
 	}
-	{% endif %}
+	test_case
+	{
+		
+	}
+	//% endcall
 	
-	avl_ainl_res constexpr auto {{op_name}}_mk(const {{name}}& vec, const sc scalar) noexcept{% if type=='h' %};
-	{% else %} {
-		{% if op_name=="div" %}
+	avl_ainl_res constexpr auto $op@_mk(const $name@& vec, const sc scalar) noexcept/*% if type=='h' %*/;
+	/*% else %*/ {
+		/*% if op=="div" %*/
 		assert(scalar!=decltype(scalar){0});
-		{% endif %}
-		return rem_const_ref_t< decltype(vec) > { {{ h.cmp_wise_op("get<?>(vec) @ scalar", op, ", ", dim) }} };
+		/*% endif %*/
+		return rem_const_ref_t< decltype(vec) > { $ h.cmp_wise_op("get<?>(vec) @ scalar", s, ", ", dim) @ };
 	}
-	{% endif %}
+	/*% endif %*/
 	
-	// {{op_name}} set
+	// $op@ set
 	
-	avl_ainl constexpr auto {{op_name}}_set({{name}}& vec, const {{name}}& other) noexcept -> void{% if type=='h' %};
-	{% else %} {
-		{% if op_name=="div" %}
-		{% for idx in range(dim) %}
-		assert(get<{{idx}}>(other)!=decltype(other[{{idx}}]){0});
-		{% endfor %}
-		{% endif %}
-		set_all(vec, {{ h.cmp_wise_op("get<?>(vec) @ get<?>(other)", op, ", ", dim) }} );
+	avl_ainl constexpr auto $op@_set($name@& vec, const $name@& other) noexcept -> void/*% if type=='h' %*/;
+	/*% else %*/ {
+		/*% if op=="div" %*/
+		/*% for idx in range(dim) %*/
+		assert(get<$idx@>(other)!=decltype(other[ $idx@ ]){0});
+		/*% endfor %*/
+		/*% endif %*/
+		set_all(vec, $ h.cmp_wise_op("get<?>(vec) @ get<?>(other)", s, ", ", dim) @ );
 	}
-	{% endif %}
+	/*% endif %*/
 	
-	avl_ainl constexpr auto {{op_name}}_set({{name}}& vec, const sc scalar) noexcept -> void{% if type=='h' %};
-	{% else %} {
-		{% if op_name=="div" %}
+	avl_ainl constexpr auto $op@_set($name@& vec, const sc scalar) noexcept -> void/*% if type=='h' %*/;
+	/*% else %*/ {
+		/*% if op=="div" %*/
 		assert(scalar!=decltype(scalar){0});
-		{% endif %}
-		set_all(vec, {{ h.cmp_wise_op("get<?>(vec) @ scalar", op, ", ", dim) }} );
+		/*% endif %*/
+		set_all(vec, $ h.cmp_wise_op("get<?>(vec) @ scalar", s, ", ", dim) @ );
 	}
-	{% endif %}
+	/*% endif %*/
 	
-	// {{op_name}} (chaining)
+	// $op@ (chaining)
 	
-	avl_ainl_res constexpr auto {{op_name}}({{name}}& vec, const {{name}}& other) noexcept -> decltype(vec){% if type=='h' %};
-	{% else %} {
-		{% if op_name=="div" %}
-		{% for idx in range(dim) %}
-		assert(get<{{idx}}>(other)!=decltype(other[{{idx}}]){0});
-		{% endfor %}
-		{% endif %}
-		set_all(vec, {{ h.cmp_wise_op("get<?>(vec) @ get<?>(other)", op, ", ", dim) }} );
+	avl_ainl_res constexpr auto $op@($name@& vec, const $name@& other) noexcept -> decltype(vec)/*% if type=='h' %*/;
+	/*% else %*/ {
+		/*% if op=="div" %*/
+		/*% for idx in range(dim) %*/
+		assert(get<$idx@>(other)!=decltype(other[ $idx@ ]){0});
+		/*% endfor %*/
+		/*% endif %*/
+		set_all(vec, $ h.cmp_wise_op("get<?>(vec) @ get<?>(other)", s, ", ", dim) @ );
 		return vec;
 	}
-	{% endif %}
+	/*% endif %*/
 	
-	avl_ainl_res constexpr auto {{op_name}}({{name}}& vec, const sc scalar) noexcept -> decltype(vec){% if type=='h' %};
-	{% else %} {
-		{% if op_name=="div" %}
+	avl_ainl_res constexpr auto $op@($name@& vec, const sc scalar) noexcept -> decltype(vec)/*% if type=='h' %*/;
+	/*% else %*/ {
+		/*% if op=="div" %*/
 		assert(scalar!=decltype(scalar){0});
-		{% endif %}
-		set_all(vec, {{ h.cmp_wise_op("get<?>(vec) @ scalar", op, ", ", dim) }} );
+		/*% endif %*/
+		set_all(vec, $ h.cmp_wise_op("get<?>(vec) @ scalar", s, ", ", dim) @ );
 		return vec;
 	}
-	{% endif %}
-	{% endfor %}
+	/*% endif %*/
+//% endfor
 	
-	{% if dim==2 %}
-	{% include 'v2.jin' %}
-	{% elif dim==3 %}
-	{% include 'v3.jin' %}
-	{% else%}
-	{% include 'v4.jin' %}
-	{% endif %}
+	/*% if dim==2 %*/
+	/*% include 'v2.jin' %*/
+	/*% elif dim==3 %*/
+	/*% include 'v3.jin' %*/
+	/*% else%*/
+	/*% include 'v4.jin' %*/
+	/*% endif %*/
 	
-	/// @}
-	/// @name Vector Length Operations
-	/// @{
+$endSection()@
+$section("Vector length operations for "+dim|string+" component vectors")@
 	
 	/// Calculate the square length of the vector
-	avl_ainl_res constexpr auto len_sqr(const {{name}}& vec) noexcept -> decltype(cmp(vec)){% if type=='h' %};
-	{% else %} {
-		{% for idx in range(dim) %}
-		const auto cmp{{idx}} = get<{{idx}}>(vec);
-		{% endfor %}
-		return {{ h.cmp_wise_op("cmp? @ cmp?", "*", " + ", dim) }};
+	avl_ainl_res constexpr auto len_sqr(const $name@& vec) noexcept -> decltype(cmp(vec))/*% if type=='h' %*/;
+	/*% else %*/ {
+		/*% for idx in range(dim) %*/
+		const auto cmp$idx@ = get<$idx@>(vec);
+		/*% endfor %*/
+		return $ h.cmp_wise_op("cmp? @ cmp?", "*", " + ", dim) @;
 	}
-	{% endif %}
+	/*% endif %*/
 	
-	/// @}
-	/// @name Vector Operations With Scalar Results
-	/// @{
+$endSection()@
+$section("Vector operations with scalar results for "+dim|string+" component vectors")@
 	
-	avl_ainl_res constexpr auto dot(const {{name}}& vec, const {{name}}& other) noexcept -> decltype(cmp(vec)){% if type=='h' %};
-	{% else %} {
-		return {{ h.cmp_wise_op("get<?>(vec) @ get<?>(other)", "*", " + ", dim) }};
+	avl_ainl_res constexpr auto dot(const $name@& vec, const $name@& other) noexcept -> decltype(cmp(vec))/*% if type=='h' %*/;
+	/*% else %*/ {
+		return $ h.cmp_wise_op("get<?>(vec) @ get<?>(other)", "*", " + ", dim) @;
 	}
-	{% endif %}
+	/*% endif %*/
 	
-	/// @}
-	
-	/// @}
-	{% endif %}
+$endSection()@
+
+//% if type!='test'
 }
-#endif // AVL_{{name.upper()}}_{{type.upper()}}
+#endif // AVL_$name.upper()@_$type.upper()@
+//%- endif

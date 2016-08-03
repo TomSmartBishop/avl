@@ -7,15 +7,17 @@ IGNORE_JINJA_TEMPLATES = [
 ]
 
 EXTRA_VARIABLES = {
-    'name': 'v',
-    'dim': 0,
-    'type': 'h',
-    'param': [ 'x', 'y'] #temp
+    'name': 'v3',
+    'dim': 3,
+    'type': 'test',
+    'param': [ 'x', 'y', 'z'], #temp
+    'test_vecDef': 'vec3<float>',
+    'test_scalarDef': 'float'
 }
 EXTRA_VARIABLES.update(TYPE_INFO)
 
 OUTPUT_OPTIONS = {
-    'extension': '.h',
+    'extension': '_test.cpp',
     'remove_double_extension': False
 }
 
