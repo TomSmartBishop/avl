@@ -117,11 +117,11 @@ Apart from learning...
 ---
 
 * Simple interfaces **really simple!** Headers should look clean.
-  This would ideally look somewhat like this
+  This would ideally look somewhat like this:
   ```[C++]
   void add_set(v2& vec, const v2& other);
   ```
- But I already explained about the trailing return types and we also want to take advantage of other C&plus;&plus; features like `noexcept` and `constexpr`, so let's refine the minimum:
+  But I already explained about the trailing return types and we also want to take advantage of other C&plus;&plus; features like `noexcept` and `constexpr`, so let's refine the minimum:
   ```[C++]
   constexpr auto add_set(v2& vec, const v2& other) noexcept -> void;
   ```
