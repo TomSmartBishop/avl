@@ -1,18 +1,22 @@
 # -*- coding: utf-8 -*-
+from jinja_settings import *
 
 IGNORE_JINJA_TEMPLATES = [
-    '.*base.jinja',
-    '.*tests/.*'
 ]
 
 EXTRA_VARIABLES = {
-    'name': 'v2',
+    'filename': 'v2',
+    'vecPar': 'v2',
+    'scalarPar': 'sc',
     'dim': 2,
     'param': [ 'x', 'y'],
-    'type': 'h'
+    'filetype': 'h'
 }
+EXTRA_VARIABLES.update(TYPE_INFO)
 
 OUTPUT_OPTIONS = {
     'extension': '2.h',
     'remove_double_extension': False
 }
+
+JINJA_ENVIRONMENT = GLOBAL_JINJA_ENVIRONMENT

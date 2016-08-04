@@ -4,10 +4,12 @@ IGNORE_JINJA_TEMPLATES = [
 ]
 
 EXTRA_VARIABLES = {
-    'name': 'v3',
+    'filename': 'v3',
+    'vecPar': 'v3',
+    'scalarPar': 'sc',
     'dim': 3,
     'param': [ 'x', 'y', 'z'],
-    'type': 'inl'
+    'filetype': 'inl'
 }
 
 OUTPUT_OPTIONS = {

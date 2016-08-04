@@ -7,9 +7,11 @@ IGNORE_JINJA_TEMPLATES = [
 ]
 
 EXTRA_VARIABLES = {
-    'name': 'v',
+    'filename': 'v',
+    'vecPar': 'v',
+    'scalarPar': 'sc',
     'dim': 0,
-    'type': 'h',
+    'filetype': 'h',
     'param': [ 'x', 'y'] #temp
 }
 EXTRA_VARIABLES.update(TYPE_INFO)

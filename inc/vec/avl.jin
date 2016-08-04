@@ -1,23 +1,24 @@
 ### Macro that will split a function into header, inline and test file
 //% macro func(list_supportedDims, desc)
 //%   set currentDimMatches = (list_supportedDims|join).find(dim|string) != -1
-//%   set ident = caller()|length - caller().lstrip()|length
-//%   if type=='h' and currentDimMatches
+//%   set content = caller()
+//%   set ident = content|length - content.lstrip()|length
+//%   if filetype=='h' and currentDimMatches
 $'\t'*ident + desc@
-$caller().split('\n')|first@;
+$content.split('\n')|first@;
 $'\t'*ident@
-//%  elif type=='inl' and currentDimMatches
+//%  elif filetype=='inl' and currentDimMatches
 $"\t"*ident + desc@
-$(caller().split("test_case")|first)@
-//%  elif type=='test' and (currentDimMatches or list_supportedDims == [0])
+$(content.split("test_case")|first)@
+//%  elif filetype=='test' and (currentDimMatches or list_supportedDims == [0])
 $"\t"*ident + 'SECTION("' + desc.lstrip('/') + '")'@
-$(caller().split("test_case")|last).rstrip("\t").strip("\n")@
+$(content.split("test_case")|last).rstrip("\t").strip("\n")@
 $"\t"*ident@
 //%  endif
 //% endmacro
 
 //% macro section(desc)
-//%   if type=='test'
+//%   if filetype=='test'
 TEST_CASE( "$desc@", "[$test_vecDef@($dim@)]" )
 $'{'@
 //%-  else
@@ -26,7 +27,7 @@ $'\t/// \defgroup ' + desc +'\n\t/// \\{'@
 //%-endmacro
 
 //% macro endSection()
-//%   if type=='test'
+//%   if filetype=='test'
 $'}'@
 //%   else
 $'\t/// \\}'@
@@ -72,6 +73,20 @@ $vecCreate(vecVar) + ' = { ' + seqRnd() + ' }'@
 $vecCreate(vecVar) + ' = { ' + seq() + ' }'@
 //%-endmacro
 
+### Create a vector initialized with a sequence from 0 to dim-1
+//% macro vecCreateZero(vecVar)
+$vecCreate(vecVar)@ = { /*% call loop_(range(dim)) %*/0/*% endcall %*/ }
+//%-endmacro
+
+
+//% macro scalarCreate(scalarVar)
+$test_scalarDef|default + ' ' + scalarVar@
+//%-endmacro
+
+//% macro scalarCreateRnd(scalarVar)
+$test_scalarDef|default + ' ' + scalarVar@ = { $getRndFloat()@ }
+//%-endmacro
+
 //% macro arrCreate(arrayVar)
 $test_scalarDef|default +'[] ' + arrayVar@
 //%-endmacro
@@ -90,19 +105,22 @@ $arrCreate(arrayVar) + ' = { ' + seq() + ' }'@
 //%     if not loop.first
 $', '@
 //%-    endif
-$'%1.3f'%random_floats[random_index]@
-//%-    set random_index = (random_index + 1) % random_len
+$'%1.3f'%random_floats[rnd.index]@
+//%-    if rnd.update({ 'index': (rnd.index+1)%rnd.length})
+//%-    endif
 //%-  endfor
 //%-endmacro
 
 //% macro getRndInt()
-$random_ints[random_index]@
-//%-set random_index = (random_index + 1) % random_len
+$random_ints[rnd.index]@
+//%-if rnd.update({ 'index': (rnd.index+1)%rnd.length})
+//%-endif
 //%-endmacro
 
 //% macro getRndFloat()
-$random_floats[random_index]@
-//%-set random_index = (random_index + 1) % random_len
+$random_floats[rnd.index]@
+//%-if rnd.update({ 'index': (rnd.index+1)%rnd.length})
+//%-endif
 //%-endmacro
 
 ### Create a comma separated sequence from 0 to dim-1
@@ -120,7 +138,7 @@ $index@
 //%     if not loop.first
 $separator@
 //%-    endif
-$caller()|replace('?', i)@
+$caller()|replace('#', i)@
 //%-  endfor
 //%-endmacro
 
@@ -130,7 +148,7 @@ $caller()|replace('?', i)@
 //%       if not loop.first
 $separator@
 //%-      endif
-$caller()|replace('?', i)@
+$caller()|replace('#', i)@
 //%-   endfor
 //%- endif
 //%-endmacro

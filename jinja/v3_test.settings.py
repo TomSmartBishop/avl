@@ -7,9 +7,10 @@ IGNORE_JINJA_TEMPLATES = [
 ]
 
 EXTRA_VARIABLES = {
-    'name': 'v3',
+    'vecPar': 'v2',
+    'scalarPar': 'sc',
     'dim': 3,
-    'type': 'test',
+    'filetype': 'test',
     'param': [ 'x', 'y', 'z'], #temp
     'test_vecDef': 'vec3<float>',
     'test_scalarDef': 'float'
