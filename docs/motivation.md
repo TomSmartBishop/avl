@@ -74,12 +74,13 @@ Apart from learning...
 
 * Use trailing return types everywhere.
   When using templates or concepts there are a lot of cases where we need trailing return types. And mixing the 'old style' and trailing return types is quite ugly. Of course since C&plus;&plus;14 we could just entirely skip the return type and just write 'auto', but I find that confusing for the API user if you cannot see the return type from the function signature. Also it feels quite natural to first specify the input and then the output.
-  ```C++
+  
+  ```c++
   //first two float inputs and then the float output
   auto func1(float in1, float in2) -> float;
   ```
   VS
-  ```C++
+  ```c++
   //first the float output and then the two float inputs
   float func2(float in1, float in2);
   ```
@@ -88,7 +89,8 @@ Apart from learning...
 
 * To avoid code duplication and also allow `constexpr` I rely on the 'Uniform Call Syntax' proposal:
   http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0301r1.html
-  ```C++
+  
+  ```c++
   add_set(v1,v2);
   //will be the same as
   v1.add_set(v2);
@@ -98,18 +100,20 @@ Apart from learning...
 ---
 
 * Operations should offer a way to modify the actual vector or create a new vector.
-  ```C++
+
+  ```c++
   //result will create (make) a new vector
   auto v3 = add_mk(v1,v2);
   ```
   Comment: I didn't want to use `add_new` since `new` has another meaning in C++
-  ```C++
+  ```c++
   //result will be applied to the vector
   add_set(v1,v2);
   ```
 
 * And also allow operator chaining:
-  ```C++
+
+  ```c++
   vec_a.add(vec_b).mul(scalar_x).sub(vec_c).div_set(scalar_y);
   ```
   >Note that the last operation uses div_set instead of div, since div would return the 'this' reference again and therefore produce a warning (unused return value).
@@ -118,18 +122,20 @@ Apart from learning...
 
 * Simple interfaces **really simple!** Headers should look clean.
   This would ideally look somewhat like this:
-  ```C++
+  
+  ```c++
   void add_set(v2& vec, const v2& other);
   ```
   But I already explained about the trailing return types and we also want to take advantage of other C&plus;&plus; features like `noexcept` and `constexpr`, so let's refine the minimum:
-  ```C++
+  ```c++
   constexpr auto add_set(v2& vec, const v2& other) noexcept -> void;
   ```
 
 ---
 
 * (Simple interfaces cont.) And I still want to control wheater the compiler should inline a function and also warn the user about unused return types and therefore need one more additional token, sp that my current interface looks like:
-  ```C++
+
+  ```c++
   //             Trailing return
   //  Inline and     type                          Won't trough an exception
   //return options     |                                neither asserts
@@ -165,28 +171,30 @@ Apart from learning...
 
 * To achieve max compatiblity while still being explicit about all used types &plus; the desire to get simple interfaces I initially decided to use C&plus;&plus; concepts (currently only supported by GCC-6 with the -fconcepts switch).
   Instead of complicated function signatues like this:
-  ```C++
+
+  ```c++
   template<typename T, std::enable_if<std::is_same<T, MyVec>>>
   constexpr auto add(T& v1, const T& v2) -> T;
   ```
   Concepts allow us to shorten the same to:
-  ```C++
+  ```c++
   constexpr auto add(MyVec& v1, const MyVec& v2) -> MyVec; //MyVec is a concept
   ```
   However there is another factor about that made me rethink that approach.
 
 ---
 
-* Eliminate "copy &amp; paste &plus; modify" code. This unfortunately happens frequently when creating similar classes (but not the same).
+* Eliminate 'copy &amp; paste &plus; modify' code. This unfortunately happens frequently when creating similar classes (but not the same).
   A short sample:
-  ```C++
+
+  ```c++
   avl_ainl_res constexpr auto add(v2& vec, const v2& other) noexcept -> decltype(vec) {
     set_all(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other) );
     return vec;
   }
   ```
   And almost the same:
-  ```C++
+  ```c++
   avl_ainl_res constexpr auto sub(v2& vec, const v2& other) noexcept -> decltype(vec) {
     set_all(vec, get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other) );
     return vec;
@@ -195,16 +203,17 @@ Apart from learning...
   And there are even tricker versions...
 
 ---
-* (Eliminate "copy &amp; paste &plus; modify" cont. 1) The difference between v2 and v3  (and v4) is often only one parameter following a pettern.
 
-  ```C++
+* (Eliminate 'copy &amp; paste &plus; modify' cont. 1) The difference between v2 and v3  (and v4) is often only one parameter following a pettern.
+
+  ```c++
   avl_ainl_res constexpr auto add(v2& vec, const v2& other) noexcept -> decltype(vec) {
     set_all(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other) );
     return vec;
   }
   ```
   Quite similar:
-  ```C++
+  ```c++
   avl_ainl_res constexpr auto add(v3& vec, const v3& other) noexcept -> decltype(vec) {
 	set_all(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other), get<2>(vec) + get<2>(other) );
 	return vec;
@@ -214,8 +223,9 @@ Apart from learning...
 
 ---
 
-* (Eliminate "copy &amp; paste &plus; modify" cont. 2) All these functions could be expressed like this:
-  ```C++
+* (Eliminate 'copy &amp; paste &plus; modify' cont. 2) All these functions could be expressed like this:
+
+  ```c++
   avl_ainl_res constexpr auto __OP_NAME__(VEC_T& vec, const VEC_T& other) noexcept -> decltype(vec) {
 	set_all(vec, __FOR__(__DIM__){ get<__IDX__>(vec) __OP__ get<__IDX__>(other)) } );
 	return vec;
@@ -226,8 +236,10 @@ Apart from learning...
   So I first started into looking at existing template engines. After some research I found that Jinja could be a fit for this: http://jinja.pocoo.org/ It is a python based template engine API (also used by Mozilla, Instagram, Google, ...) and there is also a stand-alone version (if you don't want to work directly with the API): https://github.com/filwaitman/jinja2-standalone-compiler
 
 ---
-* (Eliminate "copy &amp; paste &plus; modify" cont. 3) Writing this in Jinja looks like this:
-  ```C++
+
+* (Eliminate 'copy &amp; paste &plus; modify' cont. 3) Writing this in Jinja looks like this:
+
+  ```c++
   avl_ainl_res constexpr auto {{op_name}}({{vec_type}}& vec, const {{vec_type}}& other) noexcept -> decltype(vec) {
     set_all(vec, {{ helper.cmp_wise_op("get<?>(vec) @ get<?>(other)", op, ", ", dim) }} );
     return vec;
@@ -236,8 +248,10 @@ Apart from learning...
   With Jinja I can loop over this template for eg. add, sub, mul and div for every vector type and output the result into a source file - so all vector types and operations are always in sync, also when changing the interface. Seemed good at the beginning but unfortunately we are not done yet.
 
 ---
-* (Eliminate "copy &amp; paste &plus; modify" cont. 4) At some point it is not possible any more to implement everything in the header (cyclic depndencies) so I have to seperate header and inline files and also handle asserts/exceptions, so the intial template changes a bit:
-  ```C++
+
+* (Eliminate 'copy &amp; paste &plus; modify' cont. 4) At some point it is not possible any more to implement everything in the header (cyclic depndencies) so I have to seperate header and inline files and also handle asserts/exceptions, so the intial template changes a bit:
+
+  ```c++
   avl_ainl_res constexpr auto {{op_name}}({{vec_type}}& vec, const {{vec_type}}& other) noexcept -> decltype(vec){% if type=='h' %};
 	{% else %} {
         {% if op_name=="div" %}
@@ -251,9 +265,12 @@ Apart from learning...
     {% endif %}
   ```
   Ok... now it's getting a bit more complicated. This is hard to read and maintain.
+  
 ---
-* (Eliminate "copy &amp; paste &plus; modify" cont. 5) But when forgetting a second about the complexity I could additionally append a test block to every function and generate testcases like it is possible in dlang:
-  ```C++
+
+* (Eliminate 'copy &amp; paste &plus; modify' cont. 5) But when forgetting a second about the complexity I could additionally append a test block to every function and generate testcases like it is possible in dlang:
+
+  ```c++
     ...
     return vec;
   }
@@ -269,29 +286,35 @@ Apart from learning...
   This would be nice because I could create test for multiple types as well (eg. flost, double, long double, ...). Unfortunately the syntax is quite alienating for C&plus;&plus; programmers.
 
 ---
-* (Eliminate "copy &amp; paste &plus; modify" cont. 6) So I was looking into alternatives to make it more readable and maintainable. C&plus;&plus; macros don't work since you cannot pass arbitraty argumnets into a macro (eg. the comma). And after some time I already through away the idea of an own templating engine with clang libTooling or boost.sprit/boost.wave. So i looked into ways how to customize jinja to feel more C&plus;&plus; native.
+
+* (Eliminate 'copy &amp; paste &plus; modify' cont. 6) So I was looking into alternatives to make it more readable and maintainable. C&plus;&plus; macros don't work since you cannot pass arbitraty argumnets into a macro (eg. the comma). And after some time I already through away the idea of an own templating engine with clang libTooling or boost.sprit/boost.wave. So i looked into ways how to customize jinja to feel more C&plus;&plus; native.
 
   So I reconfigure the start and end tags to be embedded into C++ comments
-  ```C++
+
+  ```c++
   {% jinja statement %}
   /*% jinja statement %*/
   ```
   And line statements as well:
-  ```C++
+  ```c++
   # jinja line statement 
   //% jinja line statement
   ```
   
 ---
-* (Eliminate "copy &amp; paste &plus; modify" cont. 7) For expressions it's not so simple (since I don't want them to dissappear in comments). Jinja requires the start and stop symbol(s) to be differnt (the default `{{` and `}}` is quite confusing). First I was thinking about `[[` and `]]`, but this is already used for C&plus;&plus; attributes, eg. `[[Fallthrough]]`. After quite some time of experimentation I turned to a single character approch (shorter is simpler) and used the only still available wildcards in C&plus;&plus;: `$` and `@`
-  ```C++
+
+* (Eliminate 'copy &amp; paste &plus; modify' cont. 7) For expressions it's not so simple (since I don't want them to dissappear in comments). Jinja requires the start and stop symbol(s) to be differnt (the default `{{` and `}}` is quite confusing). First I was thinking about `[[` and `]]`, but this is already used for C&plus;&plus; attributes, eg. `[[Fallthrough]]`. After quite some time of experimentation I turned to a single character approch (shorter is simpler) and used the only still available wildcards in C&plus;&plus;: `$` and `@`
+
+  ```c++
   {{jinja expression}}
   $jinja expression@
   ```
   So let's take a look how this looks in code...
+
 ---
-* (Eliminate "copy &amp; paste &plus; modify" cont. 8)
-  ```C++
+
+* (Eliminate 'copy &amp; paste &plus; modify' cont. 8)
+  ```c++
   //% for op, s in [("add", "+"), ("sub", "-"), ("mul", "*"), ("div", "/")]
 	
 	//% call func([2,3,4], '//make ' + op)
@@ -309,6 +332,7 @@ Apart from learning...
     ...
   //% endfor
   ```
+
 ---
 
 ## Drawbacks
