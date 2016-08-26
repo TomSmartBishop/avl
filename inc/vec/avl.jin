@@ -78,6 +78,9 @@ $vecCreate(vecVar) + ' = { ' + seq() + ' }'@
 $vecCreate(vecVar)@ = { /*% call loop_(range(dim)) %*/0/*% endcall %*/ }
 //%-endmacro
 
+//% macro scalarType()
+$test_scalarDef|default@
+//%-endmacro
 
 //% macro scalarCreate(scalarVar)
 $test_scalarDef|default + ' ' + scalarVar@

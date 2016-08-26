@@ -9,11 +9,12 @@
 //%- from 'avl.jin' import arrCreate, arrCreateRnd, arrCreateSeq with context
 //%- from 'avl.jin' import getRndInt, getRndFloat with context
 //%- from 'avl.jin' import loop_, loop_if, if_then with context
-//%- from 'avl.jin' import scalarCreate, scalarCreateRnd with context
+//%- from 'avl.jin' import scalarType, scalarCreate, scalarCreateRnd with context
 ###-
 ###- Define global strings so that they can be used like variables
 ###-
 //%- set vec = 'vec'
+//%- set unit_vec = 'unit_vec'
 //%- set arr = 'arr'
 //%- set _Idx = '_Idx'
 //%- set idx = 'idx'
@@ -24,6 +25,8 @@
 #define AVL_$filename.upper()@_$filetype.upper()@
 
 #pragma once
+
+#include "../helper/const.h"
 
 /// avl: A Vector Library
 /// \author Thomas Pollak
@@ -127,54 +130,61 @@ $endSection()@
 $section("Dimension independent vector length operations")@
 	
 	//% call func([0], "/// Returns a new vector with the requested length")
-	avl_ainl_res constexpr auto len_mk(const $vecPar@& vec, const $scalarPar@ new_len) noexcept(ndebug|exuse)
+	avl_ainl_res constexpr auto setlen_mk(const $vecPar@& vec, const $scalarPar@ new_len) noexcept(ndebug|exuse)
 	{
 		const decltype(newlen) length = len(vec);
-		assert(length!=decltype(length){0});
+		assert(length!=cnst<decltype(length)>::zero);
 		return mul_mk(vec, new_len / length));
 	}
 	test_case
 	{
 		$vecCreateRnd(vec)@;
 		auto new_len = $getRndFloat()@;
-		auto len_vec = len_mk(vec, new_len);
+		auto len_vec = setlen_mk(vec, new_len);
 		auto res = len(len_vec);
 		
 		REQUIRE( res == Approx(new_len) );
 		
 		//test edge case 0.0
-		decltype(new_len) zero = {0};
-		auto zero_vec = len_mk(vec, zero);
+		auto zero_vec = setlen_mk(vec, cnst<$scalarType()@>::zero);
 		//% for i in range(dim)
-		REQUIRE( get<$i@>(zero_vec) == Approx( zero ) );
+		REQUIRE( get<$i@>(zero_vec) == Approx( cnst<$scalarType()@>::zero ) );
 		//% endfor
 	}
 	//% endcall
-	
-	//% call func([0], "/// Set the length of the vector")
-	avl_ainl constexpr auto len_set($vecPar@& vec, const $scalarPar@ new_len) noexcept(ndebug|exuse) -> void
+
+//%for mut, rt, res, info in [('_set', '-> void', '', ''), ('', '-> decltype(cmp(vec))', '_res', ' and return the same vector (chained)')]
+	//% call func([0], "/// Set the length of the vector"+info)
+	avl_ainl$res@ constexpr auto setlen$mut@($vecPar@& vec, const $scalarPar@ new_len) noexcept(ndebug|exuse) $rt@
 	{
 		const decltype(newlen) length = len(vec);
-		assert(length!=decltype(length){0});
+		assert(length!=cnst<decltype(length)>::zero);
 		mul_set(vec, new_len / length);
+		//% if mut==''
+		return vec;
+		//% endif
 	}
 	test_case
 	{
 		$vecCreateRnd(vec)@;
 		auto new_len = $getRndFloat()@;
-		len_set(vec, new_len);
+		$if_then(mut=='', 'auto ret = ')@setlen$mut@(vec, new_len);
 		auto res = len(vec);
 		
 		REQUIRE( res == Approx(new_len) );
 		
+		//% if mut==''
+		REQUIRE( &vec == &ret);
+		//% endif
+		
 		//test edge case 0.0
-		decltype(new_len) zero = {0};
-		len_set(vec, zero);
+		len_set(vec, cnst<$scalarType()@>::zero);
 		//% for i in range(dim)
-		REQUIRE( get<$i@>(vec) == Approx( zero ) );
+		REQUIRE( get<$i@>(vec) == Approx( cnst<$scalarType()@>::zero ) );
 		//% endfor
 	}
 	//% endcall
+//% endfor
 	
 	//% call func([0], "/// Calculate the length of the vector, prefere len_sqr when comparing distances")
 	avl_ainl_res constexpr auto len(const $vecPar@& vec) noexcept -> decltype(cmp(vec))
@@ -192,69 +202,97 @@ $section("Dimension independent vector length operations")@
 		//test edge case 0.0
 		$vecCreateZero(vec)@;
 		auto res = len(vec);
-		decltype(res) zero = {0};
 		//% for i in range(dim)
-		REQUIRE( get<$i@>(vec) == Approx( zero ) );
+		REQUIRE( get<$i@>(vec) == Approx( cnst<$scalarType()@>::zero ) );
 		//% endfor
 	}
 	//% endcall
 	
-	/// Returns a normalized vector
-	avl_ainl_res constexpr auto norm_mk(const v& vec) noexcept(ndebug)/*% if filetype=='h' %*/;
-	/*% else %*/ {
-		return div_mk(vec, len(vec)); //div might assert in debug
-	}
-	/*% endif %*/
-	
-	/// Returns a normalized vector
-	avl_inl_res constexpr auto norm_mk(const v& vec, const v& vec_if_zero_len) noexcept(ndebug)/*% if filetype=='h' %*/;
-	/*% else %*/ {
+//%- set altParamDesc = ', use alternative vector if the current vector length is 0'
+//% for zeroLenParam, ex, info in [('', '(ndebug||exuse)', ''), (', const '+vecPar+'& vec_if_zero_len', '', altParamDesc)]
+	//% call func([0], "/// Returns a normalized vector" + info)
+	avl_ainl_res constexpr auto norm_mk(const $vecPar@& vec $zeroLenParam@) noexcept$ex@ -> decltype(vec)
+	{
 		auto l = len(vec);
-		if(l==decltype(l){0})
+		//% if zeroLenParam!=''
+		if(l==cnst<decltype(l)>::zero)
 			return vec_if_zero_len;
-		else
-			return div_mk(vec, l); //div might assert in debug
+		//% endif
+		return div_mk(vec, l); //div might assert in debug
 	}
-	/*% endif %*/
-	
-	/// Normalize the current vector
-	avl_ainl constexpr auto norm_set(v& vec) noexcept(ndebug) -> void/*% if filetype=='h' %*/;
-	/*% else %*/ {
-		div_set(vec, len(vec));
+	test_case
+	{
+		//% if zeroLenParam==''
+		$vecCreateRnd(vec)@;
+		auto res = norm_mk(vec);
+		auto new_len = len(res);
+		REQUIRE( new_len == Approx( cnst<$scalarType()@>::one ) );
+		//% else
+		$vecCreateZero(vec)@;
+		auto zero_len = len(res)
+		REQUIRE( zero_len == Approx( cnst<$scalarType()@>::zero ) );
+		
+		$vecCreateZero(unit_vec)@;
+		set<0>(unit_vec, cnst<$scalarType()@>::one);
+		
+		auto res = norm_mk(vec, unit_vec);
+		auto len = len(res);
+		REQUIRE( len == Approx( cnst<$scalarType()@>::one ) );
+		REQUIRE( get<0>(res) == Approx( cnst<$scalarType()@>::one ) );
+		//% endif
 	}
-	/*% endif %*/
+	//% endcall
+//% endfor
 	
-	/// Normalize the current vector
-	avl_inl constexpr auto norm_set(v& vec, const v& vec_if_zero_len) noexcept(ndebug) -> void/*% if filetype=='h' %*/;
-	/*% else %*/ {
+//% for mut, rt, res, info1 in [('_set', '-> void', '', ''), ('', '-> decltype(cmp(vec))', '_res', ' and return the same vector (chained)')]
+//%   for zeroLenParam, info2 in [('', ''), (', const '+vecPar+'& vec_if_zero_len', altParamDesc)]
+	//% call func([0], "/// Normalize the current vector" + info1 + info2)
+	avl_ainl$res@ constexpr auto norm$mut@(const $vecPar@& vec $zeroLenParam@) noexcept $rt@
+	{
 		auto l = len(vec);
-		if(l==decltype(l){0})
+		//% if zeroLenParam!=''
+		if(l==cnst<decltype(l)>::zero)
+		{
 			set_all(vec, vec_if_zero_len);
-		else
-			div_set(vec, len(vec));
-	}
-	/*% endif %*/
-	
-	/// Normalize the current vector
-	avl_ainl_res constexpr auto norm(v& vec) noexcept(ndebug) -> decltype(vec)/*% if filetype=='h' %*/;
-	/*% else %*/ {
-		div_set(vec, len(vec));
+			return;
+		}
+		//% endif
+		div_set(vec, l); //div might assert in debug
+		//% if mut==''
 		return vec;
+		//% endif
 	}
-	/*% endif %*/
+	test_case
+	{
+		//% if zeroLenParam==''
+		$vecCreateRnd(vec)@;
+		$if_then(mut=='', 'auto ret = ')@norm$mut@(vec);
+		auto new_len = len(res);
+		REQUIRE( new_len == Approx( cnst<$scalarType()@>::one ) );
+		//%   if mut==''
+		REQUIRE( &vec == &ret);
+		//%   endif
+		//% else
+		$vecCreateZero(vec)@;
+		auto zero_len = len(res)
+		REQUIRE( zero_len == Approx( cnst<$scalarType()@>::zero ) );
+		
+		$vecCreateZero(unit_vec)@;
+		set<0>(unit_vec, cnst<$scalarType()@>::one);
+		
+		$if_then(mut=='', 'auto ret = ')@norm$mut@(vec, unit_vec);
+		auto len = len(vec);
+		REQUIRE( len == Approx( cnst<$scalarType()@>::one ) );
+		REQUIRE( get<0>(vec) == Approx( cnst<$scalarType()@>::one ) );
+		//%   if mut==''
+		REQUIRE( &vec == &ret);
+		//%   endif
+		//% endif
+	}
+	//% endcall
+//%   endfor
+//% endfor
 	
-	/// Normalize the current vector
-	avl_inl_res constexpr auto norm(v& vec, const v& vec_if_zero_len) noexcept(ndebug) -> decltype(vec)/*% if filetype=='h' %*/;
-	/*% else %*/ {
-		auto l = len(vec);
-		if(l==decltype(l){0})
-			set_all(vec, vec_if_zero_len);
-		else
-			div_set(vec, len(vec));
-		return vec;
-	}
-	/*% endif %*/
-
 $endSection()@
 $section("Dimension independent vector operations with scalar results")@
 	
@@ -392,7 +430,7 @@ $section("General vector operations for "+dim|string+" component vectors")@
 	avl_ainl_res constexpr auto $op+mut@(const $vecPar@& vec, const $scalarPar@ scalar) noexcept$if_then(op=="div", '(ndebug|exude)')+rt@
 	{
 		//% if op=="div"
-		assert(scalar!=decltype(scalar){0});
+		assert(scalar!=cnst<decltype(scalar)>::zero);
 		//% endif
 		
 		//% if mut=="_mk"
