@@ -1,0 +1,37 @@
+### Number sequences and random numbers
+
+### Create a comma separated sequence with random number, dim-1 elements
+//% macro seqRnd(arrayVar)
+//%   for unused_index in range(dim)
+//%     if not loop.first
+$', '@
+//%-    endif
+$'%1.3f'%random_floats[rnd.index]@
+//%-    if rnd.update({ 'index': (rnd.index+1)%rnd.length})
+//%-    endif
+//%-  endfor
+//%-endmacro
+
+### Create a random integer (picked from the random int array in jinja_settings.py)
+//% macro getRndInt()
+$random_ints[rnd.index]@
+//%-if rnd.update({ 'index': (rnd.index+1)%rnd.length})
+//%-endif
+//%-endmacro
+
+### Create a random float (picked from the random float array in jinja_settings.py)
+//% macro getRndFloat()
+$random_floats[rnd.index]@
+//%-if rnd.update({ 'index': (rnd.index+1)%rnd.length})
+//%-endif
+//%-endmacro
+
+### Create a comma separated sequence from 0 to dim-1
+//% macro seq()
+//%   for index in range(dim)
+//%     if not loop.first
+$', '@
+//%-    endif
+$index@
+//%-  endfor
+//%-endmacro

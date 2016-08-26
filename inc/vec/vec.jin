@@ -1,0 +1,39 @@
+### Vector read write access and relevant helpers
+
+//% from 'sequence.jin' import seq, seqRnd with context
+//% from 'flow.jin' import loop_ with context
+
+### Macro to read a vector's component
+//% macro vecReadCmp(vecVar, idxVar)
+$config_vecReadCmp|replace('VEC', vecVar)|replace('IDX', idxVar|string)@
+//%-endmacro
+
+### Macro to write to vector's component
+//% macro vecWriteCmp(vecVar, idxVar, scalarVar)
+$config_vecWriteCmp|replace('VEC',vecVar)|replace('IDX',idxVar|string)|replace('CMP', scalarVar)@
+//%-endmacro
+
+### Macro to get the scalar componet type of a vector (for trailing returns)
+//% macro vecRetCmp(vecVar)
+$config_vecRetCmp|replace('VEC',vecVar)@
+//%-endmacro
+
+### Create a vector with the configured dimension (no semicolon at the end)
+//% macro vecCreate(vecVar)
+$config_vecDef|replace('DIM', dim)+ ' ' + vecVar@
+//%-endmacro
+
+### Create a vector initialized with random values (no semicolon at the end) 
+//% macro vecCreateRnd(vecVar)
+$vecCreate(vecVar) + ' = { ' + seqRnd() + ' }'@
+//%-endmacro
+
+### Create a vector initialized with a sequence from 0 to dim-1 (no semicolon at the end)
+//% macro vecCreateSeq(vecVar)
+$vecCreate(vecVar) + ' = { ' + seq() + ' }'@
+//%-endmacro
+
+### Create a vector initialized with a sequence from 0 to dim-1 (no semicolon at the end)
+//% macro vecCreateZero(vecVar)
+$vecCreate(vecVar)@ = { /*% call loop_(range(dim)) %*/0/*% endcall %*/ }
+//%-endmacro

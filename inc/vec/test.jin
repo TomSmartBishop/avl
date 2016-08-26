@@ -1,0 +1,33 @@
+### Macros used for the test cases
+
+//% from 'sequence.jin' import seq, seqRnd, getRndFloat with context
+
+### Only for tests: The current scalar type
+//% macro scalarType()
+$test_scalarDef|default@
+//%-endmacro
+
+### Only for tests: Create a variable of the current scalar type
+//% macro scalarCreate(scalarVar)
+$test_scalarDef|default + ' ' + scalarVar@
+//%-endmacro
+
+### Only for tests: Create a vector with random values
+//% macro scalarCreateRnd(scalarVar)
+$test_scalarDef|default + ' ' + scalarVar@ = { $getRndFloat()@ }
+//%-endmacro
+
+### Only for tests: Create an array (nothing assigned)
+//% macro arrCreate(arrayVar)
+$test_scalarDef|default +'[] ' + arrayVar@
+//%-endmacro
+
+### Only for tests: Create an array with random values
+//% macro arrCreateRnd(arrayVar)
+$arrCreate(arrayVar) + ' = { ' + seqRnd() + ' }'@
+//%-endmacro
+
+### Only for tests: Create an array initialized with a sequence starting with 0
+//% macro arrCreateSeq(arrayVar)
+$arrCreate(arrayVar) + ' = { ' + seq() + ' }'@
+//%-endmacro

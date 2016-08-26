@@ -1,4 +1,9 @@
-### Macro that will split a function into header, inline and test file
+### General AVL helper functions
+
+//% from 'sequence.jin' import seq, seqRnd with context
+//% from 'flow.jin' import loop_ with context
+
+### Splits a function body into header, inline and test code
 //% macro func(list_supportedDims, desc)
 //%   set currentDimMatches = (list_supportedDims|join).find(dim|string) != -1
 //%   set content = caller()
@@ -8,156 +13,30 @@ $'\t'*ident + desc@
 $content.split('\n')|first@;
 $'\t'*ident@
 //%  elif filetype=='inl' and currentDimMatches
-$"\t"*ident + desc@
-$(content.split("test_case")|first)@
+$'\t'*ident + desc@
+$(content.split('test_case')|first)@
 //%  elif filetype=='test' and (currentDimMatches or list_supportedDims == [0])
-$"\t"*ident + 'SECTION("' + desc.lstrip('/') + '")'@
-$(content.split("test_case")|last).rstrip("\t").strip("\n")@
-$"\t"*ident@
+$'\t'*ident + 'SECTION( "' + desc.lstrip('/').strip(' ') + '" )'@
+$(content.split('test_case')|last).rstrip('\t').strip('\n')@
+$'\t'*ident@
 //%  endif
 //% endmacro
 
+### Section Start
 //% macro section(desc)
 //%   if filetype=='test'
-TEST_CASE( "$desc@", "[$test_vecDef@($dim@)]" )
+TEST_CASE( "$desc@.strip(' ')", "[$test_vecDef@($dim@)]" )
 $'{'@
 //%-  else
 $'\t/// \defgroup ' + desc +'\n\t/// \\{'@
 //%-  endif
 //%-endmacro
 
+### Section End
 //% macro endSection()
 //%   if filetype=='test'
 $'}'@
 //%   else
 $'\t/// \\}'@
-//%-  endif
-//%-endmacro 
-
-### Macro to read a vector's component
-//% macro vecReadCmp(vecVar, idxVar)
-$config_vecReadCmp|replace("VEC", vecVar)|replace("IDX", idxVar|string)@
-//%-endmacro
-
-### Macro to write to vector's component
-//% macro vecWriteCmp(vecVar, idxVar, scalarVar)
-$config_vecWriteCmp|replace("VEC",vecVar)|replace("IDX",idxVar|string)|replace("CMP", scalarVar)@
-//%-endmacro
-
-### Macro to get the scalar componet type of a vector (for trailing returns)
-//% macro vecRetCmp(vecVar)
-$config_vecRetCmp|replace("VEC",vecVar)@
-//%-endmacro
-
-### Assertion or exception that checks if the index is within the dimension of the vector
-//% macro checkDim(vecVar, idxVar)
-$idxVar@ < $config_checkVecDim|format(vecVar)@
-//%-endmacro
-
-### Assertion or exception that checks if the component type of the vector matches the scalar
-//% macro checkCmpType(vecVar, idx, scalarVar)
-eq< decltype( $vecReadCmp(vecVar, idx)@ ), decltype( $scalarVar@ ) >::value
-//%-endmacro
-
-//% macro vecCreate(vecVar)
-$config_vecDef|replace("DIM", dim)+ ' ' + vecVar@
-//%-endmacro
-
-### Create a vector initialized with random values
-//% macro vecCreateRnd(vecVar)
-$vecCreate(vecVar) + ' = { ' + seqRnd() + ' }'@
-//%-endmacro
-
-### Create a vector initialized with a sequence from 0 to dim-1
-//% macro vecCreateSeq(vecVar)
-$vecCreate(vecVar) + ' = { ' + seq() + ' }'@
-//%-endmacro
-
-### Create a vector initialized with a sequence from 0 to dim-1
-//% macro vecCreateZero(vecVar)
-$vecCreate(vecVar)@ = { /*% call loop_(range(dim)) %*/0/*% endcall %*/ }
-//%-endmacro
-
-//% macro scalarType()
-$test_scalarDef|default@
-//%-endmacro
-
-//% macro scalarCreate(scalarVar)
-$test_scalarDef|default + ' ' + scalarVar@
-//%-endmacro
-
-//% macro scalarCreateRnd(scalarVar)
-$test_scalarDef|default + ' ' + scalarVar@ = { $getRndFloat()@ }
-//%-endmacro
-
-//% macro arrCreate(arrayVar)
-$test_scalarDef|default +'[] ' + arrayVar@
-//%-endmacro
-
-//% macro arrCreateRnd(arrayVar)
-$arrCreate(arrayVar) + ' = { ' + seqRnd() + ' }'@
-//%-endmacro
-
-//% macro arrCreateSeq(arrayVar)
-$arrCreate(arrayVar) + ' = { ' + seq() + ' }'@
-//%-endmacro
-
-### Create a comma separated sequence with random number, dim-1 elements
-//% macro seqRnd(arrayVar)
-//%   for unused_index in range(dim)
-//%     if not loop.first
-$', '@
-//%-    endif
-$'%1.3f'%random_floats[rnd.index]@
-//%-    if rnd.update({ 'index': (rnd.index+1)%rnd.length})
-//%-    endif
-//%-  endfor
-//%-endmacro
-
-//% macro getRndInt()
-$random_ints[rnd.index]@
-//%-if rnd.update({ 'index': (rnd.index+1)%rnd.length})
-//%-endif
-//%-endmacro
-
-//% macro getRndFloat()
-$random_floats[rnd.index]@
-//%-if rnd.update({ 'index': (rnd.index+1)%rnd.length})
-//%-endif
-//%-endmacro
-
-### Create a comma separated sequence from 0 to dim-1
-//% macro seq()
-//%   for index in range(dim)
-//%     if not loop.first
-$', '@
-//%-    endif
-$index@
-//%-  endfor
-//%-endmacro
-
-//% macro loop_(loopRange, separator=', ')
-//%   for i in loopRange
-//%     if not loop.first
-$separator@
-//%-    endif
-$caller()|replace('#', i)@
-//%-  endfor
-//%-endmacro
-
-//% macro loop_if(cond, loopRange, separator=', ')
-//%   if cond
-//%     for i in loopRange
-//%       if not loop.first
-$separator@
-//%-      endif
-$caller()|replace('#', i)@
-//%-   endfor
-//%- endif
-//%-endmacro
-
-//% macro if_then(cond, ouput)
-//%   if cond
-$ouput@
 //%-  endif
 //%-endmacro

@@ -2,14 +2,12 @@
 ###- Import jinja helpers
 ###-
 //%- import 'helpers.jin' as h
+//%- from 'flow.jin' import loop_, loop_if, if_then with context
+//%- from 'sequence.jin' import getRndInt, getRndFloat with context
+//%- from 'test.jin' import arrCreate, arrCreateRnd, arrCreateSeq, scalarType, scalarCreate, scalarCreateRnd with context
+//%- from 'vec.jin' import vecReadCmp, vecWriteCmp, vecRetCmp, vecCreate, vecCreateRnd, vecCreateSeq, vecCreateZero with context
+//%- from 'check.jin' import checkDim, checkCmpType with context
 //%- from 'avl.jin' import func, section, endSection with context
-//%- from 'avl.jin' import vecReadCmp, vecWriteCmp, vecRetCmp with context
-//%- from 'avl.jin' import checkDim, checkCmpType with context
-//%- from 'avl.jin' import vecCreate, vecCreateRnd, vecCreateSeq, vecCreateZero with context
-//%- from 'avl.jin' import arrCreate, arrCreateRnd, arrCreateSeq with context
-//%- from 'avl.jin' import getRndInt, getRndFloat with context
-//%- from 'avl.jin' import loop_, loop_if, if_then with context
-//%- from 'avl.jin' import scalarType, scalarCreate, scalarCreateRnd with context
 ###-
 ###- Define global strings so that they can be used like variables
 ###-
@@ -56,7 +54,7 @@ $section("Helper functions")@
 $endSection()@
 $section("Getters and setters for all vectors")@
 	
-	//% call func([0], "///Access the vector components by a range checked index from 0 to dim-1")
+	//% call func([0], "/// Access the vector components by a range checked index from 0 to dim-1")
 	avl_ainl_res constexpr auto get($vecPar@& vec, const s::size_t idx) noexcept(ndebug||exuse) -> decltype(cmp(vec))
 	{
 		assert($checkDim(vec, idx)@);
@@ -88,7 +86,7 @@ $section("Getters and setters for all vectors")@
 	}
 	//% endcall
 	
-	//% call func([0], "///Set a single component by index from 0 to dim-1")
+	//% call func([0], "/// Set a single component by index from 0 to dim-1")
 	avl_ainl constexpr auto set($vecPar@& vec, const s::size_t idx, const $scalarPar@ scalar) noexcept(ndebug||exuse) -> void
 	{
 		static_assert($checkCmpType(vec, idx, scalar)@, $supplyScalar@);

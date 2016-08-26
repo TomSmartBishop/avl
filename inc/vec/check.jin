@@ -1,0 +1,13 @@
+### Checking helpers (asserts and exceptions)
+
+//% from 'vec.jin' import vecReadCmp with context
+
+### Condition for assertion or exception that checks if the index is within the dimension of the vector
+//% macro checkDim(vecVar, idxVar)
+$idxVar@ < $config_checkVecDim|format(vecVar)@
+//%-endmacro
+
+### Condition for assertion or exception that checks if the component type of the vector matches the scalar
+//% macro checkCmpType(vecVar, idx, scalarVar)
+eq< decltype( $vecReadCmp(vecVar, idx)@ ), decltype( $scalarVar@ ) >::value
+//%-endmacro
