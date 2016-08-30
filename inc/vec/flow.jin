@@ -28,3 +28,12 @@ $caller()|replace('#', i)@
 $ouput@
 //%-  endif
 //%-endmacro
+
+### Helper single line if statement
+//% macro if_then_else(cond, output_t, output_f)
+//%   if cond
+$output_t@
+//%-  else
+$output_f@
+//%-  endif
+//%-endmacro

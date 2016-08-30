@@ -1,9 +1,9 @@
 ###-
 ###- Import jinja helpers
 ###-
-//%- import 'helpers.jin' as h
-//%- from 'flow.jin' import loop_, loop_if, if_then with context
-//%- from 'sequence.jin' import getRndInt, getRndFloat with context
+//%- from 'helpers.jin' import deg_to_rad with context
+//%- from 'flow.jin' import loop_, loop_if, if_then, if_then_else with context
+//%- from 'sequence.jin' import getRndInt, getRndFloat, getRndFloatPos, getRndFloatNeg with context
 //%- from 'test.jin' import arrCreate, arrCreateRnd, arrCreateSeq, scalarType, scalarCreate, scalarCreateRnd with context
 //%- from 'vec.jin' import vecReadCmp, vecWriteCmp, vecRetCmp, vecCreate, vecCreateRnd, vecCreateSeq, vecCreateZero with context
 //%- from 'check.jin' import checkDim, checkCmpType with context
@@ -46,7 +46,7 @@ $section("Helper functions")@
 	}
 	test_case
 	{
-		$vecCreate(vec)@;
+		const $vecCreate(vec)@;
 		static_assert($checkCmpType(vec, 0, "cmp(vec)")@, $supplyScalar@);
 	}
 	//% endcall
@@ -62,7 +62,7 @@ $section("Getters and setters for all vectors")@
 	}
 	test_case
 	{
-		$vecCreateSeq(vec)@;
+		const $vecCreateSeq(vec)@;
 		
 		//% for i in range(dim)
 		REQUIRE( get(vec, $i@) == Approx( $i@ ) );
@@ -78,7 +78,7 @@ $section("Getters and setters for all vectors")@
 	}
 	test_case
 	{
-		$vecCreateSeq(vec)@;
+		const $vecCreateSeq(vec)@;
 		
 		//% for i in range(dim)
 		REQUIRE( get<$i@>(vec) == Approx( $i@ ) );
@@ -96,7 +96,7 @@ $section("Getters and setters for all vectors")@
 	test_case
 	{
 		$vecCreate(vec)@;
-		$arrCreateRnd(arr)@;
+		const $arrCreateRnd(arr)@;
 		
 		//% for i in range(dim)
 		set(vec, $i@, arr[$i@]);
@@ -115,7 +115,7 @@ $section("Getters and setters for all vectors")@
 	test_case
 	{
 		$vecCreateSeq(vec)@;
-		$arrCreateRnd(arr)@;
+		const $arrCreateRnd(arr)@;
 		
 		//% for i in range(dim)
 		set<$i@>(vec, arr[ $i@ ]);
@@ -128,36 +128,36 @@ $endSection()@
 $section("Dimension independent vector length operations")@
 	
 	//% call func([0], "/// Returns a new vector with the requested length")
-	avl_ainl_res constexpr auto setlen_mk(const $vecPar@& vec, const $scalarPar@ new_len) noexcept(ndebug|exuse)
+	avl_ainl_res constexpr auto setlen_mk(const $vecPar@& vec, const $scalarPar@ len_to_set) noexcept(ndebug|exuse)
 	{
-		const decltype(newlen) length = len(vec);
-		assert(length!=cnst<decltype(length)>::zero);
-		return mul_mk(vec, new_len / length));
+		const auto vec_len = len(vec);
+		assert(vec_len!=cnst<decltype(vec_len)>::zero);
+		return mul_mk(vec, len_to_set / vec_len));
 	}
 	test_case
 	{
-		$vecCreateRnd(vec)@;
-		auto new_len = $getRndFloat()@;
-		auto len_vec = setlen_mk(vec, new_len);
-		auto res = len(len_vec);
+		const $vecCreateRnd(vec)@;
+		const auto len_to_set = $getRndFloat()@;
+		const auto new_vec = setlen_mk(vec, len_to_set);
+		const auto len_new_vec = len(new_vec);
 		
-		REQUIRE( res == Approx(new_len) );
+		REQUIRE( len_new_vec == Approx(len_to_set) );
 		
 		//test edge case 0.0
-		auto zero_vec = setlen_mk(vec, cnst<$scalarType()@>::zero);
+		const auto zero_len_vec = setlen_mk(vec, cnst<$scalarType()@>::zero);
 		//% for i in range(dim)
-		REQUIRE( get<$i@>(zero_vec) == Approx( cnst<$scalarType()@>::zero ) );
+		REQUIRE( get<$i@>(zero_len_vec) == Approx( cnst<$scalarType()@>::zero ) );
 		//% endfor
 	}
 	//% endcall
 
 //%for mut, rt, res, info in [('_set', '-> void', '', ''), ('', '-> decltype(cmp(vec))', '_res', ' and return the same vector (chained)')]
 	//% call func([0], "/// Set the length of the vector"+info)
-	avl_ainl$res@ constexpr auto setlen$mut@($vecPar@& vec, const $scalarPar@ new_len) noexcept(ndebug|exuse) $rt@
+	avl_ainl$res@ constexpr auto setlen$mut@($vecPar@& vec, const $scalarPar@ len_to_set) noexcept(ndebug|exuse) $rt@
 	{
-		const decltype(newlen) length = len(vec);
-		assert(length!=cnst<decltype(length)>::zero);
-		mul_set(vec, new_len / length);
+		const auto vec_len = len(vec);
+		assert(vec_len!=cnst<decltype(vec_len)>::zero);
+		mul_set(vec, len_to_set / vec_len);
 		//% if mut==''
 		return vec;
 		//% endif
@@ -165,21 +165,26 @@ $section("Dimension independent vector length operations")@
 	test_case
 	{
 		$vecCreateRnd(vec)@;
-		auto new_len = $getRndFloat()@;
-		$if_then(mut=='', 'auto ret = ')@setlen$mut@(vec, new_len);
-		auto res = len(vec);
+		const auto len_to_set = $getRndFloat()@;
+		$if_then(mut=='', 'const auto ret_vec = ')@setlen$mut@(vec, len_to_set);
+		const auto vec_len = len(vec);
 		
-		REQUIRE( res == Approx(new_len) );
+		REQUIRE( vec_len == Approx(len_to_set) );
 		
 		//% if mut==''
-		REQUIRE( &vec == &ret);
+		REQUIRE( &vec == &ret_vec);
 		//% endif
 		
 		//test edge case 0.0
-		len_set(vec, cnst<$scalarType()@>::zero);
+		$if_then(mut=='', 'const auto ret_zero_vec = ')@setlen$mut@(vec, cnst<$scalarType()@>::zero);
+		
 		//% for i in range(dim)
 		REQUIRE( get<$i@>(vec) == Approx( cnst<$scalarType()@>::zero ) );
 		//% endfor
+		
+		//% if mut==''
+		REQUIRE( &vec == &ret_zero_vec);
+		//% endif
 	}
 	//% endcall
 //% endfor
@@ -188,21 +193,20 @@ $section("Dimension independent vector length operations")@
 	avl_ainl_res constexpr auto len(const $vecPar@& vec) noexcept -> decltype(cmp(vec))
 	{
 		//len_sqr will never return any negativ values so we can gurantee noexcept
-		return static_cast<decltype(cmp(vec))>( s::sqrt( len_sqr(vec) ) );
+		const auto vec_square_len = len_sqr(vec);
+		return static_cast<decltype(cmp(vec))>( s::sqrt( vec_square_len ) );
 	}
 	test_case
 	{
-		$vecCreateRnd(vec)@;
-		auto res = len(vec);
-		auto square_len = /*% call loop_(range(dim), ' + ') %*/get<#>(vec) * get<#>(vec)/*% endcall %*/;
-		REQUIRE( res == Approx( s::sqrt( square_len ) ) );
+		const $vecCreateRnd(vec)@;
+		const auto vec_len = len(vec);
+		const auto vec_square_len = /*% call loop_(range(dim), ' + ') %*/get<#>(vec) * get<#>(vec)/*% endcall %*/;
+		REQUIRE( vec_len == Approx( s::sqrt( vec_square_len ) ) );
 		
 		//test edge case 0.0
-		$vecCreateZero(vec)@;
-		auto res = len(vec);
-		//% for i in range(dim)
-		REQUIRE( get<$i@>(vec) == Approx( cnst<$scalarType()@>::zero ) );
-		//% endfor
+		const $vecCreateZero("zero_vec")@;
+		const auto zero_vec_len = len(zero_vec);
+		REQUIRE( zero_vec_len == Approx( cnst<$scalarType()@>::zero ) );
 	}
 	//% endcall
 	
@@ -211,32 +215,32 @@ $section("Dimension independent vector length operations")@
 	//% call func([0], "/// Returns a normalized vector" + info)
 	avl_ainl_res constexpr auto norm_mk(const $vecPar@& vec $zeroLenParam@) noexcept$ex@ -> decltype(vec)
 	{
-		auto l = len(vec);
+		const auto vec_len = len(vec);
 		//% if zeroLenParam!=''
-		if(l==cnst<decltype(l)>::zero)
+		if(vec_len==cnst<decltype(vec_len)>::zero)
 			return vec_if_zero_len;
 		//% endif
-		return div_mk(vec, l); //div might assert in debug
+		return div_mk(vec, vec_len); //div might assert in debug
 	}
 	test_case
 	{
 		//% if zeroLenParam==''
-		$vecCreateRnd(vec)@;
-		auto res = norm_mk(vec);
-		auto new_len = len(res);
-		REQUIRE( new_len == Approx( cnst<$scalarType()@>::one ) );
+		const $vecCreateRnd(vec)@;
+		const auto new_norm_vec = norm_mk(vec);
+		const auto norm_len = len(new_norm_vec);
+		REQUIRE( norm_len == Approx( cnst<$scalarType()@>::one ) );
 		//% else
-		$vecCreateZero(vec)@;
-		auto zero_len = len(res)
+		const $vecCreateZero("zero_vec")@;
+		const auto zero_len = len(zer0_vec)
 		REQUIRE( zero_len == Approx( cnst<$scalarType()@>::zero ) );
 		
 		$vecCreateZero(unit_vec)@;
 		set<0>(unit_vec, cnst<$scalarType()@>::one);
 		
-		auto res = norm_mk(vec, unit_vec);
-		auto len = len(res);
-		REQUIRE( len == Approx( cnst<$scalarType()@>::one ) );
-		REQUIRE( get<0>(res) == Approx( cnst<$scalarType()@>::one ) );
+		const auto new_unit_vec = norm_mk(zero_vec, unit_vec);
+		const auto new_unit_vec_len = len(new_unit_vec);
+		REQUIRE( new_unit_vec_len == Approx( cnst<$scalarType()@>::one ) );
+		REQUIRE( get<0>(new_unit_vec) == Approx( cnst<$scalarType()@>::one ) );
 		//% endif
 	}
 	//% endcall
@@ -247,15 +251,15 @@ $section("Dimension independent vector length operations")@
 	//% call func([0], "/// Normalize the current vector" + info1 + info2)
 	avl_ainl$res@ constexpr auto norm$mut@(const $vecPar@& vec $zeroLenParam@) noexcept $rt@
 	{
-		auto l = len(vec);
+		const auto vec_len = len(vec);
 		//% if zeroLenParam!=''
-		if(l==cnst<decltype(l)>::zero)
+		if(vec_len==cnst<decltype(vec_len)>::zero)
 		{
 			set_all(vec, vec_if_zero_len);
 			return;
 		}
 		//% endif
-		div_set(vec, l); //div might assert in debug
+		div_set(vec, vec_len); //div might assert in debug
 		//% if mut==''
 		return vec;
 		//% endif
@@ -264,26 +268,26 @@ $section("Dimension independent vector length operations")@
 	{
 		//% if zeroLenParam==''
 		$vecCreateRnd(vec)@;
-		$if_then(mut=='', 'auto ret = ')@norm$mut@(vec);
-		auto new_len = len(res);
-		REQUIRE( new_len == Approx( cnst<$scalarType()@>::one ) );
+		$if_then(mut=='', 'auto ret_vec = ')@norm$mut@(vec);
+		const auto len_to_set = len(vec);
+		REQUIRE( len_to_set == Approx( cnst<$scalarType()@>::one ) );
 		//%   if mut==''
-		REQUIRE( &vec == &ret);
+		REQUIRE( &vec == &ret_vec);
 		//%   endif
 		//% else
 		$vecCreateZero(vec)@;
-		auto zero_len = len(res)
+		const auto zero_len = len(vec)
 		REQUIRE( zero_len == Approx( cnst<$scalarType()@>::zero ) );
 		
 		$vecCreateZero(unit_vec)@;
 		set<0>(unit_vec, cnst<$scalarType()@>::one);
 		
-		$if_then(mut=='', 'auto ret = ')@norm$mut@(vec, unit_vec);
-		auto len = len(vec);
-		REQUIRE( len == Approx( cnst<$scalarType()@>::one ) );
+		$if_then(mut=='', 'auto ret_vec = ')@norm$mut@(vec, unit_vec);
+		const auto vec_len = len(vec);
+		REQUIRE( vec_len == Approx( cnst<$scalarType()@>::one ) );
 		REQUIRE( get<0>(vec) == Approx( cnst<$scalarType()@>::one ) );
 		//%   if mut==''
-		REQUIRE( &vec == &ret);
+		REQUIRE( &vec == &ret_vec);
 		//%   endif
 		//% endif
 	}
@@ -293,19 +297,126 @@ $section("Dimension independent vector length operations")@
 	
 $endSection()@
 $section("Dimension independent vector operations with scalar results")@
-	
-	avl_ainl_res constexpr auto angle_rd(const v& vec, const v& other) noexcept -> decltype(cmp(vec))/*% if filetype=='h' %*/;
-	/*% else %*/ {
-		return s::acos( dot(vec, other) / (len(vec) * len(other)) );
+//% for mut, mul, info in [('_rd', '', 'radian'),('_dg', ' * cnst<decltype(cmp(vec))>::to_deg', 'degree')]
+	//% call func([0],"/// Calculate the angle between two vectors in "+info)
+	avl_ainl_res constexpr auto angle$mut@(const $vecPar@& vec, const $vecPar@& other) noexcept -> decltype(cmp(vec))
+	{
+		const auto vec_len		= len(vec);
+		const auto other_len	= len(other);
+		const auto dot_prod		= dot(vec, other);
+		return s::acos( dot_prod / ( vec_len * other_len ) )$mul@;
 	}
-	/*% endif %*/
-	
-// 	avl_ainl_res constexpr auto angle_dg(const v& vec, const v& other) noexcept -> decltype(cmp(vec))/*% if filetype=='h' %*/;
-	/*% else %*/ {
-// 		return s::acos( dot(vec, other) / (len(vec) * len(other)) ) * cnst<cmp>::to_deg;
-// 	}
-	/*% endif %*/
-	
+	test_case
+	{
+		const auto random_len1 = $getRndFloatPos()@;
+		const auto random_len2 = $getRndFloatPos()@;
+		const auto random_len3 = $getRndFloatPos()@;
+		const auto random_len4 = $getRndFloatPos()@;
+		
+		$vecCreateZero("vec_zero")@;
+		$vecCreateZero("vec_10x")@;
+		set<0>(vec_10x, random_len1);
+		$vecCreateZero("vec_01x")@;
+		set<1>(vec_01x, random_len2);
+		$vecCreateZero("vec_m10x")@;
+		set<0>(vec_m10x, -random_len3);
+		$vecCreateZero("vec_11x")@;
+		set<0>(vec_11x, random_len4);
+		set<1>(vec_11x, random_len4);
+		
+		const auto angle0 = angle$mut@(vec_10x, vec_zero);
+		REQUIRE( angle0 == Approx( cnst<$scalarType()@>::zero );
+		
+		const auto angle90 = angle$mut@(vec_10x, vec_01x);
+		REQUIRE( angle90 == Approx( $if_then_else(mut=='_rd', deg_to_rad(90), 90)@ );
+		
+		const auto angle45a = angle$mut@(vec_10x, vec_11x);
+		REQUIRE( angle45a == Approx( $if_then_else(mut=='_rd', deg_to_rad(45), 45)@ );
+		const auto angle45b = angle$mut@(vec_01x, vec_11x);
+		REQUIRE( angle45b == Approx( $if_then_else(mut=='_rd', deg_to_rad(45), 45)@ );
+		
+		const auto angle135 = angle$mut@(vec_m10x, vec_11x);
+		REQUIRE( angle135 == Approx( $if_then_else(mut=='_rd', deg_to_rad(135), 135)@ );
+		
+		const auto angle180 = angle$mut@(vec_10x, vec_m10x);
+		REQUIRE( angle180 == Approx( $if_then_else(mut=='_rd', deg_to_rad(180), 180)@ );
+	}
+	//%   if dim>=3
+	test_case
+	{
+		const auto random_len1 = $getRndFloatPos()@;
+		const auto random_len2 = $getRndFloatPos()@;
+		const auto random_len3 = $getRndFloatPos()@;
+		const auto random_len4 = $getRndFloatPos()@;
+		
+		$vecCreateZero("vec_zero")@;
+		$vecCreateZero("vec_010x")@;
+		set<1>(vec_010x, random_len1);
+		$vecCreateZero("vec_001x")@;
+		set<2>(vec_001x, random_len2);
+		$vecCreateZero("vec_0m10x")@;
+		set<1>(vec_0m10x, -random_len3);
+		$vecCreateZero("vec_011x")@;
+		set<1>(vec_011x, random_len4);
+		set<2>(vec_011x, random_len4);
+		
+		const auto angle0 = angle$mut@(vec_010x, vec_zero);
+		REQUIRE( angle0 == Approx( cnst<$scalarType()@>::zero );
+		
+		const auto angle90 = angle$mut@(vec_010x, vec_001x);
+		REQUIRE( angle90 == Approx( $if_then_else(mut=='_rd', deg_to_rad(90), 90)@ );
+		
+		const auto angle45a = angle$mut@(vec_010x, vec_011x);
+		REQUIRE( angle45a == Approx( $if_then_else(mut=='_rd', deg_to_rad(45), 45)@ );
+		const auto angle45b = angle$mut@(vec_001x, vec_011x);
+		REQUIRE( angle45b == Approx( $if_then_else(mut=='_rd', deg_to_rad(45), 45)@ );
+		
+		const auto angle135 = angle$mut@(vec_0m10x, vec_011x);
+		REQUIRE( angle135 == Approx( $if_then_else(mut=='_rd', deg_to_rad(135), 135)@ );
+		
+		const auto angle180 = angle$mut@(vec_010x, vec_0m10x);
+		REQUIRE( angle180 == Approx( $if_then_else(mut=='_rd', deg_to_rad(180), 180)@ );
+	}
+	//%   endif
+	//%   if dim>=4
+	test_case
+	{
+		const auto random_len1 = $getRndFloatPos()@;
+		const auto random_len2 = $getRndFloatPos()@;
+		const auto random_len3 = $getRndFloatPos()@;
+		const auto random_len4 = $getRndFloatPos()@;
+		
+		$vecCreateZero("vec_zero")@;
+		$vecCreateZero("vec_0010")@;
+		set<2>(vec_0010, random_len1);
+		$vecCreateZero("vec_0001")@;
+		set<3>(vec_0001, random_len2);
+		$vecCreateZero("vec_00m10")@;
+		set<2>(vec_00m10, -random_len3);
+		$vecCreateZero("vec_0011")@;
+		set<2>(vec_0011, random_len4);
+		set<3>(vec_0011, random_len4);
+		
+		const auto angle0 = angle$mut@(vec_0010, vec_zero);
+		REQUIRE( angle0 == Approx( cnst<$scalarType()@>::zero );
+		
+		const auto angle90 = angle$mut@(vec_0010, vec_001x);
+		REQUIRE( angle90 == Approx( $if_then_else(mut=='_rd', deg_to_rad(90), 90)@ );
+		
+		const auto angle45a = angle$mut@(vec_0010, vec_011x);
+		REQUIRE( angle45a == Approx( $if_then_else(mut=='_rd', deg_to_rad(45), 45)@ );
+		const auto angle45b = angle$mut@(vec_0001, vec_011x);
+		REQUIRE( angle45b == Approx( $if_then_else(mut=='_rd', deg_to_rad(45), 45)@ );
+		
+		const auto angle135 = angle$mut@(vec_00m10, vec_011x);
+		REQUIRE( angle135 == Approx( $if_then_else(mut=='_rd', deg_to_rad(135), 135)@ );
+		
+		const auto angle180 = angle$mut@(vec_0010, vec_0m10x);
+		REQUIRE( angle180 == Approx( $if_then_else(mut=='_rd', deg_to_rad(180), 180)@ );
+	}
+	//%   endif
+	//% endcall
+//% endfor
 $endSection()@
 $section("Getter and setters for "+dim|string+" component vectors")@
 	
@@ -490,7 +601,7 @@ $section("Vector length operations for "+dim|string+" component vectors")@
 		/*% for idx in range(dim) %*/
 		const auto cmp$idx@ = get<$idx@>(vec);
 		/*% endfor %*/
-		return $ h.cmp_wise_op("cmp? @ cmp?", "*", " + ", dim) @;
+		return /*% call loop_(range(dim), ' + ') %*/ cmp#*cmp# /*% endcall %*/;
 	}
 	/*% endif %*/
 	
@@ -499,7 +610,7 @@ $section("Vector operations with scalar results for "+dim|string+" component vec
 	
 	avl_ainl_res constexpr auto dot(const $vecPar@& vec, const $vecPar@& other) noexcept -> decltype(cmp(vec))/*% if filetype=='h' %*/;
 	/*% else %*/ {
-		return $ h.cmp_wise_op("get<?>(vec) @ get<?>(other)", "*", " + ", dim) @;
+		return /*% call loop_(range(dim), ' + ') %*/ get<#>(vec) * get<#>(other) /*% endcall %*/;
 	}
 	/*% endif %*/
 	

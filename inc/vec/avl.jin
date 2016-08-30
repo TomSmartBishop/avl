@@ -16,9 +16,13 @@ $'\t'*ident@
 $'\t'*ident + desc@
 $(content.split('test_case')|first)@
 //%  elif filetype=='test' and (currentDimMatches or list_supportedDims == [0])
-$'\t'*ident + 'SECTION( "' + desc.lstrip('/').strip(' ') + '" )'@
-$(content.split('test_case')|last).rstrip('\t').strip('\n')@
+//%    for test_case in content.split('test_case')
+//%      if loop.index0!=0
+$'\t'*ident + 'SECTION( "' + desc.lstrip('/').strip(' ') + '/' + loop.index0|string + '" )'@
+$test_case.rstrip('\t').strip('\n')@
 $'\t'*ident@
+//%      endif
+//%    endfor
 //%  endif
 //% endmacro
 
