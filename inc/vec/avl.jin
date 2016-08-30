@@ -29,7 +29,7 @@ $'\t'*ident@
 ### Section Start
 //% macro section(desc)
 //%   if filetype=='test'
-TEST_CASE( "$desc@.strip(' ')", "[$test_vecDef@($dim@)]" )
+TEST_CASE( "$desc.strip(' ')@", "[$test_vecDef@($dim@)]" )
 $'{'@
 //%-  else
 $'\t/// \defgroup ' + desc +'\n\t/// \\{'@

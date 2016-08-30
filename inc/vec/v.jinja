@@ -222,16 +222,20 @@ $section("Dimension independent vector length operations")@
 		//% endif
 		return div_mk(vec, vec_len); //div might assert in debug
 	}
+	//%   if zeroLenParam==''
 	test_case
 	{
-		//% if zeroLenParam==''
+		
 		const $vecCreateRnd(vec)@;
 		const auto new_norm_vec = norm_mk(vec);
 		const auto norm_len = len(new_norm_vec);
 		REQUIRE( norm_len == Approx( cnst<$scalarType()@>::one ) );
-		//% else
+	}
+	//%   else
+	test_case
+	{
 		const $vecCreateZero("zero_vec")@;
-		const auto zero_len = len(zer0_vec)
+		const auto zero_len = len(zero_vec)
 		REQUIRE( zero_len == Approx( cnst<$scalarType()@>::zero ) );
 		
 		$vecCreateZero(unit_vec)@;
@@ -241,8 +245,8 @@ $section("Dimension independent vector length operations")@
 		const auto new_unit_vec_len = len(new_unit_vec);
 		REQUIRE( new_unit_vec_len == Approx( cnst<$scalarType()@>::one ) );
 		REQUIRE( get<0>(new_unit_vec) == Approx( cnst<$scalarType()@>::one ) );
-		//% endif
 	}
+	//%   endif
 	//% endcall
 //% endfor
 	
@@ -264,17 +268,20 @@ $section("Dimension independent vector length operations")@
 		return vec;
 		//% endif
 	}
+	//%   if zeroLenParam==''
 	test_case
 	{
-		//% if zeroLenParam==''
 		$vecCreateRnd(vec)@;
 		$if_then(mut=='', 'auto ret_vec = ')@norm$mut@(vec);
 		const auto len_to_set = len(vec);
 		REQUIRE( len_to_set == Approx( cnst<$scalarType()@>::one ) );
-		//%   if mut==''
+		//% if mut==''
 		REQUIRE( &vec == &ret_vec);
-		//%   endif
-		//% else
+		//% endif
+	}
+	//%   else
+	test_case
+	{
 		$vecCreateZero(vec)@;
 		const auto zero_len = len(vec)
 		REQUIRE( zero_len == Approx( cnst<$scalarType()@>::zero ) );
@@ -286,11 +293,11 @@ $section("Dimension independent vector length operations")@
 		const auto vec_len = len(vec);
 		REQUIRE( vec_len == Approx( cnst<$scalarType()@>::one ) );
 		REQUIRE( get<0>(vec) == Approx( cnst<$scalarType()@>::one ) );
-		//%   if mut==''
+		//% if mut==''
 		REQUIRE( &vec == &ret_vec);
-		//%   endif
 		//% endif
 	}
+	//%   endif
 	//% endcall
 //%   endfor
 //% endfor
@@ -418,56 +425,106 @@ $section("Dimension independent vector operations with scalar results")@
 	//% endcall
 //% endfor
 $endSection()@
+//% if dim!=0
 $section("Getter and setters for "+dim|string+" component vectors")@
 	
-	/// Set all vector components to the same scalar
-	avl_ainl constexpr auto set_all($vecPar@& vec, const sc scalar) noexcept -> void/*% if filetype=='h' %*/;
-	/*% else %*/ {
+	//% call func([2,3,4], '/// Set all vector components to the same scalar')
+	avl_ainl constexpr auto set_all($vecPar@& vec, const $scalarPar@ scalar) noexcept -> void
+	{
 		static_assert(eq<decltype(vec[0]), decltype(scalar)>::value, "Supply a scalar of the vectors element filetype.");
-		/*% for idx in range(dim) %*/
-		vec[ $idx@ ] = scalar;
-		/*% endfor %*/
-	} /*% endif %*/
-	
-	/// Set all vector components individually
-	avl_ainl constexpr auto set_all($vecPar@& vec/*% for cmp in param %*/, const sc $cmp@/*% endfor %*/) noexcept -> void/*% if filetype=='h' %*/;
-	/*% else %*/ {
-		/*% for idx in range(dim) %*/
-		static_assert(eq<decltype(vec[ $idx@ ]), decltype($param[idx]@)>::value, "Supply a scalar of the vectors element type for $param[idx]@.");
-		/*% endfor %*/
-		/*% for idx in range(dim) %*/
-		vec[ $idx@ ] = $param[idx]@;
-		/*% endfor %*/
+		//% for i in range(dim)
+		$vecWriteCmp(vec, i, scalar)@;
+		//% endfor
 	}
-	/*% endif %*/
-	
-	/// Set all vector components individually
-	avl_ainl constexpr auto set_all($vecPar@& vec, const sc scalars[ $dim@ ]) noexcept -> void/*% if filetype=='h' %*/;
-	/*% else %*/ {
-		/*% for idx in range(dim) %*/
-		static_assert(eq<decltype(vec[ $idx@ ]), decltype(scalars[ $idx@ ])>::value, "Supply a scalar of the vectors element filetype.");
-		/*% endfor %*/
-		/*% for idx in range(dim) %*/
-		vec[ $idx@ ] = scalars[ $idx@ ];
-		/*% endfor %*/
+	test_case
+	{
+		$vecCreateZero(vec)@;
+		
+		const auto val = $getRndFloat()@;
+		set_all(vec, val);
+		
+		//% for i in range(dim)
+		REQUIRE( get<$i@>(vec)==val );
+		//% endfor
 	}
-	/*% endif %*/
+	//% endcall
 	
-	/// Set all vector components individually
-	template <s::size_t _Dim>
-	avl_ainl constexpr auto set_all($vecPar@& vec, const sc* scalars) noexcept -> void/*% if filetype=='h' %*/;
-	/*% else %*/ {
+	//% call func([2,3,4], '/// Set all vector components individually')
+	avl_ainl constexpr auto set_all($vecPar@& vec/*% call loop_(param) %*/const $scalarPar@ #/*% endcall %*/) noexcept -> void;
+	{
+		//% for i in range(dim)
+		static_assert(eq<decltype(vec[ $i@ ]), decltype($param[i]@)>::value, "Supply a scalar of the vectors element type for $param[i]@.");
+		//% endfor
+		
+		//% for i in range(dim)
+		$vecWriteCmp(vec, i, param[i])@;
+		//% endfor
+	}
+	test_case
+	{
+		$vecCreateZero(vec)@;
+		const $arrCreateRnd(arr)@;
+		
+		set_all(vec,/*% call loop_(range(dim)) %*/arr[#]/*% endcall %*/);
+		
+		//% for i in range(dim)
+		REQUIRE( get<$i@>(vec)==arr[$i@] );
+		//% endfor
+	}
+	//% endcall
+	
+	//% call func([2,3,4], '/// Set all vector components individually by a fixed size array')
+	avl_ainl constexpr auto set_all($vecPar@& vec, const $scalarPar@ scalars[ $dim@ ]) noexcept -> void
+	{
+		//% for i in range(dim)
+		static_assert(eq<decltype(vec[ $i@ ]), decltype(scalars[ $i@ ])>::value, "Supply a scalar of the vectors element filetype.");
+		//% endfor
+		
+		//% for i in range(dim)
+		$vecWriteCmp(vec, i, 'scalars[' + i|string + ']')@;
+		//% endfor
+	}
+	test_case
+	{
+		$vecCreateZero(vec)@;
+		const $arrCreateRnd(arr)@;
+		
+		set_all(vec, arr);
+		
+		//% for i in range(dim)
+		REQUIRE( get<$i@>(vec)==arr[$i@] );
+		//% endfor
+	}
+	//% endcall
+	
+	//% call func([2,3,4], '/// Set all vector components individually by an array')
+	template <s::size_t _Dim> avl_ainl constexpr auto set_all($vecPar@& vec, const $scalarPar@* scalars) noexcept -> void
+	{
 		static_assert(_Dim>=$dim@, "Supply at least $dim@ scalars.");
-		/*% for idx in range(dim) %*/
-		static_assert(eq<decltype(vec[ $idx@ ]), decltype(scalars[ $idx@ ])>::value, "Supply a scalar of the vectors element type.");
-		/*% endfor %*/
-		/*% for idx in range(dim) %*/
-		vec[ $idx@ ] = scalars[ $idx@ ];
-		/*% endfor %*/
+		//% for i in range(dim)
+		static_assert(eq<decltype(vec[ $i@ ]), decltype(scalars[ $i@ ])>::value, "Supply a scalar of the vectors element type.");
+		//% endfor
+		
+		//% for i in range(dim)
+		$vecWriteCmp(vec, i, 'scalars[' + i|string + ']')@;
+		//% endfor
 	}
-	/*% endif %*/
+	test_case
+	{
+		$vecCreateZero(vec)@;
+		const $arrCreateRnd(arr)@;
+		const auto* ptr_to_arr = arr;
+		
+		set_all<$dim@>(vec, ptr_to_arr);
+		
+		//% for i in range(dim)
+		REQUIRE( get<$i@>(vec)==arr[$i@] );
+		//% endfor
+	}
+	//% endcall
 	
 $endSection()@
+//% endif
 $section("General vector operations for "+dim|string+" component vectors")@
 ### Generate all permutations of the base operations: add_mk, add_set, add, sub_mk, ... , div_set, div
 //% for op, s in [("add", "+"), ("sub", "-"), ("mul", "*"), ("div", "/")]
@@ -505,34 +562,37 @@ $section("General vector operations for "+dim|string+" component vectors")@
 		return vec;
 		//% endif
 	}
+	//%   if mut=='_mk'
 	test_case
 	{
-		//% if mut=='_mk'
 		auto res = $op+mut@($op@_var_1, $op@_var_2);
-		//%   call loop_(range(dim), '')
+		//% call loop_(range(dim), '')
 		REQUIRE( get<#>(res) == Approx($op@_vec_res[#]) );
-		//%   endcall
+		//% endcall
 		REQUIRE( &res != &$op@_var_1 ); //result must be a new resource
 		REQUIRE( &res != &$op@_var_2 ); //also different to $op@_var_2
 		//% elif mut=='_set'
 		$op+mut@($op@_var_1, $op@_var_2);
-		//%   call loop_(range(dim), '')
+		//% call loop_(range(dim), '')
 		REQUIRE( get<#>(res) == Approx($op@_vec_res[#]) );
-		//%   endcall
-		//% else
+		//% endcall
+	}
+	//%   else
+	test_case
+	{
 		auto &res = $op+mut@($op@_var_1, $op@_var_2);
-		//%   call loop_(range(dim), '')
+		//% call loop_(range(dim), '')
 		REQUIRE( get<#>(res) == Approx($op@_vec_res[#]) );
-		//%   endcall
+		//% endcall
 		REQUIRE( &res == &$op@_var_1 );//result must be $op@_var_1
 		REQUIRE( &res != &$op@_var_2 );//but not $op@_var_2
 		auto &res2 = $op+mut@(res, $op@_scalar);
-		//%   call loop_(range(dim), '')
+		//% call loop_(range(dim), '')
 		REQUIRE( get<#>(res2) == Approx($op@_vec_sclar_res[#]) );
-		//%   endcall
+		//% endcall
 		REQUIRE( &res2 == &$op@_var_1 );//result must be $op@_var_1
-		//% endif
 	}
+	//%   endif
 	//% endcall
 	
 	//% call func([2,3,4], '//' + op + mut +' (scalar)')
@@ -552,33 +612,38 @@ $section("General vector operations for "+dim|string+" component vectors")@
 		return vec;
 		//% endif
 	}
+	//%   if mut=='_mk'
 	test_case
 	{
-		//% if mut=='_mk'
 		auto res = $op+mut@($op@_var_1, $op@_scalar);
-		//%   call loop_(range(dim), '')
+		//% call loop_(range(dim), '')
 		REQUIRE( get<#>(res) == Approx($op@_scalar_res[#]) );
-		//%   endcall
+		//% endcall
 		REQUIRE( &res != &$op@_var_1 ); //result must be a new resource
-		//% elif mut=='_set'
+	}
+	//%   elif mut=='_set'
+	test_case
+	{
 		$op+mut@($op@_var_1, $op@_scalar);
-		//%   call loop_(range(dim), '')
+		//% call loop_(range(dim), '')
 		REQUIRE( get<#>(res) == Approx($op@_scalar_res[#]) );
-		//%   endcall
-		//% else
+		//% endcall
+	}
+	//%   else
+	test_case
+	{
 		auto &res = $op+mut@($op@_var_1, $op@_scalar);
-		//%   call loop_(range(dim), '')
+		//% call loop_(range(dim), '')
 		REQUIRE( get<#>(res) == Approx($op@_scalar_res[#]) );
-		//%   endcall
+		//% endcall
 		REQUIRE( &res == &$op@_var_1 );//result must be $op@_var_1
 		auto &res2 = $op+mut@(res, $op@_var_2);
-		//%   call loop_(range(dim), '')
+		//% call loop_(range(dim), '')
 		REQUIRE( get<#>(res2) == Approx($op@_vec_scalar_res[#]) );
-		//%   endcall
+		//% endcall
 		REQUIRE( &res2 == &$op@_var_1 );//result must be $op@_var_1
-		
-		//% endif
 	}
+	//%   endif
 	//% endcall
 	
 //%   endfor
@@ -598,8 +663,8 @@ $section("Vector length operations for "+dim|string+" component vectors")@
 	/// Calculate the square length of the vector
 	avl_ainl_res constexpr auto len_sqr(const $vecPar@& vec) noexcept -> decltype(cmp(vec))/*% if filetype=='h' %*/;
 	/*% else %*/ {
-		/*% for idx in range(dim) %*/
-		const auto cmp$idx@ = get<$idx@>(vec);
+		/*% for i in range(dim) %*/
+		const auto cmp$i@ = get<$i@>(vec);
 		/*% endfor %*/
 		return /*% call loop_(range(dim), ' + ') %*/ cmp#*cmp# /*% endcall %*/;
 	}
