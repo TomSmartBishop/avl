@@ -216,7 +216,7 @@ using namespace avl;
 		//% for i in range(dim)
 		const auto cmp$i@ = get<$i@>(vec);
 		//% endfor
-		return /*% call loop_(range(dim), ' + ') %*/ cmp#*cmp# /*% endcall %*/;
+		return /*% call loop_(range(dim), ' + ') %*/cmp#*cmp#/*% endcall %*/;
 	}
 	test_case
 	{
@@ -325,7 +325,7 @@ using namespace avl;
 //% endfor
 	
 //% endcall
-//% call section('Dimension independent vector operations with scalar results', match([0]), true)
+//% call section('Spacial operations')
 //% for mut, mul, info in [('_rd', '', 'radian'),('_dg', ' * cnst<decltype(cmp(vec))>::to_deg', 'degree')]
 	//% call func('/// Calculate the angle between two vectors in '+info, match([0]), true)
 	avl_ainl_res constexpr auto angle$mut@(const $vecPar@& vec, const $vecPar@& other) noexcept -> decltype(cmp(vec))
@@ -446,6 +446,66 @@ using namespace avl;
 	//%   endif
 	//% endcall
 //% endfor
+	//% call func('/// Calculate the area of the spawned triangle'+if_then(dim==4,' (restricted to 3 dimensions)'), match([2,3,4]))
+	avl_inl_res constexpr auto area$if_then(dim==4,'3')@(const $vecPar@& vec, const $vecPar@& other) noexcept -> decltype(cmp(vec))
+	{
+		//% if dim==2
+		using scalar = decltype(cmp(vec));
+		const auto area = cnst<scalar>::half*(get<0>(vec) * get<1>(other) - get<1>(vec) * get<0>(other));
+		return area < cnst<scalar>::zero
+			? -area
+			: area;
+		//% else
+		return cnst<decltype(cmp(vec))>::half * len( cross$if_then(dim==4,'3')@(vec, other) );
+		//% endif
+	}
+	test_case
+	{
+		$vecCreate('vec0')@;
+		$vecCreate('vec1')@;
+		$vecCreate('vec2')@;
+		set<0>(vec0, 1);
+		set<1>(vec1, 1);
+		set<0>(vec2, -1);
+		
+		const auto a0 = area$if_then(dim==4,'3')@(vec0, vec1);
+		REQUIRE( a0 == cnst<decltype(a0)::half );
+		
+		const auto a1 = area$if_then(dim==4,'3')@(vec0, vec0);
+		REQUIRE( a1 == cnst<decltype(a1)::zero );
+		
+		const auto a2 = area$if_then(dim==4,'3')@(vec0, vec2);
+		REQUIRE( a2 == cnst<decltype(a2)::zero );
+	}
+	//% endcall
+	
+//%  for mut, rt, res in [('_mk', '', '_res'), ('_set', ' -> void', ''), ('', ' -> decltype(vec)', '_res')]
+	//% call func('/// Calculate the cross product'+if_then(dim==4,' (restricted to 3 dimensions)'), match([3,4]))
+	avl_ainl$res@ constexpr auto cross$if_then(dim==4,'3')+mut@(const $vecPar@& vec, const $vecPar@& other) noexcept$rt@
+	{
+		//% if mut=='_mk'
+		return rem_const_ref_t<decltype(vec)> {
+		//% else
+		set_all(
+		//% endif
+				get<1>(vec) * get<2>(other) - get<2>(vec) * get<1>(other),
+				get<2>(vec) * get<0>(other) - get<0>(vec) * get<2>(other),
+				get<0>(vec) * get<1>(other) - get<1>(vec) * get<0>(other)
+		//% if mut=='_mk'
+			};
+		//% else
+			);
+		//%   if mut==''
+		return vec;
+		//%   endif
+		//% endif
+	}
+	test_case
+	{
+		
+	}
+	//% endcall
+//%   endfor
 //% endcall
 //% call section('Getter and setters for '+dim|string+' component vectors', match([2,3,4]))
 	
@@ -546,7 +606,6 @@ using namespace avl;
 	
 //% endcall
 //% call section('General vector operations for '+dim|string+' component vectors', match([2,3,4]))
-### Generate all permutations of the base operations: add_mk, add_set, add, sub_mk, ... , div_set, div
 //% for op, s in [("add", "+"), ("sub", "-"), ("mul", "*"), ("div", "/")]
 //%   if filetype=='test'
 	$vecCreateRnd(op+"_var_1")@;
@@ -563,13 +622,13 @@ using namespace avl;
 //%   endif
 //% endfor
 //% for op, s in [("add", "+"), ("sub", "-"), ("mul", "*"), ("div", "/")]
-//%   for mut, rt in [('_mk', ''), ('_set', ' -> void'), ('', ' -> decltype(vec)')]
+//%   for mut, rt, res in [('_mk', '', '_res'), ('_set', ' -> void', ''), ('', ' -> decltype(vec)', '_res')]
 	
 	//% call func('// ' + op + mut, match([2,3,4]))
-	avl_ainl_res constexpr auto $op+mut@(const $vecPar@& vec, const $vecPar@& other) noexcept$if_then(op=="div", '(ndebug|exude)')+rt@
+	avl_ainl$res@ constexpr auto $op+mut@(const $vecPar@& vec, const $vecPar@& other) noexcept$if_then(op=="div", '(ndebug|exude)')+rt@
 	{
 		//% call loop_if(op=="div", range(dim), '')
-		assert(get<#>(other)!=decltype(other[#]){0});
+		assert(get<#>(other)!=cnst<decltype(cmp(other))>::zero);
 		//% endcall
 		
 		//% if mut=="_mk"
@@ -591,7 +650,10 @@ using namespace avl;
 		//% endcall
 		REQUIRE( &res != &$op@_var_1 ); //result must be a new resource
 		REQUIRE( &res != &$op@_var_2 ); //also different to $op@_var_2
-		//% elif mut=='_set'
+	}
+	//%   elif mut=='_set'
+	test_case
+	{
 		$op+mut@($op@_var_1, $op@_var_2);
 		//% call loop_(range(dim), '')
 		REQUIRE( get<#>(res) == Approx($op@_vec_res[#]) );
@@ -668,15 +730,6 @@ using namespace avl;
 	
 //%   endfor
 //% endfor
-	
-	/*% if dim==2 %*/
-	/*% include 'v2.jin' %*/
-	/*% elif dim==3 %*/
-	/*% include 'v3.jin' %*/
-	/*% else%*/
-	/*% include 'v4.jin' %*/
-	/*% endif %*/
-	
 //% endcall
 
 //% if filetype!='test'

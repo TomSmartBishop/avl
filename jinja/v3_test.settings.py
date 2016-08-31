@@ -7,7 +7,7 @@ IGNORE_JINJA_TEMPLATES = [
 ]
 
 EXTRA_VARIABLES = {
-    'vecPar': 'v2',
+    'vecPar': 'v3',
     'scalarPar': 'sc',
     'dim': 3,
     'filetype': 'test',
@@ -18,7 +18,7 @@ EXTRA_VARIABLES = {
 EXTRA_VARIABLES.update(TYPE_INFO)
 
 OUTPUT_OPTIONS = {
-    'extension': '_test.cpp',
+    'extension': '3_float_test.cpp',
     'remove_double_extension': False
 }
 

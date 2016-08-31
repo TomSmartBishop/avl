@@ -7,17 +7,18 @@ IGNORE_JINJA_TEMPLATES = [
 ]
 
 EXTRA_VARIABLES = {
-    'filename': 'v4',
-    'vecPar': 'v4',
+    'vecPar': 'v2',
     'scalarPar': 'sc',
-    'dim': 4,
-    'param': [ 'x', 'y', 'z', 'w'],
-    'filetype': 'inl'
+    'dim': 2,
+    'filetype': 'test',
+    'param': [ 'x', 'y'], #temp
+    'test_vecDef': 'vec2<float>',
+    'test_scalarDef': 'float'
 }
 EXTRA_VARIABLES.update(TYPE_INFO)
 
 OUTPUT_OPTIONS = {
-    'extension': '4.inl',
+    'extension': '2_float_test.cpp',
     'remove_double_extension': False
 }
 

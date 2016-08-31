@@ -20,9 +20,10 @@ namespace avl
 		static constexpr P sqrt2		{ M_SQRT2 };
 		static constexpr P sqrt2_inv	{ M_SQRT1_2 };
 		
-		static constexpr P one			{  1 };
-		static constexpr P minus_one	{ -1 };
-		static constexpr P zero			{  0 };
+		static constexpr P one			{  1   };
+		static constexpr P minus_one	{ -1   };
+		static constexpr P zero			{  0   };
+		static constexpr P half			{  0.5 };
 		
 		static constexpr P sml_epsln	{ 0.000001 };
 		static constexpr P big_epsln	{ 0.001 };
