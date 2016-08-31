@@ -1,3 +1,3 @@
-jinja2_standalone_compiler inc --settings=jinja/v2_test.settings.py --out=test
-jinja2_standalone_compiler inc --settings=jinja/v3_test.settings.py --out=test
-jinja2_standalone_compiler inc --settings=jinja/v4_test.settings.py --out=test
+jinja2_standalone_compiler jinja --out=test/vec --settings=jinja/settings/test_v2_float_cpp.settings.py
+jinja2_standalone_compiler jinja --out=test/vec --settings=jinja/settings/test_v3_float_cpp.settings.py
+jinja2_standalone_compiler jinja --out=test/vec --settings=jinja/settings/test_v4_float_cpp.settings.py
