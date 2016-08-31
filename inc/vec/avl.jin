@@ -3,19 +3,25 @@
 //% from 'sequence.jin' import seq, seqRnd with context
 //% from 'flow.jin' import loop_ with context
 
+### Match the current demension with the provided list
+//% macro match(list_supportedDims)
+$(list_supportedDims|join).find(dim|string)!=-1@
+//% endmacro
+
 ### Splits a function body into header, inline and test code
-//% macro func(list_supportedDims, desc)
-//%   set currentDimMatches = (list_supportedDims|join).find(dim|string) != -1
+//% macro func(desc, enableFunc = true, forceTest = false)
+//%   set en = (enableFunc|string).strip()|upper == 'TRUE'
+//%   set enTest = (forceTest|string).strip()|upper == 'TRUE'
 //%   set content = caller()
 //%   set ident = content|length - content.lstrip()|length
-//%   if filetype=='h' and currentDimMatches
+//%   if filetype=='h' and en
 $'\t'*ident + desc@
 $content.split('\n')|first@;
 $'\t'*ident@
-//%  elif filetype=='inl' and currentDimMatches
+//%  elif filetype=='inl' and en
 $'\t'*ident + desc@
 $(content.split('test_case')|first)@
-//%  elif filetype=='test' and (currentDimMatches or list_supportedDims == [0])
+//%  elif filetype=='test' and (en or enTest)
 //%    for test_case in content.split('test_case')
 //%      if loop.index0!=0
 $'\t'*ident + 'SECTION( "' + desc.lstrip('/').strip(' ') + '/' + loop.index0|string + '" )'@
@@ -26,21 +32,19 @@ $'\t'*ident@
 //%  endif
 //% endmacro
 
-### Section Start
-//% macro section(desc)
-//%   if filetype=='test'
+### Section
+//% macro section(desc, enableSection = true, forceTest = false)
+//%   set en = (enableSection|string).strip()|upper == 'TRUE'
+//%   set enTest = (forceTest|string).strip()|upper == 'TRUE'
+//%   set content = caller()
+//%   set ident = content|length - content.lstrip()|length
+//%   if filetype=='test' and (en or enTest)
 TEST_CASE( "$desc.strip(' ')@", "[$test_vecDef@($dim@)]" )
 $'{'@
-//%-  else
-$'\t/// \defgroup ' + desc +'\n\t/// \\{'@
-//%-  endif
-//%-endmacro
+$content + '}'@
+//%   elif en
+$'\t'*ident + '/// \defgroup ' + desc +'\n' + '\t'*ident + '/// \\{\n' +'\t'*ident@
+$content + '\t'*ident + '/// \\}'@
+//%   endif
+//% endmacro
 
-### Section End
-//% macro endSection()
-//%   if filetype=='test'
-$'}'@
-//%   else
-$'\t/// \\}'@
-//%-  endif
-//%-endmacro
