@@ -1,4 +1,0 @@
-
-{% macro cmp_wise_op(template, op, sep, dim) %}
-    {% for val in range(dim) %}{% if not loop.first %}{{sep}}{% endif %}{{ template|replace("?", val)|replace("@", op) }}{% endfor %}
-{% endmacro %}
