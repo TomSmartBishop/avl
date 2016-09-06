@@ -76,7 +76,7 @@ namespace avl
 	}
 	
 	/// Set all vector components individually
-	avl_ainl constexpr auto set_all(v3& vecconst sc x, const sc y, const sc z) noexcept -> void;
+	avl_ainl constexpr auto set_all(v3& vec, const sc x, const sc y, const sc z) noexcept -> void
 	{
 		static_assert(eq<decltype(vec[ 0 ]), decltype(x)>::value, "Supply a scalar of the vectors element type for x.");
 		static_assert(eq<decltype(vec[ 1 ]), decltype(y)>::value, "Supply a scalar of the vectors element type for y.");
@@ -234,7 +234,7 @@ namespace avl
 	}
 	
 	// div_mk
-	avl_ainl_res constexpr auto div_mk(const v3& vec, const v3& other) noexcept(ndebug|exude)
+	avl_ainl_res constexpr auto div_mk(const v3& vec, const v3& other) noexcept(ndebug||exuse)
 	{
 		assert(get<0>(other)!=cnst<decltype(cmp(other))>::zero);
 		assert(get<1>(other)!=cnst<decltype(cmp(other))>::zero);
@@ -244,7 +244,7 @@ namespace avl
 	}
 	
 	// div_mk (scalar)
-	avl_ainl_res constexpr auto div_mk(const v3& vec, const sc scalar) noexcept(ndebug|exude)
+	avl_ainl_res constexpr auto div_mk(const v3& vec, const sc scalar) noexcept(ndebug||exuse)
 	{
 		assert(scalar!=cnst<decltype(scalar)>::zero);
 		return rem_const_ref_t< decltype(vec) >
@@ -252,7 +252,7 @@ namespace avl
 	}
 	
 	// div_set
-	avl_ainl constexpr auto div_set(const v3& vec, const v3& other) noexcept(ndebug|exude) -> void
+	avl_ainl constexpr auto div_set(const v3& vec, const v3& other) noexcept(ndebug||exuse) -> void
 	{
 		assert(get<0>(other)!=cnst<decltype(cmp(other))>::zero);
 		assert(get<1>(other)!=cnst<decltype(cmp(other))>::zero);
@@ -261,14 +261,14 @@ namespace avl
 	}
 	
 	// div_set (scalar)
-	avl_ainl_res constexpr auto div_set(const v3& vec, const sc scalar) noexcept(ndebug|exude) -> void
+	avl_ainl_res constexpr auto div_set(const v3& vec, const sc scalar) noexcept(ndebug||exuse) -> void
 	{
 		assert(scalar!=cnst<decltype(scalar)>::zero);
 		set_all(vec, get<0>(vec) / scalar, get<1>(vec) / scalar, get<2>(vec) / scalar );
 	}
 	
 	// div
-	avl_ainl_res constexpr auto div(const v3& vec, const v3& other) noexcept(ndebug|exude) -> decltype(vec)
+	avl_ainl_res constexpr auto div(const v3& vec, const v3& other) noexcept(ndebug||exuse) -> decltype(vec)
 	{
 		assert(get<0>(other)!=cnst<decltype(cmp(other))>::zero);
 		assert(get<1>(other)!=cnst<decltype(cmp(other))>::zero);
@@ -278,7 +278,7 @@ namespace avl
 	}
 	
 	// div (scalar)
-	avl_ainl_res constexpr auto div(const v3& vec, const sc scalar) noexcept(ndebug|exude) -> decltype(vec)
+	avl_ainl_res constexpr auto div(const v3& vec, const sc scalar) noexcept(ndebug||exuse) -> decltype(vec)
 	{
 		assert(scalar!=cnst<decltype(scalar)>::zero);
 		set_all(vec, get<0>(vec) / scalar, get<1>(vec) / scalar, get<2>(vec) / scalar );

@@ -20,7 +20,7 @@ namespace avl
 	/// \{
 	
 	/// Access the vector components by a range checked index from 0 to dim-1
-	avl_ainl_res constexpr auto get(v& vec, const s::size_t idx) noexcept(ndebug||exuse) -> decltype(cmp(vec));
+	avl_ainl_res constexpr auto get(const v& vec, const s::size_t idx) noexcept(ndebug||exuse) -> decltype(cmp(vec));
 	
 	/// Access the vector components by a static range checked index from 0 to dim-1
 	template<s::size_t _Idx> avl_ainl_res constexpr auto get(const v& vec) noexcept -> decltype(cmp(vec));
@@ -36,13 +36,13 @@ namespace avl
 	/// \{
 	
 	/// Returns a new vector with the requested length
-	avl_ainl_res constexpr auto setlen_mk(const v& vec, const sc len_to_set) noexcept(ndebug|exuse);
+	avl_ainl_res constexpr auto setlen_mk(const v& vec, const sc len_to_set) noexcept(ndebug||exuse);
 	
 	/// Set the length of the vector
-	avl_ainl constexpr auto setlen_set(v& vec, const sc len_to_set) noexcept(ndebug|exuse) -> void;
+	avl_ainl constexpr auto setlen_set(v& vec, const sc len_to_set) noexcept(ndebug||exuse) -> void;
 	
 	/// Set the length of the vector and return the same vector (chained)
-	avl_ainl_res constexpr auto setlen(v& vec, const sc len_to_set) noexcept(ndebug|exuse) -> decltype(cmp(vec));
+	avl_ainl_res constexpr auto setlen(v& vec, const sc len_to_set) noexcept(ndebug||exuse) -> decltype(cmp(vec));
 	
 	/// Calculate the length of the vector, prefere len_sqr when comparing distances
 	avl_ainl_res constexpr auto len(const v& vec) noexcept -> decltype(cmp(vec));

@@ -19,7 +19,7 @@ $test_scalarDef|default + ' ' + scalarVar@ = { $getRndFloat()@ }
 
 ### Only for tests: Create an array (nothing assigned)
 //% macro arrCreate(arrayVar)
-$test_scalarDef|default +'[] ' + arrayVar@
+$test_scalarDef|default@ $arrayVar@ []
 //%-endmacro
 
 ### Only for tests: Create an array with random values

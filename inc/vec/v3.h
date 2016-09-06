@@ -39,7 +39,7 @@ namespace avl
 	avl_ainl constexpr auto set_all(v3& vec, const sc scalar) noexcept -> void;
 	
 	/// Set all vector components individually
-	avl_ainl constexpr auto set_all(v3& vecconst sc x, const sc y, const sc z) noexcept -> void;;
+	avl_ainl constexpr auto set_all(v3& vec, const sc x, const sc y, const sc z) noexcept -> void;
 	
 	/// Set all vector components individually by a fixed size array
 	avl_ainl constexpr auto set_all(v3& vec, const sc scalars[ 3 ]) noexcept -> void;
@@ -106,22 +106,22 @@ namespace avl
 	avl_ainl_res constexpr auto mul(const v3& vec, const sc scalar) noexcept -> decltype(vec);
 	
 	// div_mk
-	avl_ainl_res constexpr auto div_mk(const v3& vec, const v3& other) noexcept(ndebug|exude);
+	avl_ainl_res constexpr auto div_mk(const v3& vec, const v3& other) noexcept(ndebug||exuse);
 	
 	// div_mk (scalar)
-	avl_ainl_res constexpr auto div_mk(const v3& vec, const sc scalar) noexcept(ndebug|exude);
+	avl_ainl_res constexpr auto div_mk(const v3& vec, const sc scalar) noexcept(ndebug||exuse);
 	
 	// div_set
-	avl_ainl constexpr auto div_set(const v3& vec, const v3& other) noexcept(ndebug|exude) -> void;
+	avl_ainl constexpr auto div_set(const v3& vec, const v3& other) noexcept(ndebug||exuse) -> void;
 	
 	// div_set (scalar)
-	avl_ainl_res constexpr auto div_set(const v3& vec, const sc scalar) noexcept(ndebug|exude) -> void;
+	avl_ainl_res constexpr auto div_set(const v3& vec, const sc scalar) noexcept(ndebug||exuse) -> void;
 	
 	// div
-	avl_ainl_res constexpr auto div(const v3& vec, const v3& other) noexcept(ndebug|exude) -> decltype(vec);
+	avl_ainl_res constexpr auto div(const v3& vec, const v3& other) noexcept(ndebug||exuse) -> decltype(vec);
 	
 	// div (scalar)
-	avl_ainl_res constexpr auto div(const v3& vec, const sc scalar) noexcept(ndebug|exude) -> decltype(vec);
+	avl_ainl_res constexpr auto div(const v3& vec, const sc scalar) noexcept(ndebug||exuse) -> decltype(vec);
 	
 	/// \}
 }

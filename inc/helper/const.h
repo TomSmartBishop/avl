@@ -1,6 +1,8 @@
 #ifndef AVL_CONST_H
 #define AVL_CONST_H
 
+#include <cmath>
+
 /// avl: A Vector Library
 /// \author Thomas Pollak
 namespace avl
@@ -14,7 +16,7 @@ namespace avl
 		static constexpr P pi_4			{ M_PI_4 };
 		static constexpr P pi_inv		{ M_1_PI };
 		
-		static constexpr P to_deg		{ 180.0 * piInv };
+		static constexpr P to_deg		{ 180.0 * pi_inv };
 		static constexpr P to_rad		{ pi / 180.0 };
 		
 		static constexpr P sqrt2		{ M_SQRT2 };
@@ -28,5 +30,6 @@ namespace avl
 		static constexpr P sml_epsln	{ 0.000001 };
 		static constexpr P big_epsln	{ 0.001 };
 	};
-	
+}
+
 #endif // AVL_CONST_H

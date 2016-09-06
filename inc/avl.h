@@ -91,6 +91,8 @@ namespace avl {
     #else
         static constexpr bool ndebug = false;
     #endif
+    
+    static constexpr bool exuse = false; //just for now
 }
 
 #include <cassert>

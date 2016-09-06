@@ -23,7 +23,7 @@ namespace avl
 	/// \{
 	
 	/// Access the vector components by a range checked index from 0 to dim-1
-	avl_ainl_res constexpr auto get(v& vec, const s::size_t idx) noexcept(ndebug||exuse) -> decltype(cmp(vec))
+	avl_ainl_res constexpr auto get(const v& vec, const s::size_t idx) noexcept(ndebug||exuse) -> decltype(cmp(vec))
 	{
 		assert(idx < dim< rem_const_ref_t< decltype( vec ) > >::value);
 		return vec[idx];
@@ -57,15 +57,15 @@ namespace avl
 	/// \{
 	
 	/// Returns a new vector with the requested length
-	avl_ainl_res constexpr auto setlen_mk(const v& vec, const sc len_to_set) noexcept(ndebug|exuse)
+	avl_ainl_res constexpr auto setlen_mk(const v& vec, const sc len_to_set) noexcept(ndebug||exuse)
 	{
 		const auto vec_len = len(vec);
 		assert(vec_len!=cnst<decltype(vec_len)>::zero);
-		return mul_mk(vec, len_to_set / vec_len));
+		return mul_mk(vec, len_to_set / vec_len);
 	}
 	
 	/// Set the length of the vector
-	avl_ainl constexpr auto setlen_set(v& vec, const sc len_to_set) noexcept(ndebug|exuse) -> void
+	avl_ainl constexpr auto setlen_set(v& vec, const sc len_to_set) noexcept(ndebug||exuse) -> void
 	{
 		const auto vec_len = len(vec);
 		assert(vec_len!=cnst<decltype(vec_len)>::zero);
@@ -73,7 +73,7 @@ namespace avl
 	}
 	
 	/// Set the length of the vector and return the same vector (chained)
-	avl_ainl_res constexpr auto setlen(v& vec, const sc len_to_set) noexcept(ndebug|exuse) -> decltype(cmp(vec))
+	avl_ainl_res constexpr auto setlen(v& vec, const sc len_to_set) noexcept(ndebug||exuse) -> decltype(cmp(vec))
 	{
 		const auto vec_len = len(vec);
 		assert(vec_len!=cnst<decltype(vec_len)>::zero);

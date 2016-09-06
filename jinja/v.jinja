@@ -46,7 +46,7 @@ using namespace avl;
 	}
 	test_case
 	{
-		const $vecCreate(vec)@;
+		const $vecCreateZero(vec)@;
 		static_assert($checkCmpType(vec, 0, "cmp(vec)")@, $supplyScalar@);
 	}
 	//% endcall
@@ -55,7 +55,7 @@ using namespace avl;
 //% call section('Getters and setters for all vectors', match([0]), true)
 	
 	//% call func('/// Access the vector components by a range checked index from 0 to dim-1', match([0]), true)
-	avl_ainl_res constexpr auto get($vecPar@& vec, const s::size_t idx) noexcept(ndebug||exuse) -> decltype(cmp(vec))
+	avl_ainl_res constexpr auto get(const $vecPar@& vec, const s::size_t idx) noexcept(ndebug||exuse) -> decltype(cmp(vec))
 	{
 		assert($checkDim(vec, idx)@);
 		return $vecReadCmp(vec, idx)@;
@@ -95,7 +95,7 @@ using namespace avl;
 	}
 	test_case
 	{
-		$vecCreate(vec)@;
+		$vecCreateZero(vec)@;
 		const $arrCreateRnd(arr)@;
 		
 		//% for i in range(dim)
@@ -128,16 +128,16 @@ using namespace avl;
 //% call section('Vector length operations')
 	
 	//% call func('/// Returns a new vector with the requested length', match([0]), true)
-	avl_ainl_res constexpr auto setlen_mk(const $vecPar@& vec, const $scalarPar@ len_to_set) noexcept(ndebug|exuse)
+	avl_ainl_res constexpr auto setlen_mk(const $vecPar@& vec, const $scalarPar@ len_to_set) noexcept(ndebug||exuse)
 	{
 		const auto vec_len = len(vec);
 		assert(vec_len!=cnst<decltype(vec_len)>::zero);
-		return mul_mk(vec, len_to_set / vec_len));
+		return mul_mk(vec, len_to_set / vec_len);
 	}
 	test_case
 	{
 		const $vecCreateRnd(vec)@;
-		const auto len_to_set = $getRndFloat()@;
+		const $scalarCreateRnd('len_to_set')@;
 		const auto new_vec = setlen_mk(vec, len_to_set);
 		const auto len_new_vec = len(new_vec);
 		
@@ -153,7 +153,7 @@ using namespace avl;
 
 //%for mut, rt, res, info in [('_set', '-> void', '', ''), ('', '-> decltype(cmp(vec))', '_res', ' and return the same vector (chained)')]
 	//% call func('/// Set the length of the vector'+info, match([0]), true)
-	avl_ainl$res@ constexpr auto setlen$mut@($vecPar@& vec, const $scalarPar@ len_to_set) noexcept(ndebug|exuse) $rt@
+	avl_ainl$res@ constexpr auto setlen$mut@($vecPar@& vec, const $scalarPar@ len_to_set) noexcept(ndebug||exuse) $rt@
 	{
 		const auto vec_len = len(vec);
 		assert(vec_len!=cnst<decltype(vec_len)>::zero);
@@ -165,7 +165,7 @@ using namespace avl;
 	test_case
 	{
 		$vecCreateRnd(vec)@;
-		const auto len_to_set = $getRndFloat()@;
+		const $scalarCreateRnd('len_to_set')@;
 		$if_then(mut=='', 'const auto ret_vec = ')@setlen$mut@(vec, len_to_set);
 		const auto vec_len = len(vec);
 		
@@ -294,8 +294,8 @@ using namespace avl;
 	test_case
 	{
 		$vecCreateRnd(vec)@;
-		$if_then(mut=='', 'auto ret_vec = ')@norm$mut@(vec);
-		const auto len_to_set = len(vec);
+		$if_then(mut=='', 'auto &ret_vec = ')@norm$mut@(vec);
+		const $scalarCreateRnd('len_to_set')@;
 		REQUIRE( len_to_set == Approx( cnst<$scalarType()@>::one ) );
 		//% if mut==''
 		REQUIRE( &vec == &ret_vec);
@@ -311,7 +311,7 @@ using namespace avl;
 		$vecCreateZero(unit_vec)@;
 		set<0>(unit_vec, cnst<$scalarType()@>::one);
 		
-		$if_then(mut=='', 'auto ret_vec = ')@norm$mut@(vec, unit_vec);
+		$if_then(mut=='', 'auto &ret_vec = ')@norm$mut@(vec, unit_vec);
 		const auto vec_len = len(vec);
 		REQUIRE( vec_len == Approx( cnst<$scalarType()@>::one ) );
 		REQUIRE( get<0>(vec) == Approx( cnst<$scalarType()@>::one ) );
@@ -461,20 +461,20 @@ using namespace avl;
 	}
 	test_case
 	{
-		$vecCreate('vec0')@;
-		$vecCreate('vec1')@;
-		$vecCreate('vec2')@;
-		set<0>(vec0, 1);
-		set<1>(vec1, 1);
-		set<0>(vec2, -1);
+		$vecCreateZero('vec_0')@;
+		$vecCreateZero('vec_1')@;
+		$vecCreateZero('vec_2')@;
+		set<0>(vec_0, 1);
+		set<1>(vec_1, 1);
+		set<0>(vec_2, -1);
 		
-		const auto a0 = area$if_then(dim==4,'3')@(vec0, vec1);
+		const auto a0 = area$if_then(dim==4,'3')@(vec_0, vec_1);
 		REQUIRE( a0 == cnst<decltype(a0)::half );
 		
-		const auto a1 = area$if_then(dim==4,'3')@(vec0, vec0);
+		const auto a1 = area$if_then(dim==4,'3')@(vec_0, vec_0);
 		REQUIRE( a1 == cnst<decltype(a1)::zero );
 		
-		const auto a2 = area$if_then(dim==4,'3')@(vec0, vec2);
+		const auto a2 = area$if_then(dim==4,'3')@(vec_0, vec_2);
 		REQUIRE( a2 == cnst<decltype(a2)::zero );
 	}
 	//% endcall
@@ -502,7 +502,44 @@ using namespace avl;
 	}
 	test_case
 	{
+		$vecCreateZero('vec_100x')@
+		const $vecCreateZero('vec_100x_dup')@
+		const $vecCreateZero('vec_010x')@
+		const $vecCreateZero('expected_res1')@
+		const $vecCreateZero('expected_res2')@
+		set<0>(vec_100x,     1);
+		set<0>(vec_100x_dup,  1);
+		set<1>(vec_010x,  1);
+		set<2>(expected_res1,  1);
+		set<2>(expected_res2, -1);
 		
+		//% if mut=='_mk'
+		auto result1 = cross$if_then(dim==4, '3')@_mk(vec_100x, vec_010x);
+		auto result2 = cross$if_then(dim==4, '3')@_mk(vec_010x, vec_100x);
+		//% elif mut=='_set'
+		cross$if_then(dim==4, '3')@_set(vec_100x, vec_010x);
+		cross$if_then(dim==4, '3')@_set(vec_010x, vec_100x_dup);
+		//% else
+		auto &result1 = cross$if_then(dim==4, '3')@(vec_100x, vec_010x);
+		auto &result2 = cross$if_then(dim==4, '3')@(vec_010x, vec_100x);
+		//% endif
+		
+		//% for i in range(dim)
+		//%   if mut=='_set'
+		REQUIRE( get<$i@>(vec_100x) == Approx( get<$i@>(expected_res1) ) );
+		//%   else
+		REQUIRE( get<$i@>(result1) == Approx( get<$i@>(expected_res1) ) );
+		//%   endif
+		//%  endfor
+		
+		
+		//% for i in range(dim)
+		//%   if mut=='_set'
+		REQUIRE( get<$i@>(vec_010x) == Approx( get<$i@>(expected_res2) ) );
+		//%   else
+		REQUIRE( get<$i@>(result2) == Approx( get<$i@>(expected_res2) ) );
+		//%   endif
+		//%  endfor
 	}
 	//% endcall
 //%   endfor
@@ -531,7 +568,7 @@ using namespace avl;
 	//% endcall
 	
 	//% call func('/// Set all vector components individually', match([2,3,4]))
-	avl_ainl constexpr auto set_all($vecPar@& vec/*% call loop_(param) %*/const $scalarPar@ #/*% endcall %*/) noexcept -> void;
+	avl_ainl constexpr auto set_all($vecPar@& vec/*% for name in param %*/, const $scalarPar@ $name@/*% endfor %*/) noexcept -> void
 	{
 		//% for i in range(dim)
 		static_assert(eq<decltype(vec[ $i@ ]), decltype($param[i]@)>::value, "Supply a scalar of the vectors element type for $param[i]@.");
@@ -625,7 +662,7 @@ using namespace avl;
 //%   for mut, rt, res in [('_mk', '', '_res'), ('_set', ' -> void', ''), ('', ' -> decltype(vec)', '_res')]
 	
 	//% call func('// ' + op + mut, match([2,3,4]))
-	avl_ainl$res@ constexpr auto $op+mut@(const $vecPar@& vec, const $vecPar@& other) noexcept$if_then(op=="div", '(ndebug|exude)')+rt@
+	avl_ainl$res@ constexpr auto $op+mut@(const $vecPar@& vec, const $vecPar@& other) noexcept$if_then(op=="div", '(ndebug||exuse)')+rt@
 	{
 		//% call loop_if(op=="div", range(dim), '')
 		assert(get<#>(other)!=cnst<decltype(cmp(other))>::zero);
@@ -678,7 +715,7 @@ using namespace avl;
 	//% endcall
 	
 	//% call func('// ' + op + mut +' (scalar)', match([2,3,4]))
-	avl_ainl_res constexpr auto $op+mut@(const $vecPar@& vec, const $scalarPar@ scalar) noexcept$if_then(op=="div", '(ndebug|exude)')+rt@
+	avl_ainl_res constexpr auto $op+mut@(const $vecPar@& vec, const $scalarPar@ scalar) noexcept$if_then(op=="div", '(ndebug||exuse)')+rt@
 	{
 		//% if op=="div"
 		assert(scalar!=cnst<decltype(scalar)>::zero);
