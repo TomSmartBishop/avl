@@ -3,8 +3,6 @@
 
 #pragma once
 
-#include "../helper/const.h"
-
 /// avl: A Vector Library
 /// \author Thomas Pollak
 namespace avl
@@ -25,7 +23,7 @@ namespace avl
 	/// \{
 	
 	/// Calculate the area of the spawned triangle
-	avl_inl_res constexpr auto area(const v2& vec, const v2& other) noexcept -> decltype(cmp(vec))
+	avl_inl_res constexpr auto area(const v2& vec, const decltype(vec)& other) noexcept -> decltype(cmp(vec))
 	{
 		using scalar = decltype(cmp(vec));
 		const auto area = cnst<scalar>::half*(get<0>(vec) * get<1>(other) - get<1>(vec) * get<0>(other));
@@ -93,26 +91,26 @@ namespace avl
 	}
 	
 	// add_set
-	avl_ainl constexpr auto add_set(const v2& vec, const v2& other) noexcept -> void
+	avl_ainl constexpr auto add_set(v2& vec, const v2& other) noexcept -> void
 	{
 		set_all(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other) );
 	}
 	
 	// add_set (scalar)
-	avl_ainl_res constexpr auto add_set(const v2& vec, const sc scalar) noexcept -> void
+	avl_ainl constexpr auto add_set(v2& vec, const sc scalar) noexcept -> void
 	{
 		set_all(vec, get<0>(vec) + scalar, get<1>(vec) + scalar );
 	}
 	
 	// add
-	avl_ainl_res constexpr auto add(const v2& vec, const v2& other) noexcept -> decltype(vec)
+	avl_ainl_res constexpr auto add(v2& vec, const v2& other) noexcept -> decltype(vec)
 	{
 		set_all(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other) );
 		return vec;
 	}
 	
 	// add (scalar)
-	avl_ainl_res constexpr auto add(const v2& vec, const sc scalar) noexcept -> decltype(vec)
+	avl_ainl_res constexpr auto add(v2& vec, const sc scalar) noexcept -> decltype(vec)
 	{
 		set_all(vec, get<0>(vec) + scalar, get<1>(vec) + scalar );
 		return vec;
@@ -133,26 +131,26 @@ namespace avl
 	}
 	
 	// sub_set
-	avl_ainl constexpr auto sub_set(const v2& vec, const v2& other) noexcept -> void
+	avl_ainl constexpr auto sub_set(v2& vec, const v2& other) noexcept -> void
 	{
 		set_all(vec, get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other) );
 	}
 	
 	// sub_set (scalar)
-	avl_ainl_res constexpr auto sub_set(const v2& vec, const sc scalar) noexcept -> void
+	avl_ainl constexpr auto sub_set(v2& vec, const sc scalar) noexcept -> void
 	{
 		set_all(vec, get<0>(vec) - scalar, get<1>(vec) - scalar );
 	}
 	
 	// sub
-	avl_ainl_res constexpr auto sub(const v2& vec, const v2& other) noexcept -> decltype(vec)
+	avl_ainl_res constexpr auto sub(v2& vec, const v2& other) noexcept -> decltype(vec)
 	{
 		set_all(vec, get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other) );
 		return vec;
 	}
 	
 	// sub (scalar)
-	avl_ainl_res constexpr auto sub(const v2& vec, const sc scalar) noexcept -> decltype(vec)
+	avl_ainl_res constexpr auto sub(v2& vec, const sc scalar) noexcept -> decltype(vec)
 	{
 		set_all(vec, get<0>(vec) - scalar, get<1>(vec) - scalar );
 		return vec;
@@ -173,26 +171,26 @@ namespace avl
 	}
 	
 	// mul_set
-	avl_ainl constexpr auto mul_set(const v2& vec, const v2& other) noexcept -> void
+	avl_ainl constexpr auto mul_set(v2& vec, const v2& other) noexcept -> void
 	{
 		set_all(vec, get<0>(vec) * get<0>(other), get<1>(vec) * get<1>(other) );
 	}
 	
 	// mul_set (scalar)
-	avl_ainl_res constexpr auto mul_set(const v2& vec, const sc scalar) noexcept -> void
+	avl_ainl constexpr auto mul_set(v2& vec, const sc scalar) noexcept -> void
 	{
 		set_all(vec, get<0>(vec) * scalar, get<1>(vec) * scalar );
 	}
 	
 	// mul
-	avl_ainl_res constexpr auto mul(const v2& vec, const v2& other) noexcept -> decltype(vec)
+	avl_ainl_res constexpr auto mul(v2& vec, const v2& other) noexcept -> decltype(vec)
 	{
 		set_all(vec, get<0>(vec) * get<0>(other), get<1>(vec) * get<1>(other) );
 		return vec;
 	}
 	
 	// mul (scalar)
-	avl_ainl_res constexpr auto mul(const v2& vec, const sc scalar) noexcept -> decltype(vec)
+	avl_ainl_res constexpr auto mul(v2& vec, const sc scalar) noexcept -> decltype(vec)
 	{
 		set_all(vec, get<0>(vec) * scalar, get<1>(vec) * scalar );
 		return vec;
@@ -216,7 +214,7 @@ namespace avl
 	}
 	
 	// div_set
-	avl_ainl constexpr auto div_set(const v2& vec, const v2& other) noexcept(ndebug||exuse) -> void
+	avl_ainl constexpr auto div_set(v2& vec, const v2& other) noexcept(ndebug||exuse) -> void
 	{
 		assert(get<0>(other)!=cnst<decltype(cmp(other))>::zero);
 		assert(get<1>(other)!=cnst<decltype(cmp(other))>::zero);
@@ -224,14 +222,14 @@ namespace avl
 	}
 	
 	// div_set (scalar)
-	avl_ainl_res constexpr auto div_set(const v2& vec, const sc scalar) noexcept(ndebug||exuse) -> void
+	avl_ainl constexpr auto div_set(v2& vec, const sc scalar) noexcept(ndebug||exuse) -> void
 	{
 		assert(scalar!=cnst<decltype(scalar)>::zero);
 		set_all(vec, get<0>(vec) / scalar, get<1>(vec) / scalar );
 	}
 	
 	// div
-	avl_ainl_res constexpr auto div(const v2& vec, const v2& other) noexcept(ndebug||exuse) -> decltype(vec)
+	avl_ainl_res constexpr auto div(v2& vec, const v2& other) noexcept(ndebug||exuse) -> decltype(vec)
 	{
 		assert(get<0>(other)!=cnst<decltype(cmp(other))>::zero);
 		assert(get<1>(other)!=cnst<decltype(cmp(other))>::zero);
@@ -240,11 +238,21 @@ namespace avl
 	}
 	
 	// div (scalar)
-	avl_ainl_res constexpr auto div(const v2& vec, const sc scalar) noexcept(ndebug||exuse) -> decltype(vec)
+	avl_ainl_res constexpr auto div(v2& vec, const sc scalar) noexcept(ndebug||exuse) -> decltype(vec)
 	{
 		assert(scalar!=cnst<decltype(scalar)>::zero);
 		set_all(vec, get<0>(vec) / scalar, get<1>(vec) / scalar );
 		return vec;
+	}
+	
+	/// \}
+	/// \defgroup General purpos functions for 2 component vectors
+	/// \{
+	
+	/// Dot product
+	avl_ainl constexpr auto dot(const v2& vec, decltype(vec)& other) noexcept -> decltype(cmp(vec))
+	{
+		return get<0>(vec) * get<0>(other) + get<1>(vec) * get<1>(other);
 	}
 	
 	/// \}

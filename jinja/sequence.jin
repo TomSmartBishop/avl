@@ -28,22 +28,14 @@ $random_floats[rnd.index]@
 
 ### Create a random positive float
 //% macro getRndFloatPos()
-//%-if random_floats[rnd.index]>=0
-$random_floats[rnd.index]@
-//%-else
-$-random_floats[rnd.index]@
-//%-endif
+$random_floats[rnd.index]|float|abs@
 //%-if rnd.update({ 'index': (rnd.index+1)%rnd.length})
 //%-endif
 //%-endmacro
 
 ### Create a random negative float
 //% macro getRndFloatNeg()
-//%-if random_floats[rnd.index]<0
-$random_floats[rnd.index]@
-//%-else
-$-random_floats[rnd.index]@
-//%-endif
+-$random_floats[rnd.index]|float|abs@
 //%-if rnd.update({ 'index': (rnd.index+1)%rnd.length})
 //%-endif
 //%-endmacro

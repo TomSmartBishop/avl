@@ -142,7 +142,7 @@ TEST_CASE( "Vector length operations", "[vec2<float>(2)]" )
 	SECTION( "Returns a normalized vector, use alternative vector if the current vector length is 0/1" )
 	{
 		const vec2<float> zero_vec = { 0, 0 };
-		const auto zero_len = len(zero_vec)
+		const auto zero_len = len(zero_vec);
 		REQUIRE( zero_len == Approx( cnst<float>::zero ) );
 		
 		vec2<float> unit_vec = { 0, 0 };
@@ -165,7 +165,7 @@ TEST_CASE( "Vector length operations", "[vec2<float>(2)]" )
 	SECTION( "Normalize the current vector, use alternative vector if the current vector length is 0/1" )
 	{
 		vec2<float> vec = { 0, 0 };
-		const auto zero_len = len(vec)
+		const auto zero_len = len(vec);
 		REQUIRE( zero_len == Approx( cnst<float>::zero ) );
 		
 		vec2<float> unit_vec = { 0, 0 };
@@ -189,7 +189,7 @@ TEST_CASE( "Vector length operations", "[vec2<float>(2)]" )
 	SECTION( "Normalize the current vector and return the same vector (chained), use alternative vector if the current vector length is 0/1" )
 	{
 		vec2<float> vec = { 0, 0 };
-		const auto zero_len = len(vec)
+		const auto zero_len = len(vec);
 		REQUIRE( zero_len == Approx( cnst<float>::zero ) );
 		
 		vec2<float> unit_vec = { 0, 0 };
@@ -207,10 +207,10 @@ TEST_CASE( "Spacial operations", "[vec2<float>(2)]" )
 {
 	SECTION( "Calculate the angle between two vectors in radian/1" )
 	{
-		const auto random_len1 = 96.213;
-		const auto random_len2 = 63.923;
-		const auto random_len3 = -29.223;
-		const auto random_len4 = 83.438;
+		const float random_len1 = { 96.213 };
+		const float random_len2 = { 63.923 };
+		const float random_len3 = { 29.223 };
+		const float random_len4 = { 83.438 };
 		
 		vec2<float> vec_zero = { 0, 0 };
 		vec2<float> vec_10x = { 0, 0 };
@@ -224,29 +224,29 @@ TEST_CASE( "Spacial operations", "[vec2<float>(2)]" )
 		set<1>(vec_11x, random_len4);
 		
 		const auto angle0 = angle_rd(vec_10x, vec_zero);
-		REQUIRE( angle0 == Approx( cnst<float>::zero );
+		REQUIRE( angle0 == Approx( cnst<float>::zero ) );
 		
 		const auto angle90 = angle_rd(vec_10x, vec_01x);
-		REQUIRE( angle90 == Approx( 1.57079632679 );
+		REQUIRE( angle90 == Approx( 1.57079632679 ) );
 		
 		const auto angle45a = angle_rd(vec_10x, vec_11x);
-		REQUIRE( angle45a == Approx( 0.785398163396 );
+		REQUIRE( angle45a == Approx( 0.785398163396 ) );
 		const auto angle45b = angle_rd(vec_01x, vec_11x);
-		REQUIRE( angle45b == Approx( 0.785398163396 );
+		REQUIRE( angle45b == Approx( 0.785398163396 ) );
 		
 		const auto angle135 = angle_rd(vec_m10x, vec_11x);
-		REQUIRE( angle135 == Approx( 2.35619449019 );
+		REQUIRE( angle135 == Approx( 2.35619449019 ) );
 		
 		const auto angle180 = angle_rd(vec_10x, vec_m10x);
-		REQUIRE( angle180 == Approx( 3.14159265358 );
+		REQUIRE( angle180 == Approx( 3.14159265358 ) );
 	}
 	
 	SECTION( "Calculate the angle between two vectors in degree/1" )
 	{
-		const auto random_len1 = -89.235;
-		const auto random_len2 = 64.109;
-		const auto random_len3 = -5.5;
-		const auto random_len4 = -59.844;
+		const float random_len1 = { 89.235 };
+		const float random_len2 = { 64.109 };
+		const float random_len3 = { 5.5 };
+		const float random_len4 = { 59.844 };
 		
 		vec2<float> vec_zero = { 0, 0 };
 		vec2<float> vec_10x = { 0, 0 };
@@ -260,21 +260,21 @@ TEST_CASE( "Spacial operations", "[vec2<float>(2)]" )
 		set<1>(vec_11x, random_len4);
 		
 		const auto angle0 = angle_dg(vec_10x, vec_zero);
-		REQUIRE( angle0 == Approx( cnst<float>::zero );
+		REQUIRE( angle0 == Approx( cnst<float>::zero ) );
 		
 		const auto angle90 = angle_dg(vec_10x, vec_01x);
-		REQUIRE( angle90 == Approx( 90 );
+		REQUIRE( angle90 == Approx( 90 ) );
 		
 		const auto angle45a = angle_dg(vec_10x, vec_11x);
-		REQUIRE( angle45a == Approx( 45 );
+		REQUIRE( angle45a == Approx( 45 ) );
 		const auto angle45b = angle_dg(vec_01x, vec_11x);
-		REQUIRE( angle45b == Approx( 45 );
+		REQUIRE( angle45b == Approx( 45 ) );
 		
 		const auto angle135 = angle_dg(vec_m10x, vec_11x);
-		REQUIRE( angle135 == Approx( 135 );
+		REQUIRE( angle135 == Approx( 135 ) );
 		
 		const auto angle180 = angle_dg(vec_10x, vec_m10x);
-		REQUIRE( angle180 == Approx( 180 );
+		REQUIRE( angle180 == Approx( 180 ) );
 	}
 	
 	SECTION( "Calculate the area of the spawned triangle/1" )
@@ -282,18 +282,18 @@ TEST_CASE( "Spacial operations", "[vec2<float>(2)]" )
 		vec2<float> vec_0 = { 0, 0 };
 		vec2<float> vec_1 = { 0, 0 };
 		vec2<float> vec_2 = { 0, 0 };
-		set<0>(vec_0, 1);
-		set<1>(vec_1, 1);
-		set<0>(vec_2, -1);
+		set<0>(vec_0, cnst<float>::one);
+		set<1>(vec_1, cnst<float>::one);
+		set<0>(vec_2, cnst<float>::minus_one);
 		
 		const auto a0 = area(vec_0, vec_1);
-		REQUIRE( a0 == cnst<decltype(a0)::half );
+		REQUIRE( a0 == cnst<float>::half );
 		
 		const auto a1 = area(vec_0, vec_0);
-		REQUIRE( a1 == cnst<decltype(a1)::zero );
+		REQUIRE( a1 == cnst<float>::zero );
 		
 		const auto a2 = area(vec_0, vec_2);
-		REQUIRE( a2 == cnst<decltype(a2)::zero );
+		REQUIRE( a2 == cnst<float>::zero );
 	}
 	
 }
@@ -303,7 +303,8 @@ TEST_CASE( "Getter and setters for 2 component vectors", "[vec2<float>(2)]" )
 	{
 		vec2<float> vec = { 0, 0 };
 		
-		const auto val = -71.993;
+		const float val = { -71.993 };
+		
 		set_all(vec, val);
 		
 		REQUIRE( get<0>(vec)==val );
@@ -349,47 +350,47 @@ TEST_CASE( "General vector operations for 2 component vectors", "[vec2<float>(2)
 {
 	vec2<float> add_var_1 = { 53.365, -77.151 };
 	vec2<float> add_var_2 = { 9.297, 68.259 };
-	float add_scalar = { 31.885 };
+	const float add_scalar = { 31.885 };
 	
 	const float add_vec_res [] =
 		{ get<0>(add_var_1) + get<0>(add_var_2), get<1>(add_var_1) + get<1>(add_var_2) };
 	const float add_scalar_res [] =
-		{ get<0>(add_var_1) + get<0>(add_scalar), get<1>(add_var_1) + get<1>(add_scalar) };
+		{ get<0>(add_var_1) + add_scalar, get<1>(add_var_1) + add_scalar };
 	const float add_vec_scalar_res [] =
-		{ get<0>(add_var_1) + get<0>(add_var_2) + get<0>(add_scalar), get<1>(add_var_1) + get<1>(add_var_2) + get<1>(add_scalar) };
+		{ get<0>(add_var_1) + get<0>(add_var_2) + add_scalar, get<1>(add_var_1) + get<1>(add_var_2) + add_scalar };
 	
 	vec2<float> sub_var_1 = { 1.285, -91.230 };
 	vec2<float> sub_var_2 = { -7.666, 64.986 };
-	float sub_scalar = { -43.384 };
+	const float sub_scalar = { -43.384 };
 	
 	const float sub_vec_res [] =
 		{ get<0>(sub_var_1) - get<0>(sub_var_2), get<1>(sub_var_1) - get<1>(sub_var_2) };
 	const float sub_scalar_res [] =
-		{ get<0>(sub_var_1) - get<0>(sub_scalar), get<1>(sub_var_1) - get<1>(sub_scalar) };
+		{ get<0>(sub_var_1) - sub_scalar, get<1>(sub_var_1) - sub_scalar };
 	const float sub_vec_scalar_res [] =
-		{ get<0>(sub_var_1) - get<0>(sub_var_2) - get<0>(sub_scalar), get<1>(sub_var_1) - get<1>(sub_var_2) - get<1>(sub_scalar) };
+		{ get<0>(sub_var_1) - get<0>(sub_var_2) - sub_scalar, get<1>(sub_var_1) - get<1>(sub_var_2) - sub_scalar };
 	
 	vec2<float> mul_var_1 = { 74.225, 27.629 };
 	vec2<float> mul_var_2 = { 69.916, 65.982 };
-	float mul_scalar = { -12.719 };
+	const float mul_scalar = { -12.719 };
 	
 	const float mul_vec_res [] =
 		{ get<0>(mul_var_1) * get<0>(mul_var_2), get<1>(mul_var_1) * get<1>(mul_var_2) };
 	const float mul_scalar_res [] =
-		{ get<0>(mul_var_1) * get<0>(mul_scalar), get<1>(mul_var_1) * get<1>(mul_scalar) };
+		{ get<0>(mul_var_1) * mul_scalar, get<1>(mul_var_1) * mul_scalar };
 	const float mul_vec_scalar_res [] =
-		{ get<0>(mul_var_1) * get<0>(mul_var_2) * get<0>(mul_scalar), get<1>(mul_var_1) * get<1>(mul_var_2) * get<1>(mul_scalar) };
+		{ get<0>(mul_var_1) * get<0>(mul_var_2) * mul_scalar, get<1>(mul_var_1) * get<1>(mul_var_2) * mul_scalar };
 	
 	vec2<float> div_var_1 = { 13.388, 8.611 };
 	vec2<float> div_var_2 = { -44.171, 17.159 };
-	float div_scalar = { -30.164 };
+	const float div_scalar = { -30.164 };
 	
 	const float div_vec_res [] =
 		{ get<0>(div_var_1) / get<0>(div_var_2), get<1>(div_var_1) / get<1>(div_var_2) };
 	const float div_scalar_res [] =
-		{ get<0>(div_var_1) / get<0>(div_scalar), get<1>(div_var_1) / get<1>(div_scalar) };
+		{ get<0>(div_var_1) / div_scalar, get<1>(div_var_1) / div_scalar };
 	const float div_vec_scalar_res [] =
-		{ get<0>(div_var_1) / get<0>(div_var_2) / get<0>(div_scalar), get<1>(div_var_1) / get<1>(div_var_2) / get<1>(div_scalar) };
+		{ get<0>(div_var_1) / get<0>(div_var_2) / div_scalar, get<1>(div_var_1) / get<1>(div_var_2) / div_scalar };
 	
 	SECTION( "add_mk/1" )
 	{
@@ -411,15 +412,15 @@ TEST_CASE( "General vector operations for 2 component vectors", "[vec2<float>(2)
 	SECTION( "add_set/1" )
 	{
 		add_set(add_var_1, add_var_2);
-		REQUIRE( get<0>(res) == Approx(add_vec_res[0]) );
-		REQUIRE( get<1>(res) == Approx(add_vec_res[1]) );
+		REQUIRE( get<0>(add_var_1) == Approx(add_vec_res[0]) );
+		REQUIRE( get<1>(add_var_1) == Approx(add_vec_res[1]) );
 	}
 	
 	SECTION( "add_set (scalar)/1" )
 	{
 		add_set(add_var_1, add_scalar);
-		REQUIRE( get<0>(res) == Approx(add_scalar_res[0]) );
-		REQUIRE( get<1>(res) == Approx(add_scalar_res[1]) );
+		REQUIRE( get<0>(add_var_1) == Approx(add_scalar_res[0]) );
+		REQUIRE( get<1>(add_var_1) == Approx(add_scalar_res[1]) );
 	}
 	
 	SECTION( "add/1" )
@@ -430,8 +431,8 @@ TEST_CASE( "General vector operations for 2 component vectors", "[vec2<float>(2)
 		REQUIRE( &res == &add_var_1 );//result must be add_var_1
 		REQUIRE( &res != &add_var_2 );//but not add_var_2
 		auto &res2 = add(res, add_scalar);
-		REQUIRE( get<0>(res2) == Approx(add_vec_sclar_res[0]) );
-		REQUIRE( get<1>(res2) == Approx(add_vec_sclar_res[1]) );
+		REQUIRE( get<0>(res2) == Approx(add_vec_scalar_res[0]) );
+		REQUIRE( get<1>(res2) == Approx(add_vec_scalar_res[1]) );
 		REQUIRE( &res2 == &add_var_1 );//result must be add_var_1
 	}
 	
@@ -467,15 +468,15 @@ TEST_CASE( "General vector operations for 2 component vectors", "[vec2<float>(2)
 	SECTION( "sub_set/1" )
 	{
 		sub_set(sub_var_1, sub_var_2);
-		REQUIRE( get<0>(res) == Approx(sub_vec_res[0]) );
-		REQUIRE( get<1>(res) == Approx(sub_vec_res[1]) );
+		REQUIRE( get<0>(sub_var_1) == Approx(sub_vec_res[0]) );
+		REQUIRE( get<1>(sub_var_1) == Approx(sub_vec_res[1]) );
 	}
 	
 	SECTION( "sub_set (scalar)/1" )
 	{
 		sub_set(sub_var_1, sub_scalar);
-		REQUIRE( get<0>(res) == Approx(sub_scalar_res[0]) );
-		REQUIRE( get<1>(res) == Approx(sub_scalar_res[1]) );
+		REQUIRE( get<0>(sub_var_1) == Approx(sub_scalar_res[0]) );
+		REQUIRE( get<1>(sub_var_1) == Approx(sub_scalar_res[1]) );
 	}
 	
 	SECTION( "sub/1" )
@@ -486,8 +487,8 @@ TEST_CASE( "General vector operations for 2 component vectors", "[vec2<float>(2)
 		REQUIRE( &res == &sub_var_1 );//result must be sub_var_1
 		REQUIRE( &res != &sub_var_2 );//but not sub_var_2
 		auto &res2 = sub(res, sub_scalar);
-		REQUIRE( get<0>(res2) == Approx(sub_vec_sclar_res[0]) );
-		REQUIRE( get<1>(res2) == Approx(sub_vec_sclar_res[1]) );
+		REQUIRE( get<0>(res2) == Approx(sub_vec_scalar_res[0]) );
+		REQUIRE( get<1>(res2) == Approx(sub_vec_scalar_res[1]) );
 		REQUIRE( &res2 == &sub_var_1 );//result must be sub_var_1
 	}
 	
@@ -523,15 +524,15 @@ TEST_CASE( "General vector operations for 2 component vectors", "[vec2<float>(2)
 	SECTION( "mul_set/1" )
 	{
 		mul_set(mul_var_1, mul_var_2);
-		REQUIRE( get<0>(res) == Approx(mul_vec_res[0]) );
-		REQUIRE( get<1>(res) == Approx(mul_vec_res[1]) );
+		REQUIRE( get<0>(mul_var_1) == Approx(mul_vec_res[0]) );
+		REQUIRE( get<1>(mul_var_1) == Approx(mul_vec_res[1]) );
 	}
 	
 	SECTION( "mul_set (scalar)/1" )
 	{
 		mul_set(mul_var_1, mul_scalar);
-		REQUIRE( get<0>(res) == Approx(mul_scalar_res[0]) );
-		REQUIRE( get<1>(res) == Approx(mul_scalar_res[1]) );
+		REQUIRE( get<0>(mul_var_1) == Approx(mul_scalar_res[0]) );
+		REQUIRE( get<1>(mul_var_1) == Approx(mul_scalar_res[1]) );
 	}
 	
 	SECTION( "mul/1" )
@@ -542,8 +543,8 @@ TEST_CASE( "General vector operations for 2 component vectors", "[vec2<float>(2)
 		REQUIRE( &res == &mul_var_1 );//result must be mul_var_1
 		REQUIRE( &res != &mul_var_2 );//but not mul_var_2
 		auto &res2 = mul(res, mul_scalar);
-		REQUIRE( get<0>(res2) == Approx(mul_vec_sclar_res[0]) );
-		REQUIRE( get<1>(res2) == Approx(mul_vec_sclar_res[1]) );
+		REQUIRE( get<0>(res2) == Approx(mul_vec_scalar_res[0]) );
+		REQUIRE( get<1>(res2) == Approx(mul_vec_scalar_res[1]) );
 		REQUIRE( &res2 == &mul_var_1 );//result must be mul_var_1
 	}
 	
@@ -579,15 +580,15 @@ TEST_CASE( "General vector operations for 2 component vectors", "[vec2<float>(2)
 	SECTION( "div_set/1" )
 	{
 		div_set(div_var_1, div_var_2);
-		REQUIRE( get<0>(res) == Approx(div_vec_res[0]) );
-		REQUIRE( get<1>(res) == Approx(div_vec_res[1]) );
+		REQUIRE( get<0>(div_var_1) == Approx(div_vec_res[0]) );
+		REQUIRE( get<1>(div_var_1) == Approx(div_vec_res[1]) );
 	}
 	
 	SECTION( "div_set (scalar)/1" )
 	{
 		div_set(div_var_1, div_scalar);
-		REQUIRE( get<0>(res) == Approx(div_scalar_res[0]) );
-		REQUIRE( get<1>(res) == Approx(div_scalar_res[1]) );
+		REQUIRE( get<0>(div_var_1) == Approx(div_scalar_res[0]) );
+		REQUIRE( get<1>(div_var_1) == Approx(div_scalar_res[1]) );
 	}
 	
 	SECTION( "div/1" )
@@ -598,8 +599,8 @@ TEST_CASE( "General vector operations for 2 component vectors", "[vec2<float>(2)
 		REQUIRE( &res == &div_var_1 );//result must be div_var_1
 		REQUIRE( &res != &div_var_2 );//but not div_var_2
 		auto &res2 = div(res, div_scalar);
-		REQUIRE( get<0>(res2) == Approx(div_vec_sclar_res[0]) );
-		REQUIRE( get<1>(res2) == Approx(div_vec_sclar_res[1]) );
+		REQUIRE( get<0>(res2) == Approx(div_vec_scalar_res[0]) );
+		REQUIRE( get<1>(res2) == Approx(div_vec_scalar_res[1]) );
 		REQUIRE( &res2 == &div_var_1 );//result must be div_var_1
 	}
 	
@@ -613,6 +614,14 @@ TEST_CASE( "General vector operations for 2 component vectors", "[vec2<float>(2)
 		REQUIRE( get<0>(res2) == Approx(div_vec_scalar_res[0]) );
 		REQUIRE( get<1>(res2) == Approx(div_vec_scalar_res[1]) );
 		REQUIRE( &res2 == &div_var_1 );//result must be div_var_1
+	}
+	
+}
+TEST_CASE( "General purpos functions for 2 component vectors", "[vec2<float>(2)]" )
+{
+	SECTION( "Dot product/1" )
+	{
+		
 	}
 	
 }

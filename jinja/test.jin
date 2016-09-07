@@ -1,6 +1,6 @@
 ### Macros used for the test cases
 
-//% from 'sequence.jin' import seq, seqRnd, getRndFloat with context
+//% from 'sequence.jin' import seq, seqRnd, getRndFloat, getRndFloatPos, getRndFloatNeg with context
 
 ### Only for tests: The current scalar type
 //% macro scalarType()
@@ -15,6 +15,16 @@ $test_scalarDef|default + ' ' + scalarVar@
 ### Only for tests: Create a vector with random values
 //% macro scalarCreateRnd(scalarVar)
 $test_scalarDef|default + ' ' + scalarVar@ = { $getRndFloat()@ }
+//%-endmacro
+
+### Only for tests: Create a vector with random values
+//% macro scalarCreateRndPos(scalarVar)
+$test_scalarDef|default + ' ' + scalarVar@ = { $getRndFloatPos()@ }
+//%-endmacro
+
+### Only for tests: Create a vector with random values
+//% macro scalarCreateRndNeg(scalarVar)
+$test_scalarDef|default + ' ' + scalarVar@ = { $getRndFloatNeg()@ }
 //%-endmacro
 
 ### Only for tests: Create an array (nothing assigned)

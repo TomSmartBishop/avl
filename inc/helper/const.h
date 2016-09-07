@@ -30,6 +30,9 @@ namespace avl
 		static constexpr P sml_epsln	{ 0.000001 };
 		static constexpr P big_epsln	{ 0.001 };
 	};
-}
 
+	template<typename P> constexpr P cnst<P>::zero;
+	template<typename P> constexpr P cnst<P>::half;
+}
+//% constexpr_const('P', 'avl::cnst<P>', 'zero', '0')
 #endif // AVL_CONST_H

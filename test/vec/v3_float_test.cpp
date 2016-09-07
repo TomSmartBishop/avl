@@ -151,7 +151,7 @@ TEST_CASE( "Vector length operations", "[vec3<float>(3)]" )
 	SECTION( "Returns a normalized vector, use alternative vector if the current vector length is 0/1" )
 	{
 		const vec3<float> zero_vec = { 0, 0, 0 };
-		const auto zero_len = len(zero_vec)
+		const auto zero_len = len(zero_vec);
 		REQUIRE( zero_len == Approx( cnst<float>::zero ) );
 		
 		vec3<float> unit_vec = { 0, 0, 0 };
@@ -174,7 +174,7 @@ TEST_CASE( "Vector length operations", "[vec3<float>(3)]" )
 	SECTION( "Normalize the current vector, use alternative vector if the current vector length is 0/1" )
 	{
 		vec3<float> vec = { 0, 0, 0 };
-		const auto zero_len = len(vec)
+		const auto zero_len = len(vec);
 		REQUIRE( zero_len == Approx( cnst<float>::zero ) );
 		
 		vec3<float> unit_vec = { 0, 0, 0 };
@@ -198,7 +198,7 @@ TEST_CASE( "Vector length operations", "[vec3<float>(3)]" )
 	SECTION( "Normalize the current vector and return the same vector (chained), use alternative vector if the current vector length is 0/1" )
 	{
 		vec3<float> vec = { 0, 0, 0 };
-		const auto zero_len = len(vec)
+		const auto zero_len = len(vec);
 		REQUIRE( zero_len == Approx( cnst<float>::zero ) );
 		
 		vec3<float> unit_vec = { 0, 0, 0 };
@@ -216,10 +216,10 @@ TEST_CASE( "Spacial operations", "[vec3<float>(3)]" )
 {
 	SECTION( "Calculate the angle between two vectors in radian/1" )
 	{
-		const auto random_len1 = -83.889;
-		const auto random_len2 = -76.174;
-		const auto random_len3 = -87.059;
-		const auto random_len4 = 91.527;
+		const float random_len1 = { 83.889 };
+		const float random_len2 = { 76.174 };
+		const float random_len3 = { 87.059 };
+		const float random_len4 = { 91.527 };
 		
 		vec3<float> vec_zero = { 0, 0, 0 };
 		vec3<float> vec_10x = { 0, 0, 0 };
@@ -233,29 +233,29 @@ TEST_CASE( "Spacial operations", "[vec3<float>(3)]" )
 		set<1>(vec_11x, random_len4);
 		
 		const auto angle0 = angle_rd(vec_10x, vec_zero);
-		REQUIRE( angle0 == Approx( cnst<float>::zero );
+		REQUIRE( angle0 == Approx( cnst<float>::zero ) );
 		
 		const auto angle90 = angle_rd(vec_10x, vec_01x);
-		REQUIRE( angle90 == Approx( 1.57079632679 );
+		REQUIRE( angle90 == Approx( 1.57079632679 ) );
 		
 		const auto angle45a = angle_rd(vec_10x, vec_11x);
-		REQUIRE( angle45a == Approx( 0.785398163396 );
+		REQUIRE( angle45a == Approx( 0.785398163396 ) );
 		const auto angle45b = angle_rd(vec_01x, vec_11x);
-		REQUIRE( angle45b == Approx( 0.785398163396 );
+		REQUIRE( angle45b == Approx( 0.785398163396 ) );
 		
 		const auto angle135 = angle_rd(vec_m10x, vec_11x);
-		REQUIRE( angle135 == Approx( 2.35619449019 );
+		REQUIRE( angle135 == Approx( 2.35619449019 ) );
 		
 		const auto angle180 = angle_rd(vec_10x, vec_m10x);
-		REQUIRE( angle180 == Approx( 3.14159265358 );
+		REQUIRE( angle180 == Approx( 3.14159265358 ) );
 	}
 	
 	SECTION( "Calculate the angle between two vectors in radian/2" )
 	{
-		const auto random_len1 = 46.72;
-		const auto random_len2 = -39.516;
-		const auto random_len3 = 5.022;
-		const auto random_len4 = -55.346;
+		const float random_len1 = { 46.72 };
+		const float random_len2 = { 39.516 };
+		const float random_len3 = { 5.022 };
+		const float random_len4 = { 55.346 };
 		
 		vec3<float> vec_zero = { 0, 0, 0 };
 		vec3<float> vec_010x = { 0, 0, 0 };
@@ -269,29 +269,29 @@ TEST_CASE( "Spacial operations", "[vec3<float>(3)]" )
 		set<2>(vec_011x, random_len4);
 		
 		const auto angle0 = angle_rd(vec_010x, vec_zero);
-		REQUIRE( angle0 == Approx( cnst<float>::zero );
+		REQUIRE( angle0 == Approx( cnst<float>::zero ) );
 		
 		const auto angle90 = angle_rd(vec_010x, vec_001x);
-		REQUIRE( angle90 == Approx( 1.57079632679 );
+		REQUIRE( angle90 == Approx( 1.57079632679 ) );
 		
 		const auto angle45a = angle_rd(vec_010x, vec_011x);
-		REQUIRE( angle45a == Approx( 0.785398163396 );
+		REQUIRE( angle45a == Approx( 0.785398163396 ) );
 		const auto angle45b = angle_rd(vec_001x, vec_011x);
-		REQUIRE( angle45b == Approx( 0.785398163396 );
+		REQUIRE( angle45b == Approx( 0.785398163396 ) );
 		
 		const auto angle135 = angle_rd(vec_0m10x, vec_011x);
-		REQUIRE( angle135 == Approx( 2.35619449019 );
+		REQUIRE( angle135 == Approx( 2.35619449019 ) );
 		
 		const auto angle180 = angle_rd(vec_010x, vec_0m10x);
-		REQUIRE( angle180 == Approx( 3.14159265358 );
+		REQUIRE( angle180 == Approx( 3.14159265358 ) );
 	}
 	
 	SECTION( "Calculate the angle between two vectors in degree/1" )
 	{
-		const auto random_len1 = 64.931;
-		const auto random_len2 = -71.991;
-		const auto random_len3 = 18.044;
-		const auto random_len4 = 30.556;
+		const float random_len1 = { 64.931 };
+		const float random_len2 = { 71.991 };
+		const float random_len3 = { 18.044 };
+		const float random_len4 = { 30.556 };
 		
 		vec3<float> vec_zero = { 0, 0, 0 };
 		vec3<float> vec_10x = { 0, 0, 0 };
@@ -305,29 +305,29 @@ TEST_CASE( "Spacial operations", "[vec3<float>(3)]" )
 		set<1>(vec_11x, random_len4);
 		
 		const auto angle0 = angle_dg(vec_10x, vec_zero);
-		REQUIRE( angle0 == Approx( cnst<float>::zero );
+		REQUIRE( angle0 == Approx( cnst<float>::zero ) );
 		
 		const auto angle90 = angle_dg(vec_10x, vec_01x);
-		REQUIRE( angle90 == Approx( 90 );
+		REQUIRE( angle90 == Approx( 90 ) );
 		
 		const auto angle45a = angle_dg(vec_10x, vec_11x);
-		REQUIRE( angle45a == Approx( 45 );
+		REQUIRE( angle45a == Approx( 45 ) );
 		const auto angle45b = angle_dg(vec_01x, vec_11x);
-		REQUIRE( angle45b == Approx( 45 );
+		REQUIRE( angle45b == Approx( 45 ) );
 		
 		const auto angle135 = angle_dg(vec_m10x, vec_11x);
-		REQUIRE( angle135 == Approx( 135 );
+		REQUIRE( angle135 == Approx( 135 ) );
 		
 		const auto angle180 = angle_dg(vec_10x, vec_m10x);
-		REQUIRE( angle180 == Approx( 180 );
+		REQUIRE( angle180 == Approx( 180 ) );
 	}
 	
 	SECTION( "Calculate the angle between two vectors in degree/2" )
 	{
-		const auto random_len1 = -30.752;
-		const auto random_len2 = 44.111;
-		const auto random_len3 = -87.757;
-		const auto random_len4 = 31.643;
+		const float random_len1 = { 30.752 };
+		const float random_len2 = { 44.111 };
+		const float random_len3 = { 87.757 };
+		const float random_len4 = { 31.643 };
 		
 		vec3<float> vec_zero = { 0, 0, 0 };
 		vec3<float> vec_010x = { 0, 0, 0 };
@@ -341,21 +341,21 @@ TEST_CASE( "Spacial operations", "[vec3<float>(3)]" )
 		set<2>(vec_011x, random_len4);
 		
 		const auto angle0 = angle_dg(vec_010x, vec_zero);
-		REQUIRE( angle0 == Approx( cnst<float>::zero );
+		REQUIRE( angle0 == Approx( cnst<float>::zero ) );
 		
 		const auto angle90 = angle_dg(vec_010x, vec_001x);
-		REQUIRE( angle90 == Approx( 90 );
+		REQUIRE( angle90 == Approx( 90 ) );
 		
 		const auto angle45a = angle_dg(vec_010x, vec_011x);
-		REQUIRE( angle45a == Approx( 45 );
+		REQUIRE( angle45a == Approx( 45 ) );
 		const auto angle45b = angle_dg(vec_001x, vec_011x);
-		REQUIRE( angle45b == Approx( 45 );
+		REQUIRE( angle45b == Approx( 45 ) );
 		
 		const auto angle135 = angle_dg(vec_0m10x, vec_011x);
-		REQUIRE( angle135 == Approx( 135 );
+		REQUIRE( angle135 == Approx( 135 ) );
 		
 		const auto angle180 = angle_dg(vec_010x, vec_0m10x);
-		REQUIRE( angle180 == Approx( 180 );
+		REQUIRE( angle180 == Approx( 180 ) );
 	}
 	
 	SECTION( "Calculate the area of the spawned triangle/1" )
@@ -363,32 +363,32 @@ TEST_CASE( "Spacial operations", "[vec3<float>(3)]" )
 		vec3<float> vec_0 = { 0, 0, 0 };
 		vec3<float> vec_1 = { 0, 0, 0 };
 		vec3<float> vec_2 = { 0, 0, 0 };
-		set<0>(vec_0, 1);
-		set<1>(vec_1, 1);
-		set<0>(vec_2, -1);
+		set<0>(vec_0, cnst<float>::one);
+		set<1>(vec_1, cnst<float>::one);
+		set<0>(vec_2, cnst<float>::minus_one);
 		
 		const auto a0 = area(vec_0, vec_1);
-		REQUIRE( a0 == cnst<decltype(a0)::half );
+		REQUIRE( a0 == cnst<float>::half );
 		
 		const auto a1 = area(vec_0, vec_0);
-		REQUIRE( a1 == cnst<decltype(a1)::zero );
+		REQUIRE( a1 == cnst<float>::zero );
 		
 		const auto a2 = area(vec_0, vec_2);
-		REQUIRE( a2 == cnst<decltype(a2)::zero );
+		REQUIRE( a2 == cnst<float>::zero );
 	}
 	
 	SECTION( "Calculate the cross product/1" )
 	{
-		vec3<float> vec_100x = { 0, 0, 0 }
-		const vec3<float> vec_100x_dup = { 0, 0, 0 }
-		const vec3<float> vec_010x = { 0, 0, 0 }
-		const vec3<float> expected_res1 = { 0, 0, 0 }
-		const vec3<float> expected_res2 = { 0, 0, 0 }
-		set<0>(vec_100x,     1);
-		set<0>(vec_100x_dup,  1);
-		set<1>(vec_010x,  1);
-		set<2>(expected_res1,  1);
-		set<2>(expected_res2, -1);
+		vec3<float> vec_100x = { 0, 0, 0 };
+		vec3<float> vec_100x_dup = { 0, 0, 0 };
+		vec3<float> vec_010x = { 0, 0, 0 };
+		vec3<float> expected_res1 = { 0, 0, 0 };
+		vec3<float> expected_res2 = { 0, 0, 0 };
+		set<0>(vec_100x, cnst<float>::one);
+		set<0>(vec_100x_dup, cnst<float>::one);
+		set<1>(vec_010x, cnst<float>::one);
+		set<2>(expected_res1, cnst<float>::one);
+		set<2>(expected_res2, cnst<float>::minus_one);
 		
 		auto result1 = cross_mk(vec_100x, vec_010x);
 		auto result2 = cross_mk(vec_010x, vec_100x);
@@ -402,16 +402,16 @@ TEST_CASE( "Spacial operations", "[vec3<float>(3)]" )
 	
 	SECTION( "Calculate the cross product/1" )
 	{
-		vec3<float> vec_100x = { 0, 0, 0 }
-		const vec3<float> vec_100x_dup = { 0, 0, 0 }
-		const vec3<float> vec_010x = { 0, 0, 0 }
-		const vec3<float> expected_res1 = { 0, 0, 0 }
-		const vec3<float> expected_res2 = { 0, 0, 0 }
-		set<0>(vec_100x,     1);
-		set<0>(vec_100x_dup,  1);
-		set<1>(vec_010x,  1);
-		set<2>(expected_res1,  1);
-		set<2>(expected_res2, -1);
+		vec3<float> vec_100x = { 0, 0, 0 };
+		vec3<float> vec_100x_dup = { 0, 0, 0 };
+		vec3<float> vec_010x = { 0, 0, 0 };
+		vec3<float> expected_res1 = { 0, 0, 0 };
+		vec3<float> expected_res2 = { 0, 0, 0 };
+		set<0>(vec_100x, cnst<float>::one);
+		set<0>(vec_100x_dup, cnst<float>::one);
+		set<1>(vec_010x, cnst<float>::one);
+		set<2>(expected_res1, cnst<float>::one);
+		set<2>(expected_res2, cnst<float>::minus_one);
 		
 		cross_set(vec_100x, vec_010x);
 		cross_set(vec_010x, vec_100x_dup);
@@ -425,16 +425,16 @@ TEST_CASE( "Spacial operations", "[vec3<float>(3)]" )
 	
 	SECTION( "Calculate the cross product/1" )
 	{
-		vec3<float> vec_100x = { 0, 0, 0 }
-		const vec3<float> vec_100x_dup = { 0, 0, 0 }
-		const vec3<float> vec_010x = { 0, 0, 0 }
-		const vec3<float> expected_res1 = { 0, 0, 0 }
-		const vec3<float> expected_res2 = { 0, 0, 0 }
-		set<0>(vec_100x,     1);
-		set<0>(vec_100x_dup,  1);
-		set<1>(vec_010x,  1);
-		set<2>(expected_res1,  1);
-		set<2>(expected_res2, -1);
+		vec3<float> vec_100x = { 0, 0, 0 };
+		vec3<float> vec_100x_dup = { 0, 0, 0 };
+		vec3<float> vec_010x = { 0, 0, 0 };
+		vec3<float> expected_res1 = { 0, 0, 0 };
+		vec3<float> expected_res2 = { 0, 0, 0 };
+		set<0>(vec_100x, cnst<float>::one);
+		set<0>(vec_100x_dup, cnst<float>::one);
+		set<1>(vec_010x, cnst<float>::one);
+		set<2>(expected_res1, cnst<float>::one);
+		set<2>(expected_res2, cnst<float>::minus_one);
 		
 		auto &result1 = cross(vec_100x, vec_010x);
 		auto &result2 = cross(vec_010x, vec_100x);
@@ -453,7 +453,8 @@ TEST_CASE( "Getter and setters for 3 component vectors", "[vec3<float>(3)]" )
 	{
 		vec3<float> vec = { 0, 0, 0 };
 		
-		const auto val = -20.87;
+		const float val = { -20.87 };
+		
 		set_all(vec, val);
 		
 		REQUIRE( get<0>(vec)==val );
@@ -503,47 +504,47 @@ TEST_CASE( "General vector operations for 3 component vectors", "[vec3<float>(3)
 {
 	vec3<float> add_var_1 = { -23.339, -20.869, -42.571 };
 	vec3<float> add_var_2 = { -66.230, 96.213, 63.923 };
-	float add_scalar = { -29.223 };
+	const float add_scalar = { -29.223 };
 	
 	const float add_vec_res [] =
 		{ get<0>(add_var_1) + get<0>(add_var_2), get<1>(add_var_1) + get<1>(add_var_2), get<2>(add_var_1) + get<2>(add_var_2) };
 	const float add_scalar_res [] =
-		{ get<0>(add_var_1) + get<0>(add_scalar), get<1>(add_var_1) + get<1>(add_scalar), get<2>(add_var_1) + get<2>(add_scalar) };
+		{ get<0>(add_var_1) + add_scalar, get<1>(add_var_1) + add_scalar, get<2>(add_var_1) + add_scalar };
 	const float add_vec_scalar_res [] =
-		{ get<0>(add_var_1) + get<0>(add_var_2) + get<0>(add_scalar), get<1>(add_var_1) + get<1>(add_var_2) + get<1>(add_scalar), get<2>(add_var_1) + get<2>(add_var_2) + get<2>(add_scalar) };
+		{ get<0>(add_var_1) + get<0>(add_var_2) + add_scalar, get<1>(add_var_1) + get<1>(add_var_2) + add_scalar, get<2>(add_var_1) + get<2>(add_var_2) + add_scalar };
 	
 	vec3<float> sub_var_1 = { 83.438, -89.235, 64.109 };
 	vec3<float> sub_var_2 = { -5.500, -59.844, -71.993 };
-	float sub_scalar = { 35.807 };
+	const float sub_scalar = { 35.807 };
 	
 	const float sub_vec_res [] =
 		{ get<0>(sub_var_1) - get<0>(sub_var_2), get<1>(sub_var_1) - get<1>(sub_var_2), get<2>(sub_var_1) - get<2>(sub_var_2) };
 	const float sub_scalar_res [] =
-		{ get<0>(sub_var_1) - get<0>(sub_scalar), get<1>(sub_var_1) - get<1>(sub_scalar), get<2>(sub_var_1) - get<2>(sub_scalar) };
+		{ get<0>(sub_var_1) - sub_scalar, get<1>(sub_var_1) - sub_scalar, get<2>(sub_var_1) - sub_scalar };
 	const float sub_vec_scalar_res [] =
-		{ get<0>(sub_var_1) - get<0>(sub_var_2) - get<0>(sub_scalar), get<1>(sub_var_1) - get<1>(sub_var_2) - get<1>(sub_scalar), get<2>(sub_var_1) - get<2>(sub_var_2) - get<2>(sub_scalar) };
+		{ get<0>(sub_var_1) - get<0>(sub_var_2) - sub_scalar, get<1>(sub_var_1) - get<1>(sub_var_2) - sub_scalar, get<2>(sub_var_1) - get<2>(sub_var_2) - sub_scalar };
 	
 	vec3<float> mul_var_1 = { 23.679, -44.516, -17.864 };
 	vec3<float> mul_var_2 = { -55.271, 54.458, 53.365 };
-	float mul_scalar = { -77.151 };
+	const float mul_scalar = { -77.151 };
 	
 	const float mul_vec_res [] =
 		{ get<0>(mul_var_1) * get<0>(mul_var_2), get<1>(mul_var_1) * get<1>(mul_var_2), get<2>(mul_var_1) * get<2>(mul_var_2) };
 	const float mul_scalar_res [] =
-		{ get<0>(mul_var_1) * get<0>(mul_scalar), get<1>(mul_var_1) * get<1>(mul_scalar), get<2>(mul_var_1) * get<2>(mul_scalar) };
+		{ get<0>(mul_var_1) * mul_scalar, get<1>(mul_var_1) * mul_scalar, get<2>(mul_var_1) * mul_scalar };
 	const float mul_vec_scalar_res [] =
-		{ get<0>(mul_var_1) * get<0>(mul_var_2) * get<0>(mul_scalar), get<1>(mul_var_1) * get<1>(mul_var_2) * get<1>(mul_scalar), get<2>(mul_var_1) * get<2>(mul_var_2) * get<2>(mul_scalar) };
+		{ get<0>(mul_var_1) * get<0>(mul_var_2) * mul_scalar, get<1>(mul_var_1) * get<1>(mul_var_2) * mul_scalar, get<2>(mul_var_1) * get<2>(mul_var_2) * mul_scalar };
 	
 	vec3<float> div_var_1 = { 9.297, 68.259, 31.885 };
 	vec3<float> div_var_2 = { 1.285, -91.230, -7.666 };
-	float div_scalar = { 64.986 };
+	const float div_scalar = { 64.986 };
 	
 	const float div_vec_res [] =
 		{ get<0>(div_var_1) / get<0>(div_var_2), get<1>(div_var_1) / get<1>(div_var_2), get<2>(div_var_1) / get<2>(div_var_2) };
 	const float div_scalar_res [] =
-		{ get<0>(div_var_1) / get<0>(div_scalar), get<1>(div_var_1) / get<1>(div_scalar), get<2>(div_var_1) / get<2>(div_scalar) };
+		{ get<0>(div_var_1) / div_scalar, get<1>(div_var_1) / div_scalar, get<2>(div_var_1) / div_scalar };
 	const float div_vec_scalar_res [] =
-		{ get<0>(div_var_1) / get<0>(div_var_2) / get<0>(div_scalar), get<1>(div_var_1) / get<1>(div_var_2) / get<1>(div_scalar), get<2>(div_var_1) / get<2>(div_var_2) / get<2>(div_scalar) };
+		{ get<0>(div_var_1) / get<0>(div_var_2) / div_scalar, get<1>(div_var_1) / get<1>(div_var_2) / div_scalar, get<2>(div_var_1) / get<2>(div_var_2) / div_scalar };
 	
 	SECTION( "add_mk/1" )
 	{
@@ -567,17 +568,17 @@ TEST_CASE( "General vector operations for 3 component vectors", "[vec3<float>(3)
 	SECTION( "add_set/1" )
 	{
 		add_set(add_var_1, add_var_2);
-		REQUIRE( get<0>(res) == Approx(add_vec_res[0]) );
-		REQUIRE( get<1>(res) == Approx(add_vec_res[1]) );
-		REQUIRE( get<2>(res) == Approx(add_vec_res[2]) );
+		REQUIRE( get<0>(add_var_1) == Approx(add_vec_res[0]) );
+		REQUIRE( get<1>(add_var_1) == Approx(add_vec_res[1]) );
+		REQUIRE( get<2>(add_var_1) == Approx(add_vec_res[2]) );
 	}
 	
 	SECTION( "add_set (scalar)/1" )
 	{
 		add_set(add_var_1, add_scalar);
-		REQUIRE( get<0>(res) == Approx(add_scalar_res[0]) );
-		REQUIRE( get<1>(res) == Approx(add_scalar_res[1]) );
-		REQUIRE( get<2>(res) == Approx(add_scalar_res[2]) );
+		REQUIRE( get<0>(add_var_1) == Approx(add_scalar_res[0]) );
+		REQUIRE( get<1>(add_var_1) == Approx(add_scalar_res[1]) );
+		REQUIRE( get<2>(add_var_1) == Approx(add_scalar_res[2]) );
 	}
 	
 	SECTION( "add/1" )
@@ -589,9 +590,9 @@ TEST_CASE( "General vector operations for 3 component vectors", "[vec3<float>(3)
 		REQUIRE( &res == &add_var_1 );//result must be add_var_1
 		REQUIRE( &res != &add_var_2 );//but not add_var_2
 		auto &res2 = add(res, add_scalar);
-		REQUIRE( get<0>(res2) == Approx(add_vec_sclar_res[0]) );
-		REQUIRE( get<1>(res2) == Approx(add_vec_sclar_res[1]) );
-		REQUIRE( get<2>(res2) == Approx(add_vec_sclar_res[2]) );
+		REQUIRE( get<0>(res2) == Approx(add_vec_scalar_res[0]) );
+		REQUIRE( get<1>(res2) == Approx(add_vec_scalar_res[1]) );
+		REQUIRE( get<2>(res2) == Approx(add_vec_scalar_res[2]) );
 		REQUIRE( &res2 == &add_var_1 );//result must be add_var_1
 	}
 	
@@ -631,17 +632,17 @@ TEST_CASE( "General vector operations for 3 component vectors", "[vec3<float>(3)
 	SECTION( "sub_set/1" )
 	{
 		sub_set(sub_var_1, sub_var_2);
-		REQUIRE( get<0>(res) == Approx(sub_vec_res[0]) );
-		REQUIRE( get<1>(res) == Approx(sub_vec_res[1]) );
-		REQUIRE( get<2>(res) == Approx(sub_vec_res[2]) );
+		REQUIRE( get<0>(sub_var_1) == Approx(sub_vec_res[0]) );
+		REQUIRE( get<1>(sub_var_1) == Approx(sub_vec_res[1]) );
+		REQUIRE( get<2>(sub_var_1) == Approx(sub_vec_res[2]) );
 	}
 	
 	SECTION( "sub_set (scalar)/1" )
 	{
 		sub_set(sub_var_1, sub_scalar);
-		REQUIRE( get<0>(res) == Approx(sub_scalar_res[0]) );
-		REQUIRE( get<1>(res) == Approx(sub_scalar_res[1]) );
-		REQUIRE( get<2>(res) == Approx(sub_scalar_res[2]) );
+		REQUIRE( get<0>(sub_var_1) == Approx(sub_scalar_res[0]) );
+		REQUIRE( get<1>(sub_var_1) == Approx(sub_scalar_res[1]) );
+		REQUIRE( get<2>(sub_var_1) == Approx(sub_scalar_res[2]) );
 	}
 	
 	SECTION( "sub/1" )
@@ -653,9 +654,9 @@ TEST_CASE( "General vector operations for 3 component vectors", "[vec3<float>(3)
 		REQUIRE( &res == &sub_var_1 );//result must be sub_var_1
 		REQUIRE( &res != &sub_var_2 );//but not sub_var_2
 		auto &res2 = sub(res, sub_scalar);
-		REQUIRE( get<0>(res2) == Approx(sub_vec_sclar_res[0]) );
-		REQUIRE( get<1>(res2) == Approx(sub_vec_sclar_res[1]) );
-		REQUIRE( get<2>(res2) == Approx(sub_vec_sclar_res[2]) );
+		REQUIRE( get<0>(res2) == Approx(sub_vec_scalar_res[0]) );
+		REQUIRE( get<1>(res2) == Approx(sub_vec_scalar_res[1]) );
+		REQUIRE( get<2>(res2) == Approx(sub_vec_scalar_res[2]) );
 		REQUIRE( &res2 == &sub_var_1 );//result must be sub_var_1
 	}
 	
@@ -695,17 +696,17 @@ TEST_CASE( "General vector operations for 3 component vectors", "[vec3<float>(3)
 	SECTION( "mul_set/1" )
 	{
 		mul_set(mul_var_1, mul_var_2);
-		REQUIRE( get<0>(res) == Approx(mul_vec_res[0]) );
-		REQUIRE( get<1>(res) == Approx(mul_vec_res[1]) );
-		REQUIRE( get<2>(res) == Approx(mul_vec_res[2]) );
+		REQUIRE( get<0>(mul_var_1) == Approx(mul_vec_res[0]) );
+		REQUIRE( get<1>(mul_var_1) == Approx(mul_vec_res[1]) );
+		REQUIRE( get<2>(mul_var_1) == Approx(mul_vec_res[2]) );
 	}
 	
 	SECTION( "mul_set (scalar)/1" )
 	{
 		mul_set(mul_var_1, mul_scalar);
-		REQUIRE( get<0>(res) == Approx(mul_scalar_res[0]) );
-		REQUIRE( get<1>(res) == Approx(mul_scalar_res[1]) );
-		REQUIRE( get<2>(res) == Approx(mul_scalar_res[2]) );
+		REQUIRE( get<0>(mul_var_1) == Approx(mul_scalar_res[0]) );
+		REQUIRE( get<1>(mul_var_1) == Approx(mul_scalar_res[1]) );
+		REQUIRE( get<2>(mul_var_1) == Approx(mul_scalar_res[2]) );
 	}
 	
 	SECTION( "mul/1" )
@@ -717,9 +718,9 @@ TEST_CASE( "General vector operations for 3 component vectors", "[vec3<float>(3)
 		REQUIRE( &res == &mul_var_1 );//result must be mul_var_1
 		REQUIRE( &res != &mul_var_2 );//but not mul_var_2
 		auto &res2 = mul(res, mul_scalar);
-		REQUIRE( get<0>(res2) == Approx(mul_vec_sclar_res[0]) );
-		REQUIRE( get<1>(res2) == Approx(mul_vec_sclar_res[1]) );
-		REQUIRE( get<2>(res2) == Approx(mul_vec_sclar_res[2]) );
+		REQUIRE( get<0>(res2) == Approx(mul_vec_scalar_res[0]) );
+		REQUIRE( get<1>(res2) == Approx(mul_vec_scalar_res[1]) );
+		REQUIRE( get<2>(res2) == Approx(mul_vec_scalar_res[2]) );
 		REQUIRE( &res2 == &mul_var_1 );//result must be mul_var_1
 	}
 	
@@ -759,17 +760,17 @@ TEST_CASE( "General vector operations for 3 component vectors", "[vec3<float>(3)
 	SECTION( "div_set/1" )
 	{
 		div_set(div_var_1, div_var_2);
-		REQUIRE( get<0>(res) == Approx(div_vec_res[0]) );
-		REQUIRE( get<1>(res) == Approx(div_vec_res[1]) );
-		REQUIRE( get<2>(res) == Approx(div_vec_res[2]) );
+		REQUIRE( get<0>(div_var_1) == Approx(div_vec_res[0]) );
+		REQUIRE( get<1>(div_var_1) == Approx(div_vec_res[1]) );
+		REQUIRE( get<2>(div_var_1) == Approx(div_vec_res[2]) );
 	}
 	
 	SECTION( "div_set (scalar)/1" )
 	{
 		div_set(div_var_1, div_scalar);
-		REQUIRE( get<0>(res) == Approx(div_scalar_res[0]) );
-		REQUIRE( get<1>(res) == Approx(div_scalar_res[1]) );
-		REQUIRE( get<2>(res) == Approx(div_scalar_res[2]) );
+		REQUIRE( get<0>(div_var_1) == Approx(div_scalar_res[0]) );
+		REQUIRE( get<1>(div_var_1) == Approx(div_scalar_res[1]) );
+		REQUIRE( get<2>(div_var_1) == Approx(div_scalar_res[2]) );
 	}
 	
 	SECTION( "div/1" )
@@ -781,9 +782,9 @@ TEST_CASE( "General vector operations for 3 component vectors", "[vec3<float>(3)
 		REQUIRE( &res == &div_var_1 );//result must be div_var_1
 		REQUIRE( &res != &div_var_2 );//but not div_var_2
 		auto &res2 = div(res, div_scalar);
-		REQUIRE( get<0>(res2) == Approx(div_vec_sclar_res[0]) );
-		REQUIRE( get<1>(res2) == Approx(div_vec_sclar_res[1]) );
-		REQUIRE( get<2>(res2) == Approx(div_vec_sclar_res[2]) );
+		REQUIRE( get<0>(res2) == Approx(div_vec_scalar_res[0]) );
+		REQUIRE( get<1>(res2) == Approx(div_vec_scalar_res[1]) );
+		REQUIRE( get<2>(res2) == Approx(div_vec_scalar_res[2]) );
 		REQUIRE( &res2 == &div_var_1 );//result must be div_var_1
 	}
 	
@@ -799,6 +800,14 @@ TEST_CASE( "General vector operations for 3 component vectors", "[vec3<float>(3)
 		REQUIRE( get<1>(res2) == Approx(div_vec_scalar_res[1]) );
 		REQUIRE( get<2>(res2) == Approx(div_vec_scalar_res[2]) );
 		REQUIRE( &res2 == &div_var_1 );//result must be div_var_1
+	}
+	
+}
+TEST_CASE( "General purpos functions for 3 component vectors", "[vec3<float>(3)]" )
+{
+	SECTION( "Dot product/1" )
+	{
+		
 	}
 	
 }

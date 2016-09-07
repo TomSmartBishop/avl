@@ -3,8 +3,6 @@
 
 #pragma once
 
-#include "../helper/const.h"
-
 /// avl: A Vector Library
 /// \author Thomas Pollak
 namespace avl
@@ -73,7 +71,7 @@ namespace avl
 	}
 	
 	/// Set the length of the vector and return the same vector (chained)
-	avl_ainl_res constexpr auto setlen(v& vec, const sc len_to_set) noexcept(ndebug||exuse) -> decltype(cmp(vec))
+	avl_ainl_res constexpr auto setlen(v& vec, const sc len_to_set) noexcept(ndebug||exuse) -> decltype(vec)
 	{
 		const auto vec_len = len(vec);
 		assert(vec_len!=cnst<decltype(vec_len)>::zero);
@@ -90,14 +88,14 @@ namespace avl
 	}
 	
 	/// Returns a normalized vector
-	avl_ainl_res constexpr auto norm_mk(const v& vec ) noexcept(ndebug||exuse) -> decltype(vec)
+	avl_ainl_res constexpr auto norm_mk(const v& vec ) noexcept(ndebug||exuse)
 	{
 		const auto vec_len = len(vec);
 		return div_mk(vec, vec_len); //div might assert in debug
 	}
 	
 	/// Returns a normalized vector, use alternative vector if the current vector length is 0
-	avl_ainl_res constexpr auto norm_mk(const v& vec , const v& vec_if_zero_len) noexcept -> decltype(vec)
+	avl_ainl_res constexpr auto norm_mk(const v& vec , const v& vec_if_zero_len) noexcept
 	{
 		const auto vec_len = len(vec);
 		if(vec_len==cnst<decltype(vec_len)>::zero)
@@ -106,26 +104,26 @@ namespace avl
 	}
 	
 	/// Normalize the current vector
-	avl_ainl constexpr auto norm_set(const v& vec ) noexcept -> void
+	avl_ainl constexpr auto norm_set(v& vec ) noexcept -> void
 	{
 		const auto vec_len = len(vec);
 		div_set(vec, vec_len); //div might assert in debug
 	}
 	
 	/// Normalize the current vector, use alternative vector if the current vector length is 0
-	avl_ainl constexpr auto norm_set(const v& vec , const v& vec_if_zero_len) noexcept -> void
+	avl_ainl constexpr auto norm_set(v& vec , const v& vec_if_zero_len) noexcept -> void
 	{
 		const auto vec_len = len(vec);
 		if(vec_len==cnst<decltype(vec_len)>::zero)
 		{
-			set_all(vec, vec_if_zero_len);
+			vec = vec_if_zero_len;
 			return;
 		}
 		div_set(vec, vec_len); //div might assert in debug
 	}
 	
 	/// Normalize the current vector and return the same vector (chained)
-	avl_ainl_res constexpr auto norm(const v& vec ) noexcept -> decltype(cmp(vec))
+	avl_ainl_res constexpr auto norm(v& vec ) noexcept -> decltype(vec)
 	{
 		const auto vec_len = len(vec);
 		div_set(vec, vec_len); //div might assert in debug
@@ -133,13 +131,13 @@ namespace avl
 	}
 	
 	/// Normalize the current vector and return the same vector (chained), use alternative vector if the current vector length is 0
-	avl_ainl_res constexpr auto norm(const v& vec , const v& vec_if_zero_len) noexcept -> decltype(cmp(vec))
+	avl_ainl_res constexpr auto norm(v& vec , const v& vec_if_zero_len) noexcept -> decltype(vec)
 	{
 		const auto vec_len = len(vec);
 		if(vec_len==cnst<decltype(vec_len)>::zero)
 		{
-			set_all(vec, vec_if_zero_len);
-			return;
+			vec = vec_if_zero_len;
+			return vec;
 		}
 		div_set(vec, vec_len); //div might assert in debug
 		return vec;
@@ -150,7 +148,7 @@ namespace avl
 	/// \{
 	
 	/// Calculate the angle between two vectors in radian
-	avl_ainl_res constexpr auto angle_rd(const v& vec, const v& other) noexcept -> decltype(cmp(vec))
+	avl_ainl_res constexpr auto angle_rd(const v& vec, const decltype(vec) other) noexcept -> decltype(cmp(vec))
 	{
 		const auto vec_len		= len(vec);
 		const auto other_len	= len(other);
@@ -159,7 +157,7 @@ namespace avl
 	}
 	
 	/// Calculate the angle between two vectors in degree
-	avl_ainl_res constexpr auto angle_dg(const v& vec, const v& other) noexcept -> decltype(cmp(vec))
+	avl_ainl_res constexpr auto angle_dg(const v& vec, const decltype(vec) other) noexcept -> decltype(cmp(vec))
 	{
 		const auto vec_len		= len(vec);
 		const auto other_len	= len(other);

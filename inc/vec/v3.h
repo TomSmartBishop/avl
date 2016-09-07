@@ -3,8 +3,6 @@
 
 #pragma once
 
-#include "../helper/const.h"
-
 /// avl: A Vector Library
 /// \author Thomas Pollak
 namespace avl
@@ -20,16 +18,16 @@ namespace avl
 	/// \{
 	
 	/// Calculate the area of the spawned triangle
-	avl_inl_res constexpr auto area(const v3& vec, const v3& other) noexcept -> decltype(cmp(vec));
+	avl_inl_res constexpr auto area(v3 vec, const decltype(vec)& other) noexcept -> decltype(cmp(vec));
 	
 	/// Calculate the cross product
 	avl_ainl_res constexpr auto cross_mk(const v3& vec, const v3& other) noexcept;
 	
 	/// Calculate the cross product
-	avl_ainl constexpr auto cross_set(const v3& vec, const v3& other) noexcept -> void;
+	avl_ainl constexpr auto cross_set(v3& vec, const v3& other) noexcept -> void;
 	
 	/// Calculate the cross product
-	avl_ainl_res constexpr auto cross(const v3& vec, const v3& other) noexcept -> decltype(vec);
+	avl_ainl_res constexpr auto cross(v3& vec, const v3& other) noexcept -> decltype(vec);
 	
 	/// \}
 	/// \defgroup Getter and setters for 3 component vectors
@@ -58,16 +56,16 @@ namespace avl
 	avl_ainl_res constexpr auto add_mk(const v3& vec, const sc scalar) noexcept;
 	
 	// add_set
-	avl_ainl constexpr auto add_set(const v3& vec, const v3& other) noexcept -> void;
+	avl_ainl constexpr auto add_set(v3& vec, const v3& other) noexcept -> void;
 	
 	// add_set (scalar)
-	avl_ainl_res constexpr auto add_set(const v3& vec, const sc scalar) noexcept -> void;
+	avl_ainl constexpr auto add_set(v3& vec, const sc scalar) noexcept -> void;
 	
 	// add
-	avl_ainl_res constexpr auto add(const v3& vec, const v3& other) noexcept -> decltype(vec);
+	avl_ainl_res constexpr auto add(v3& vec, const v3& other) noexcept -> decltype(vec);
 	
 	// add (scalar)
-	avl_ainl_res constexpr auto add(const v3& vec, const sc scalar) noexcept -> decltype(vec);
+	avl_ainl_res constexpr auto add(v3& vec, const sc scalar) noexcept -> decltype(vec);
 	
 	// sub_mk
 	avl_ainl_res constexpr auto sub_mk(const v3& vec, const v3& other) noexcept;
@@ -76,16 +74,16 @@ namespace avl
 	avl_ainl_res constexpr auto sub_mk(const v3& vec, const sc scalar) noexcept;
 	
 	// sub_set
-	avl_ainl constexpr auto sub_set(const v3& vec, const v3& other) noexcept -> void;
+	avl_ainl constexpr auto sub_set(v3& vec, const v3& other) noexcept -> void;
 	
 	// sub_set (scalar)
-	avl_ainl_res constexpr auto sub_set(const v3& vec, const sc scalar) noexcept -> void;
+	avl_ainl constexpr auto sub_set(v3& vec, const sc scalar) noexcept -> void;
 	
 	// sub
-	avl_ainl_res constexpr auto sub(const v3& vec, const v3& other) noexcept -> decltype(vec);
+	avl_ainl_res constexpr auto sub(v3& vec, const v3& other) noexcept -> decltype(vec);
 	
 	// sub (scalar)
-	avl_ainl_res constexpr auto sub(const v3& vec, const sc scalar) noexcept -> decltype(vec);
+	avl_ainl_res constexpr auto sub(v3& vec, const sc scalar) noexcept -> decltype(vec);
 	
 	// mul_mk
 	avl_ainl_res constexpr auto mul_mk(const v3& vec, const v3& other) noexcept;
@@ -94,16 +92,16 @@ namespace avl
 	avl_ainl_res constexpr auto mul_mk(const v3& vec, const sc scalar) noexcept;
 	
 	// mul_set
-	avl_ainl constexpr auto mul_set(const v3& vec, const v3& other) noexcept -> void;
+	avl_ainl constexpr auto mul_set(v3& vec, const v3& other) noexcept -> void;
 	
 	// mul_set (scalar)
-	avl_ainl_res constexpr auto mul_set(const v3& vec, const sc scalar) noexcept -> void;
+	avl_ainl constexpr auto mul_set(v3& vec, const sc scalar) noexcept -> void;
 	
 	// mul
-	avl_ainl_res constexpr auto mul(const v3& vec, const v3& other) noexcept -> decltype(vec);
+	avl_ainl_res constexpr auto mul(v3& vec, const v3& other) noexcept -> decltype(vec);
 	
 	// mul (scalar)
-	avl_ainl_res constexpr auto mul(const v3& vec, const sc scalar) noexcept -> decltype(vec);
+	avl_ainl_res constexpr auto mul(v3& vec, const sc scalar) noexcept -> decltype(vec);
 	
 	// div_mk
 	avl_ainl_res constexpr auto div_mk(const v3& vec, const v3& other) noexcept(ndebug||exuse);
@@ -112,16 +110,23 @@ namespace avl
 	avl_ainl_res constexpr auto div_mk(const v3& vec, const sc scalar) noexcept(ndebug||exuse);
 	
 	// div_set
-	avl_ainl constexpr auto div_set(const v3& vec, const v3& other) noexcept(ndebug||exuse) -> void;
+	avl_ainl constexpr auto div_set(v3& vec, const v3& other) noexcept(ndebug||exuse) -> void;
 	
 	// div_set (scalar)
-	avl_ainl_res constexpr auto div_set(const v3& vec, const sc scalar) noexcept(ndebug||exuse) -> void;
+	avl_ainl constexpr auto div_set(v3& vec, const sc scalar) noexcept(ndebug||exuse) -> void;
 	
 	// div
-	avl_ainl_res constexpr auto div(const v3& vec, const v3& other) noexcept(ndebug||exuse) -> decltype(vec);
+	avl_ainl_res constexpr auto div(v3& vec, const v3& other) noexcept(ndebug||exuse) -> decltype(vec);
 	
 	// div (scalar)
-	avl_ainl_res constexpr auto div(const v3& vec, const sc scalar) noexcept(ndebug||exuse) -> decltype(vec);
+	avl_ainl_res constexpr auto div(v3& vec, const sc scalar) noexcept(ndebug||exuse) -> decltype(vec);
+	
+	/// \}
+	/// \defgroup General purpos functions for 3 component vectors
+	/// \{
+	
+	/// Dot product
+	avl_ainl constexpr auto dot(const v3& vec, decltype(vec)& other) noexcept -> decltype(cmp(vec));
 	
 	/// \}
 }
