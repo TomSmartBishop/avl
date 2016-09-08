@@ -13,23 +13,54 @@ $(list_supportedDims|join).find(dim|string)!=-1@
 //%   set en = (enableFunc|string).strip()|upper == 'TRUE'
 //%   set enTest = (forceTest|string).strip()|upper == 'TRUE'
 //%   set content = caller()
-//%   set ident = content|length - content.lstrip()|length
+//%   set indent = content|length - content.lstrip()|length
 //%   if filetype=='h' and en
-$'\t'*ident + desc@
+$'\t'*indent + desc@
 $content.split('\n')|first@;
-$'\t'*ident@
+$'\t'*indent@
 //%  elif filetype=='inl' and en
-$'\t'*ident + desc@
+$'\t'*indent + desc@
 $(content.split('test_case')|first)@
 //%  elif filetype=='test' and (en or enTest)
 //%    for test_case in content.split('test_case')
 //%      if loop.index0!=0
-$'\t'*ident + 'SECTION( "' + desc.lstrip('/').strip(' ') + '/' + loop.index0|string + '" )'@
+$'\t'*indent + 'SECTION( "' + desc.lstrip('/').strip(' ') + '/' + loop.index0|string + '" )'@
 $test_case.rstrip('\t').strip('\n')@
-$'\t'*ident@
+$'\t'*indent@
 //%      endif
 //%    endfor
 //%  endif
+//% endmacro
+
+//% macro constant_container(name, templateParam)
+//%   set content = caller()
+//%   set indent = content|length - content.lstrip()|length
+//%   set outerIndent = indent - 1
+//%   if outerIndent<0
+//%     set outerIndent = 0
+//%   endif
+$'\t'*outerIndent@template<typename $templateParam@>
+$'\t'*outerIndent@struct $name@
+$'\t'*outerIndent@{
+//%   for line in content.split('\n')
+//%     if line.strip()|length > 0
+$'\t'*indent@static constexpr $templateParam@  $line.strip()@;
+//%     else
+$'\t'*indent@
+//%     endif
+//%   endfor
+$'\t'*outerIndent@};
+$'\t'*outerIndent@
+//%   if indent>0
+//%     set indent = indent - 1
+//%   endif
+//%   for line in content.split('\n')
+//%     if line.strip()|length > 0
+$'\t'*outerIndent@template<typename $templateParam@> constexpr $templateParam@ $name@<$templateParam@>::$(line.split('{')|first).strip()@;
+//%     else
+$'\t'*outerIndent@
+//%     endif
+//%   endfor
 //% endmacro
 
 ### Section
@@ -37,14 +68,14 @@ $'\t'*ident@
 //%   set en = (enableSection|string).strip()|upper == 'TRUE'
 //%   set enTest = (forceTest|string).strip()|upper == 'TRUE'
 //%   set content = caller()
-//%   set ident = content|length - content.lstrip()|length
+//%   set indent = content|length - content.lstrip()|length
 //%   if filetype=='test' and (en or enTest)
 TEST_CASE( "$desc.strip(' ')@", "[$test_vecDef@($dim@)]" )
 $'{'@
 $content + '}'@
 //%   elif en
-$'\t'*ident + '/// \defgroup ' + desc +'\n' + '\t'*ident + '/// \\{\n' +'\t'*ident@
-$content + '\t'*ident + '/// \\}'@
+$'\t'*indent + '/// \defgroup ' + desc +'\n' + '\t'*indent + '/// \\{\n' +'\t'*indent@
+$content + '\t'*indent + '/// \\}'@
 //%   endif
 //% endmacro
 

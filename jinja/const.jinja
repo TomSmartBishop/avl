@@ -1,0 +1,38 @@
+###-
+###- Import jinja helpers
+###-
+//%- from 'avl.jin' import constant_container with context
+#ifndef AVL_CONST_H
+#define AVL_CONST_H
+
+#include <cmath>
+
+/// avl: A Vector Library
+/// \author Thomas Pollak
+namespace avl
+{
+	/// Frequently used constants in floating point precision of <P>
+	// actually these constexpr do not require a struct according to c++14, but through compiler limitations (msvc) we stick to this format
+	//% call constant_container('cnst', 'P')
+		pi			{ M_PI }
+		pi_2		{ M_PI_2 }
+		pi_4		{ M_PI_4 }
+		pi_inv		{ M_1_PI }
+		
+		to_deg		{ 180.0 * pi_inv }
+		to_rad		{ pi / 180.0 }
+		
+		sqrt2		{ M_SQRT2 }
+		sqrt2_inv	{ M_SQRT1_2 }
+		
+		one			{  1   }
+		minus_one	{ -1   }
+		zero		{  0   }
+		half		{  0.5 }
+		
+		sml_epsln	{ 0.000001 }
+		big_epsln	{ 0.001 }
+	//% endcall
+}
+
+#endif // AVL_CONST_H
