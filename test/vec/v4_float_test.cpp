@@ -3,7 +3,7 @@
 
 using namespace avl;
 
-TEST_CASE( "Helper functions", "[vec4<float>(4)]" )
+TEST_CASE( "Helper functions/4", "[vec4<float>(4)]" )
 {
 	SECTION( "Component type helper/1" )
 	{
@@ -12,7 +12,7 @@ TEST_CASE( "Helper functions", "[vec4<float>(4)]" )
 	}
 	
 }
-TEST_CASE( "Getters and setters for all vectors", "[vec4<float>(4)]" )
+TEST_CASE( "Getters and setters for all vectors/4", "[vec4<float>(4)]" )
 {
 	SECTION( "Access the vector components by a range checked index from 0 to dim-1/1" )
 	{
@@ -65,7 +65,7 @@ TEST_CASE( "Getters and setters for all vectors", "[vec4<float>(4)]" )
 	}
 	
 }
-TEST_CASE( "Vector length operations", "[vec4<float>(4)]" )
+TEST_CASE( "Vector length operations/4", "[vec4<float>(4)]" )
 {
 	SECTION( "Returns a new vector with the requested length/1" )
 	{
@@ -221,7 +221,7 @@ TEST_CASE( "Vector length operations", "[vec4<float>(4)]" )
 	}
 	
 }
-TEST_CASE( "Spacial operations", "[vec4<float>(4)]" )
+TEST_CASE( "Spacial operations/4", "[vec4<float>(4)]" )
 {
 	SECTION( "Calculate the angle between two vectors in radian/1" )
 	{
@@ -534,7 +534,7 @@ TEST_CASE( "Spacial operations", "[vec4<float>(4)]" )
 	}
 	
 }
-TEST_CASE( "Getter and setters for 4 component vectors", "[vec4<float>(4)]" )
+TEST_CASE( "Getter and setters for 4 component vectors/4", "[vec4<float>(4)]" )
 {
 	SECTION( "Set all vector components to the same scalar/1" )
 	{
@@ -591,7 +591,7 @@ TEST_CASE( "Getter and setters for 4 component vectors", "[vec4<float>(4)]" )
 	}
 	
 }
-TEST_CASE( "General vector operations for 4 component vectors", "[vec4<float>(4)]" )
+TEST_CASE( "General vector operations for 4 component vectors/4", "[vec4<float>(4)]" )
 {
 	vec4<float> add_var_1 = { -5.500, -59.844, -71.993, 35.807 };
 	vec4<float> add_var_2 = { 23.679, -44.516, -17.864, -55.271 };
@@ -926,7 +926,7 @@ TEST_CASE( "General vector operations for 4 component vectors", "[vec4<float>(4)
 	}
 	
 }
-TEST_CASE( "General purpos functions for 4 component vectors", "[vec4<float>(4)]" )
+TEST_CASE( "General purpos functions for 4 component vectors/4", "[vec4<float>(4)]" )
 {
 	SECTION( "Dot product/1" )
 	{

@@ -70,7 +70,7 @@ $'\t'*outerIndent@
 //%   set content = caller()
 //%   set indent = content|length - content.lstrip()|length
 //%   if filetype=='test' and (en or enTest)
-TEST_CASE( "$desc.strip(' ')@", "[$test_vecDef@($dim@)]" )
+TEST_CASE( "$desc.strip(' ')@/$dim@", "[$test_vecDef@($dim@)]" )
 $'{'@
 $content + '}'@
 //%   elif en

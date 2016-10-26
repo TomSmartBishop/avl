@@ -3,7 +3,7 @@
 
 using namespace avl;
 
-TEST_CASE( "Helper functions", "[vec3<float>(3)]" )
+TEST_CASE( "Helper functions/3", "[vec3<float>(3)]" )
 {
 	SECTION( "Component type helper/1" )
 	{
@@ -12,7 +12,7 @@ TEST_CASE( "Helper functions", "[vec3<float>(3)]" )
 	}
 	
 }
-TEST_CASE( "Getters and setters for all vectors", "[vec3<float>(3)]" )
+TEST_CASE( "Getters and setters for all vectors/3", "[vec3<float>(3)]" )
 {
 	SECTION( "Access the vector components by a range checked index from 0 to dim-1/1" )
 	{
@@ -59,7 +59,7 @@ TEST_CASE( "Getters and setters for all vectors", "[vec3<float>(3)]" )
 	}
 	
 }
-TEST_CASE( "Vector length operations", "[vec3<float>(3)]" )
+TEST_CASE( "Vector length operations/3", "[vec3<float>(3)]" )
 {
 	SECTION( "Returns a new vector with the requested length/1" )
 	{
@@ -212,7 +212,7 @@ TEST_CASE( "Vector length operations", "[vec3<float>(3)]" )
 	}
 	
 }
-TEST_CASE( "Spacial operations", "[vec3<float>(3)]" )
+TEST_CASE( "Spacial operations/3", "[vec3<float>(3)]" )
 {
 	SECTION( "Calculate the angle between two vectors in radian/1" )
 	{
@@ -447,7 +447,7 @@ TEST_CASE( "Spacial operations", "[vec3<float>(3)]" )
 	}
 	
 }
-TEST_CASE( "Getter and setters for 3 component vectors", "[vec3<float>(3)]" )
+TEST_CASE( "Getter and setters for 3 component vectors/3", "[vec3<float>(3)]" )
 {
 	SECTION( "Set all vector components to the same scalar/1" )
 	{
@@ -500,7 +500,7 @@ TEST_CASE( "Getter and setters for 3 component vectors", "[vec3<float>(3)]" )
 	}
 	
 }
-TEST_CASE( "General vector operations for 3 component vectors", "[vec3<float>(3)]" )
+TEST_CASE( "General vector operations for 3 component vectors/3", "[vec3<float>(3)]" )
 {
 	vec3<float> add_var_1 = { -23.339, -20.869, -42.571 };
 	vec3<float> add_var_2 = { -66.230, 96.213, 63.923 };
@@ -803,7 +803,7 @@ TEST_CASE( "General vector operations for 3 component vectors", "[vec3<float>(3)
 	}
 	
 }
-TEST_CASE( "General purpos functions for 3 component vectors", "[vec3<float>(3)]" )
+TEST_CASE( "General purpos functions for 3 component vectors/3", "[vec3<float>(3)]" )
 {
 	SECTION( "Dot product/1" )
 	{

@@ -3,7 +3,7 @@
 
 using namespace avl;
 
-TEST_CASE( "Helper functions", "[vec2<float>(2)]" )
+TEST_CASE( "Helper functions/2", "[vec2<float>(2)]" )
 {
 	SECTION( "Component type helper/1" )
 	{
@@ -12,7 +12,7 @@ TEST_CASE( "Helper functions", "[vec2<float>(2)]" )
 	}
 	
 }
-TEST_CASE( "Getters and setters for all vectors", "[vec2<float>(2)]" )
+TEST_CASE( "Getters and setters for all vectors/2", "[vec2<float>(2)]" )
 {
 	SECTION( "Access the vector components by a range checked index from 0 to dim-1/1" )
 	{
@@ -53,7 +53,7 @@ TEST_CASE( "Getters and setters for all vectors", "[vec2<float>(2)]" )
 	}
 	
 }
-TEST_CASE( "Vector length operations", "[vec2<float>(2)]" )
+TEST_CASE( "Vector length operations/2", "[vec2<float>(2)]" )
 {
 	SECTION( "Returns a new vector with the requested length/1" )
 	{
@@ -203,7 +203,7 @@ TEST_CASE( "Vector length operations", "[vec2<float>(2)]" )
 	}
 	
 }
-TEST_CASE( "Spacial operations", "[vec2<float>(2)]" )
+TEST_CASE( "Spacial operations/2", "[vec2<float>(2)]" )
 {
 	SECTION( "Calculate the angle between two vectors in radian/1" )
 	{
@@ -297,7 +297,7 @@ TEST_CASE( "Spacial operations", "[vec2<float>(2)]" )
 	}
 	
 }
-TEST_CASE( "Getter and setters for 2 component vectors", "[vec2<float>(2)]" )
+TEST_CASE( "Getter and setters for 2 component vectors/2", "[vec2<float>(2)]" )
 {
 	SECTION( "Set all vector components to the same scalar/1" )
 	{
@@ -346,7 +346,7 @@ TEST_CASE( "Getter and setters for 2 component vectors", "[vec2<float>(2)]" )
 	}
 	
 }
-TEST_CASE( "General vector operations for 2 component vectors", "[vec2<float>(2)]" )
+TEST_CASE( "General vector operations for 2 component vectors/2", "[vec2<float>(2)]" )
 {
 	vec2<float> add_var_1 = { 53.365, -77.151 };
 	vec2<float> add_var_2 = { 9.297, 68.259 };
@@ -617,7 +617,7 @@ TEST_CASE( "General vector operations for 2 component vectors", "[vec2<float>(2)
 	}
 	
 }
-TEST_CASE( "General purpos functions for 2 component vectors", "[vec2<float>(2)]" )
+TEST_CASE( "General purpos functions for 2 component vectors/2", "[vec2<float>(2)]" )
 {
 	SECTION( "Dot product/1" )
 	{
