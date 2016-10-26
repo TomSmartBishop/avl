@@ -3,7 +3,7 @@
 
 using namespace avl;
 
-TEST_CASE( "4 | Helper functions/4", "[vec4<float>(4)]" )
+TEST_CASE( "Helper functions/4", "[vec4<float>(4)]" )
 {
 	SECTION( "Component type helper/1" )
 	{
@@ -12,7 +12,7 @@ TEST_CASE( "4 | Helper functions/4", "[vec4<float>(4)]" )
 	}
 	
 }
-TEST_CASE( "4 | Getters and setters for all vectors/4", "[vec4<float>(4)]" )
+TEST_CASE( "Getters and setters for all vectors/4", "[vec4<float>(4)]" )
 {
 	SECTION( "Access the vector components by a range checked index from 0 to dim-1/1" )
 	{
@@ -65,7 +65,7 @@ TEST_CASE( "4 | Getters and setters for all vectors/4", "[vec4<float>(4)]" )
 	}
 	
 }
-TEST_CASE( "4 | Vector length operations/4", "[vec4<float>(4)]" )
+TEST_CASE( "Vector length operations/4", "[vec4<float>(4)]" )
 {
 	SECTION( "Returns a new vector with the requested length/1" )
 	{
@@ -221,7 +221,7 @@ TEST_CASE( "4 | Vector length operations/4", "[vec4<float>(4)]" )
 	}
 	
 }
-TEST_CASE( "4 | Spacial operations/4", "[vec4<float>(4)]" )
+TEST_CASE( "Spacial operations/4", "[vec4<float>(4)]" )
 {
 	SECTION( "Calculate the angle between two vectors in radian/1" )
 	{
@@ -538,7 +538,7 @@ TEST_CASE( "4 | Spacial operations/4", "[vec4<float>(4)]" )
 	}
 	
 }
-TEST_CASE( "4 | Getter and setters for 4 component vectors/4", "[vec4<float>(4)]" )
+TEST_CASE( "Getter and setters for 4 component vectors/4", "[vec4<float>(4)]" )
 {
 	SECTION( "Set all vector components to the same scalar/1" )
 	{
@@ -595,7 +595,7 @@ TEST_CASE( "4 | Getter and setters for 4 component vectors/4", "[vec4<float>(4)]
 	}
 	
 }
-TEST_CASE( "4 | General vector operations for 4 component vectors/4", "[vec4<float>(4)]" )
+TEST_CASE( "General vector operations for 4 component vectors/4", "[vec4<float>(4)]" )
 {
 	vec4<float> add_var_1 = { 96.213, 63.923, -29.223, 83.438 };
 	vec4<float> add_var_2 = { -89.235, 64.109, -5.500, -59.844 };
@@ -930,7 +930,7 @@ TEST_CASE( "4 | General vector operations for 4 component vectors/4", "[vec4<flo
 	}
 	
 }
-TEST_CASE( "4 | General purpos functions for 4 component vectors/4", "[vec4<float>(4)]" )
+TEST_CASE( "General purpos functions for 4 component vectors/4", "[vec4<float>(4)]" )
 {
 	SECTION( "Dot product/1" )
 	{

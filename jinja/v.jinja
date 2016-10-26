@@ -36,7 +36,7 @@ $'{\n'@
 using namespace avl;
 
 //% endif
-//% call section(dim|string + ' | Helper functions', match([0]), true)
+//% call section('Helper functions', match([0]), true)
 	
 	//% call func('//Component type helper', match([0]), true)
 	avl_ainl_res constexpr auto cmp(const $vecPar@& vec) noexcept -> $vecRetCmp(vec)@
@@ -51,7 +51,7 @@ using namespace avl;
 	//% endcall
 	
 //% endcall
-//% call section(dim|string + ' | Getters and setters for all vectors', match([0]), true)
+//% call section('Getters and setters for all vectors', match([0]), true)
 	
 	//% call func('/// Access the vector components by a range checked index from 0 to dim-1', match([0]), true)
 	avl_ainl_res constexpr auto get(const $vecPar@& vec, const s::size_t idx) noexcept(ndebug||exuse) -> decltype(cmp(vec))
@@ -124,7 +124,7 @@ using namespace avl;
 	//% endcall
 	
 //% endcall
-//% call section(dim|string + ' | Vector length operations')
+//% call section('Vector length operations')
 	
 	//% call func('/// Returns a new vector with the requested length', match([0]), true)
 	avl_ainl_res constexpr auto setlen_mk(const $vecPar@& vec, const $scalarPar@ len_to_set) noexcept(ndebug||exuse)
@@ -328,7 +328,7 @@ using namespace avl;
 //% endfor
 	
 //% endcall
-//% call section(dim|string + ' | Spacial operations')
+//% call section('Spacial operations')
 //% for mut, mul, info in [('_rd', '', 'radian'),('_dg', ' * cnst<decltype(cmp(vec))>::to_deg', 'degree')]
 	//% call func('/// Calculate the angle between two vectors in '+info, match([0]), true)
 	avl_ainl_res constexpr auto angle$mut@(const $vecPar@& vec, const decltype(vec) other) noexcept -> decltype(cmp(vec))
@@ -551,7 +551,7 @@ using namespace avl;
 	//% endcall
 //%   endfor
 //% endcall
-//% call section(dim|string + ' | Getter and setters for '+dim|string+' component vectors', match([2,3,4]))
+//% call section('Getter and setters for '+dim|string+' component vectors', match([2,3,4]))
 	
 	//% call func('/// Set all vector components to the same scalar', match([2,3,4]))
 	avl_ainl constexpr auto set_all($vecPar@& vec, const $scalarPar@ scalar) noexcept -> void
@@ -650,7 +650,7 @@ using namespace avl;
 	//% endcall
 	
 //% endcall
-//% call section(dim|string + ' | General vector operations for '+dim|string+' component vectors', match([2,3,4]))
+//% call section('General vector operations for '+dim|string+' component vectors', match([2,3,4]))
 //% for op, s in [('add', '+'), ('sub', '-'), ('mul', '*'), ('div', '/')]
 //%   if filetype=='test'
 	$vecCreateRnd(op+'_var_1')@;
@@ -776,7 +776,7 @@ using namespace avl;
 //%   endfor
 //% endfor
 //% endcall
-//% call section(dim|string + ' | General purpos functions for '+dim|string+' component vectors', match([2,3,4]))
+//% call section('General purpos functions for '+dim|string+' component vectors', match([2,3,4]))
 	
 	//% call func('/// Dot product', match([2,3,4]))
 	avl_ainl constexpr auto dot(const $vecPar@& vec, decltype(vec)& other) noexcept -> decltype(cmp(vec))
