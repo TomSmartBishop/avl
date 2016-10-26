@@ -3,7 +3,7 @@
 
 using namespace avl;
 
-TEST_CASE( "Helper functions/2", "[vec2<float>(2)]" )
+TEST_CASE( "2 | Helper functions/2", "[vec2<float>(2)]" )
 {
 	SECTION( "Component type helper/1" )
 	{
@@ -12,7 +12,7 @@ TEST_CASE( "Helper functions/2", "[vec2<float>(2)]" )
 	}
 	
 }
-TEST_CASE( "Getters and setters for all vectors/2", "[vec2<float>(2)]" )
+TEST_CASE( "2 | Getters and setters for all vectors/2", "[vec2<float>(2)]" )
 {
 	SECTION( "Access the vector components by a range checked index from 0 to dim-1/1" )
 	{
@@ -53,7 +53,7 @@ TEST_CASE( "Getters and setters for all vectors/2", "[vec2<float>(2)]" )
 	}
 	
 }
-TEST_CASE( "Vector length operations/2", "[vec2<float>(2)]" )
+TEST_CASE( "2 | Vector length operations/2", "[vec2<float>(2)]" )
 {
 	SECTION( "Returns a new vector with the requested length/1" )
 	{
@@ -73,7 +73,7 @@ TEST_CASE( "Vector length operations/2", "[vec2<float>(2)]" )
 	SECTION( "Set the length of the vector/1" )
 	{
 		vec2<float> vec = { -30.752, 44.111 };
-		const float len_to_set = { -87.757 };
+		const float len_to_set = { 87.757 };
 		setlen_set(vec, len_to_set);
 		const auto vec_len = len(vec);
 		
@@ -90,14 +90,14 @@ TEST_CASE( "Vector length operations/2", "[vec2<float>(2)]" )
 	{
 		vec2<float> vec = { 31.643, -20.870 };
 		const float len_to_set = { 99.803 };
-		const auto ret_vec = setlen(vec, len_to_set);
+		const auto &ret_vec = setlen(vec, len_to_set);
 		const auto vec_len = len(vec);
 		
 		REQUIRE( vec_len == Approx(len_to_set) );
 		
 		REQUIRE( &vec == &ret_vec);
 		//test edge case 0.0
-		const auto ret_zero_vec = setlen(vec, cnst<float>::zero);
+		const auto &ret_zero_vec = setlen(vec, cnst<float>::zero);
 		
 		REQUIRE( get<0>(vec) == Approx( cnst<float>::zero ) );
 		REQUIRE( get<1>(vec) == Approx( cnst<float>::zero ) );
@@ -158,8 +158,8 @@ TEST_CASE( "Vector length operations/2", "[vec2<float>(2)]" )
 	{
 		vec2<float> vec = { -47.634, 11.530 };
 		norm_set(vec);
-		const float len_to_set = { -23.339 };
-		REQUIRE( len_to_set == Approx( cnst<float>::one ) );
+		const auto len_of_norm_vec = len(vec);
+		REQUIRE( len_of_norm_vec == Approx( cnst<float>::one ) );
 	}
 	
 	SECTION( "Normalize the current vector, use alternative vector if the current vector length is 0/1" )
@@ -179,10 +179,10 @@ TEST_CASE( "Vector length operations/2", "[vec2<float>(2)]" )
 	
 	SECTION( "Normalize the current vector and return the same vector (chained)/1" )
 	{
-		vec2<float> vec = { -20.869, -42.571 };
-		auto &ret_vec = norm(vec);
-		const float len_to_set = { -66.23 };
-		REQUIRE( len_to_set == Approx( cnst<float>::one ) );
+		vec2<float> vec = { -23.339, -20.869 };
+		const auto &ret_vec = norm(vec);
+		const auto len_of_norm_vec = len(vec);
+		REQUIRE( len_of_norm_vec == Approx( cnst<float>::one ) );
 		REQUIRE( &vec == &ret_vec);
 	}
 	
@@ -195,7 +195,7 @@ TEST_CASE( "Vector length operations/2", "[vec2<float>(2)]" )
 		vec2<float> unit_vec = { 0, 0 };
 		set<0>(unit_vec, cnst<float>::one);
 		
-		auto &ret_vec = norm(vec, unit_vec);
+		const auto &ret_vec = norm(vec, unit_vec);
 		const auto vec_len = len(vec);
 		REQUIRE( vec_len == Approx( cnst<float>::one ) );
 		REQUIRE( get<0>(vec) == Approx( cnst<float>::one ) );
@@ -203,14 +203,14 @@ TEST_CASE( "Vector length operations/2", "[vec2<float>(2)]" )
 	}
 	
 }
-TEST_CASE( "Spacial operations/2", "[vec2<float>(2)]" )
+TEST_CASE( "2 | Spacial operations/2", "[vec2<float>(2)]" )
 {
 	SECTION( "Calculate the angle between two vectors in radian/1" )
 	{
-		const float random_len1 = { 96.213 };
-		const float random_len2 = { 63.923 };
-		const float random_len3 = { 29.223 };
-		const float random_len4 = { 83.438 };
+		const float random_len1 = { 42.571 };
+		const float random_len2 = { 66.23 };
+		const float random_len3 = { 96.213 };
+		const float random_len4 = { 63.923 };
 		
 		vec2<float> vec_zero = { 0, 0 };
 		vec2<float> vec_10x = { 0, 0 };
@@ -223,7 +223,9 @@ TEST_CASE( "Spacial operations/2", "[vec2<float>(2)]" )
 		set<0>(vec_11x, random_len4);
 		set<1>(vec_11x, random_len4);
 		
-		const auto angle0 = angle_rd(vec_10x, vec_zero);
+		//TODO: add case for edge case with zero vec
+		
+		const auto angle0 = angle_rd(vec_10x, vec_10x);
 		REQUIRE( angle0 == Approx( cnst<float>::zero ) );
 		
 		const auto angle90 = angle_rd(vec_10x, vec_01x);
@@ -243,10 +245,10 @@ TEST_CASE( "Spacial operations/2", "[vec2<float>(2)]" )
 	
 	SECTION( "Calculate the angle between two vectors in degree/1" )
 	{
-		const float random_len1 = { 89.235 };
-		const float random_len2 = { 64.109 };
-		const float random_len3 = { 5.5 };
-		const float random_len4 = { 59.844 };
+		const float random_len1 = { 29.223 };
+		const float random_len2 = { 83.438 };
+		const float random_len3 = { 89.235 };
+		const float random_len4 = { 64.109 };
 		
 		vec2<float> vec_zero = { 0, 0 };
 		vec2<float> vec_10x = { 0, 0 };
@@ -259,7 +261,9 @@ TEST_CASE( "Spacial operations/2", "[vec2<float>(2)]" )
 		set<0>(vec_11x, random_len4);
 		set<1>(vec_11x, random_len4);
 		
-		const auto angle0 = angle_dg(vec_10x, vec_zero);
+		//TODO: add case for edge case with zero vec
+		
+		const auto angle0 = angle_dg(vec_10x, vec_10x);
 		REQUIRE( angle0 == Approx( cnst<float>::zero ) );
 		
 		const auto angle90 = angle_dg(vec_10x, vec_01x);
@@ -297,13 +301,13 @@ TEST_CASE( "Spacial operations/2", "[vec2<float>(2)]" )
 	}
 	
 }
-TEST_CASE( "Getter and setters for 2 component vectors/2", "[vec2<float>(2)]" )
+TEST_CASE( "2 | Getter and setters for 2 component vectors/2", "[vec2<float>(2)]" )
 {
 	SECTION( "Set all vector components to the same scalar/1" )
 	{
 		vec2<float> vec = { 0, 0 };
 		
-		const float val = { -71.993 };
+		const float val = { -5.5 };
 		
 		set_all(vec, val);
 		
@@ -314,7 +318,7 @@ TEST_CASE( "Getter and setters for 2 component vectors/2", "[vec2<float>(2)]" )
 	SECTION( "Set all vector components individually/1" )
 	{
 		vec2<float> vec = { 0, 0 };
-		const float arr [] = { 35.807, 23.679 };
+		const float arr [] = { -59.844, -71.993 };
 		
 		set_all(vec,arr[0], arr[1]);
 		
@@ -325,7 +329,7 @@ TEST_CASE( "Getter and setters for 2 component vectors/2", "[vec2<float>(2)]" )
 	SECTION( "Set all vector components individually by a fixed size array/1" )
 	{
 		vec2<float> vec = { 0, 0 };
-		const float arr [] = { -44.516, -17.864 };
+		const float arr [] = { 35.807, 23.679 };
 		
 		set_all(vec, arr);
 		
@@ -336,7 +340,7 @@ TEST_CASE( "Getter and setters for 2 component vectors/2", "[vec2<float>(2)]" )
 	SECTION( "Set all vector components individually by an array/1" )
 	{
 		vec2<float> vec = { 0, 0 };
-		const float arr [] = { -55.271, 54.458 };
+		const float arr [] = { -44.516, -17.864 };
 		const auto* ptr_to_arr = arr;
 		
 		set_all<2>(vec, ptr_to_arr);
@@ -346,11 +350,11 @@ TEST_CASE( "Getter and setters for 2 component vectors/2", "[vec2<float>(2)]" )
 	}
 	
 }
-TEST_CASE( "General vector operations for 2 component vectors/2", "[vec2<float>(2)]" )
+TEST_CASE( "2 | General vector operations for 2 component vectors/2", "[vec2<float>(2)]" )
 {
-	vec2<float> add_var_1 = { 53.365, -77.151 };
-	vec2<float> add_var_2 = { 9.297, 68.259 };
-	const float add_scalar = { 31.885 };
+	vec2<float> add_var_1 = { -55.271, 54.458 };
+	vec2<float> add_var_2 = { 53.365, -77.151 };
+	const float add_scalar = { 9.297 };
 	
 	const float add_vec_res [] =
 		{ get<0>(add_var_1) + get<0>(add_var_2), get<1>(add_var_1) + get<1>(add_var_2) };
@@ -359,9 +363,9 @@ TEST_CASE( "General vector operations for 2 component vectors/2", "[vec2<float>(
 	const float add_vec_scalar_res [] =
 		{ get<0>(add_var_1) + get<0>(add_var_2) + add_scalar, get<1>(add_var_1) + get<1>(add_var_2) + add_scalar };
 	
-	vec2<float> sub_var_1 = { 1.285, -91.230 };
-	vec2<float> sub_var_2 = { -7.666, 64.986 };
-	const float sub_scalar = { -43.384 };
+	vec2<float> sub_var_1 = { 68.259, 31.885 };
+	vec2<float> sub_var_2 = { 1.285, -91.230 };
+	const float sub_scalar = { -7.666 };
 	
 	const float sub_vec_res [] =
 		{ get<0>(sub_var_1) - get<0>(sub_var_2), get<1>(sub_var_1) - get<1>(sub_var_2) };
@@ -370,9 +374,9 @@ TEST_CASE( "General vector operations for 2 component vectors/2", "[vec2<float>(
 	const float sub_vec_scalar_res [] =
 		{ get<0>(sub_var_1) - get<0>(sub_var_2) - sub_scalar, get<1>(sub_var_1) - get<1>(sub_var_2) - sub_scalar };
 	
-	vec2<float> mul_var_1 = { 74.225, 27.629 };
-	vec2<float> mul_var_2 = { 69.916, 65.982 };
-	const float mul_scalar = { -12.719 };
+	vec2<float> mul_var_1 = { 64.986, -43.384 };
+	vec2<float> mul_var_2 = { 74.225, 27.629 };
+	const float mul_scalar = { 69.916 };
 	
 	const float mul_vec_res [] =
 		{ get<0>(mul_var_1) * get<0>(mul_var_2), get<1>(mul_var_1) * get<1>(mul_var_2) };
@@ -381,9 +385,9 @@ TEST_CASE( "General vector operations for 2 component vectors/2", "[vec2<float>(
 	const float mul_vec_scalar_res [] =
 		{ get<0>(mul_var_1) * get<0>(mul_var_2) * mul_scalar, get<1>(mul_var_1) * get<1>(mul_var_2) * mul_scalar };
 	
-	vec2<float> div_var_1 = { 13.388, 8.611 };
-	vec2<float> div_var_2 = { -44.171, 17.159 };
-	const float div_scalar = { -30.164 };
+	vec2<float> div_var_1 = { 65.982, -12.719 };
+	vec2<float> div_var_2 = { 13.388, 8.611 };
+	const float div_scalar = { -44.171 };
 	
 	const float div_vec_res [] =
 		{ get<0>(div_var_1) / get<0>(div_var_2), get<1>(div_var_1) / get<1>(div_var_2) };
@@ -617,7 +621,7 @@ TEST_CASE( "General vector operations for 2 component vectors/2", "[vec2<float>(
 	}
 	
 }
-TEST_CASE( "General purpos functions for 2 component vectors/2", "[vec2<float>(2)]" )
+TEST_CASE( "2 | General purpos functions for 2 component vectors/2", "[vec2<float>(2)]" )
 {
 	SECTION( "Dot product/1" )
 	{
