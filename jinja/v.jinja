@@ -522,13 +522,13 @@ using namespace avl;
 		
 		//% if mut=='_mk'
 		auto result1 = cross$if_then(dim==4, '3')@_mk(vec_100x, vec_010x);
-		auto result2 = cross$if_then(dim==4, '3')@_mk(vec_010x, vec_100x);
+		auto result2 = cross$if_then(dim==4, '3')@_mk(vec_010x, vec_100x_dup);
 		//% elif mut=='_set'
 		cross$if_then(dim==4, '3')@_set(vec_100x, vec_010x);
 		cross$if_then(dim==4, '3')@_set(vec_010x, vec_100x_dup);
 		//% else
 		auto &result1 = cross$if_then(dim==4, '3')@(vec_100x, vec_010x);
-		auto &result2 = cross$if_then(dim==4, '3')@(vec_010x, vec_100x);
+		auto &result2 = cross$if_then(dim==4, '3')@(vec_010x, vec_100x_dup);
 		//% endif
 		
 		//% for i in range(dim)

@@ -395,7 +395,7 @@ TEST_CASE( "Spacial operations/3", "[vec3<float>(3)]" )
 		set<2>(expected_res2, cnst<float>::minus_one);
 		
 		auto result1 = cross_mk(vec_100x, vec_010x);
-		auto result2 = cross_mk(vec_010x, vec_100x);
+		auto result2 = cross_mk(vec_010x, vec_100x_dup);
 		REQUIRE( get<0>(result1) == Approx( get<0>(expected_res1) ) );
 		REQUIRE( get<1>(result1) == Approx( get<1>(expected_res1) ) );
 		REQUIRE( get<2>(result1) == Approx( get<2>(expected_res1) ) );
@@ -441,7 +441,7 @@ TEST_CASE( "Spacial operations/3", "[vec3<float>(3)]" )
 		set<2>(expected_res2, cnst<float>::minus_one);
 		
 		auto &result1 = cross(vec_100x, vec_010x);
-		auto &result2 = cross(vec_010x, vec_100x);
+		auto &result2 = cross(vec_010x, vec_100x_dup);
 		REQUIRE( get<0>(result1) == Approx( get<0>(expected_res1) ) );
 		REQUIRE( get<1>(result1) == Approx( get<1>(expected_res1) ) );
 		REQUIRE( get<2>(result1) == Approx( get<2>(expected_res1) ) );
