@@ -1,0 +1,99 @@
+//% call section('Getter and setters for '+dim|string+' component vectors', match([2,3,4]))
+	
+	//% call func('/// Set all vector components to the same scalar', match([2,3,4]))
+	avl_ainl constexpr auto set_all($vecPar@& vec, const $scalarPar@ scalar) noexcept -> void
+	{
+		static_assert(eq<decltype(vec[0]), decltype(scalar)>::value, "Supply a scalar of the vectors element filetype.");
+		//% for i in range(dim)
+		$vecWriteCmp(vec, i, scalar)@;
+		//% endfor
+	}
+	test_case
+	{
+		$vecCreateZero(vec)@;
+		
+		const $scalarCreateRnd('val')@;
+		
+		set_all(vec, val);
+		
+		//% for i in range(dim)
+		REQUIRE( get<$i@>(vec)==val );
+		//% endfor
+	}
+	//% endcall
+	
+	//% call func('/// Set all vector components individually', match([2,3,4]))
+	avl_ainl constexpr auto set_all($vecPar@& vec/*% for name in param %*/, const $scalarPar@ $name@/*% endfor %*/) noexcept -> void
+	{
+		//% for i in range(dim)
+		static_assert(eq<decltype(vec[ $i@ ]), decltype($param[i]@)>::value, "Supply a scalar of the vectors element type for $param[i]@.");
+		//% endfor
+		
+		//% for i in range(dim)
+		$vecWriteCmp(vec, i, param[i])@;
+		//% endfor
+	}
+	test_case
+	{
+		$vecCreateZero(vec)@;
+		const $arrCreateRnd(arr)@;
+		
+		set_all(vec,/*% call loop_(range(dim)) %*/arr[#]/*% endcall %*/);
+		
+		//% for i in range(dim)
+		REQUIRE( get<$i@>(vec)==arr[$i@] );
+		//% endfor
+	}
+	//% endcall
+	
+	//% call func('/// Set all vector components individually by a fixed size array', match([2,3,4]))
+	avl_ainl constexpr auto set_all($vecPar@& vec, const $scalarPar@ scalars[ $dim@ ]) noexcept -> void
+	{
+		//% for i in range(dim)
+		static_assert(eq<decltype(vec[ $i@ ]), decltype(scalars[ $i@ ])>::value, "Supply a scalar of the vectors element filetype.");
+		//% endfor
+		
+		//% for i in range(dim)
+		$vecWriteCmp(vec, i, 'scalars[' + i|string + ']')@;
+		//% endfor
+	}
+	test_case
+	{
+		$vecCreateZero(vec)@;
+		const $arrCreateRnd(arr)@;
+		
+		set_all(vec, arr);
+		
+		//% for i in range(dim)
+		REQUIRE( get<$i@>(vec)==arr[$i@] );
+		//% endfor
+	}
+	//% endcall
+	
+	//% call func('/// Set all vector components individually by an array of specified size _Dim', match([2,3,4]))
+	template <s::size_t _Dim> avl_ainl constexpr auto set_all($vecPar@& vec, const $scalarPar@* scalars) noexcept -> void
+	{
+		static_assert(_Dim>=$dim@, "Supply at least $dim@ scalars.");
+		//% for i in range(dim)
+		static_assert(eq<decltype(vec[ $i@ ]), decltype(scalars[ $i@ ])>::value, "Supply a scalar of the vectors element type.");
+		//% endfor
+		
+		//% for i in range(dim)
+		$vecWriteCmp(vec, i, 'scalars[' + i|string + ']')@;
+		//% endfor
+	}
+	test_case
+	{
+		$vecCreateZero(vec)@;
+		const $arrCreateRnd(arr)@;
+		const auto* ptr_to_arr = arr;
+		
+		set_all<$dim@>(vec, ptr_to_arr);
+		
+		//% for i in range(dim)
+		REQUIRE( get<$i@>(vec)==arr[$i@] );
+		//% endfor
+	}
+	//% endcall
+	
+//% endcall

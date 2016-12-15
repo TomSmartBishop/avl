@@ -1,3 +1,4 @@
+
 #ifndef AVL_V_INL
 #define AVL_V_INL
 
@@ -7,10 +8,11 @@
 /// \author Thomas Pollak
 namespace avl
 {
+
 	/// \defgroup Helper functions
 	/// \{
 	
-	//Component type helper
+	//Component type helperget
 	avl_ainl_res constexpr auto cmp(const v& vec) noexcept -> rem_const_ref_t<decltype(vec[0])>
 	{
 		return vec[0];
@@ -165,6 +167,32 @@ namespace avl
 		return s::acos( dot_prod / ( vec_len * other_len ) ) * cnst<decltype(cmp(vec))>::to_deg;
 	}
 	
+	/// Get the direction relative to another point excluding colinear and opposite-but-colinear (faster than get_dir_col)
+	avl_ainl_res constexpr auto get_dir(const v& vec, const v& other) noexcept -> dir
+	{
+		const auto dotProduct = dot(vec, other);
+		if( utl::eqls(dotProduct, decltype(dotProduct){0}, cnst<decltype(cmp(vec))>::big_epsln) ) {
+			return dir::perpend;
+		} else if( dotProduct > decltype(dotProduct){0}) {
+			return dir::same;
+		} else {
+			return dir::opp;
+		}
+	}
+
+	/// Get the direction relative to another point excluding colinear and opposite-but-colinear (faster than get_dir_col)
+	avl_ainl_res constexpr auto get_dir(const v& vec, const v& other, const sc epsilon) noexcept -> dir
+	{
+		const auto dotProduct = dot(vec, other);
+		if( utl::eqls(dotProduct, decltype(dotProduct){0}, epsilon) ) {
+			return dir::perpend;
+		} else if( dotProduct > decltype(dotProduct){0}) {
+			return dir::same;
+		} else {
+			return dir::opp;
+		}
+	}
+
 	/// \}
 }
 #endif // AVL_V_INL

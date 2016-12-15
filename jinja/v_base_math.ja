@@ -1,0 +1,126 @@
+//% call section('Base math vector operations for '+dim|string+' component vectors', match([2,3,4]))
+//% for op, s in [('add', '+'), ('sub', '-'), ('mul', '*'), ('div', '/')]
+//%   if test
+	$vecCreateRnd(op+'_var_1')@;
+	$vecCreateRnd(op+'_var_2')@;
+	const $scalarCreateRnd(op+'_scalar')@;
+	
+	const $arrCreate(op+'_vec_res')@ =
+		{ /*% call loop_(range(dim)) %*/get<#>($op@_var_1) $s@ get<#>($op@_var_2)/*% endcall %*/ };
+	const $arrCreate(op+'_scalar_res')@ =
+		{ /*% call loop_(range(dim)) %*/get<#>($op@_var_1) $s@ $op@_scalar/*% endcall %*/ };
+	const $arrCreate(op+'_vec_scalar_res')@ =
+		{ /*% call loop_(range(dim)) %*/get<#>($op@_var_1) $s@ get<#>($op@_var_2) $s@ $op@_scalar/*% endcall %*/ };
+	
+//%   endif
+//% endfor
+//% for op, s in [('add', '+'), ('sub', '-'), ('mul', '*'), ('div', '/')]
+//%   for mut, rt, res in [('_mk', '', '_res'), ('_set', ' -> void', ''), ('', ' -> decltype(vec)', '_res')]
+	
+	//% call func('// ' + op + mut, match([2,3,4]))
+	avl_ainl$res@ constexpr auto $op+mut@($if_then(mut=='_mk', 'const ')+vecPar@& vec, const $vecPar@& other) noexcept$if_then(op=='div', '(ndebug||exuse)')+rt@
+	{
+		//% call loop_if(op=='div', range(dim), '')
+		assert(get<#>(other)!=cnst<decltype(cmp(other))>::zero);
+		//% endcall
+		
+		//% if mut=='_mk'
+		return rem_const_ref_t< decltype(vec) >
+					{/*% call loop_(range(dim)) %*/get<#>(vec) $s@ get<#>(other)/*% endcall %*/ };
+		//% elif mut=='_set'
+		set_all(vec, /*% call loop_(range(dim)) %*/get<#>(vec) $s@ get<#>(other)/*% endcall %*/ );
+		//% else
+		set_all(vec, /*% call loop_(range(dim)) %*/get<#>(vec) $s@ get<#>(other)/*% endcall %*/ );
+		return vec;
+		//% endif
+	}
+	//%   if mut=='_mk'
+	test_case
+	{
+		auto res = $op+mut@($op@_var_1, $op@_var_2);
+		//% call loop_(range(dim), '')
+		REQUIRE( get<#>(res) == Approx($op@_vec_res[#]) );
+		//% endcall
+		REQUIRE( &res != &$op@_var_1 ); //result must be a new resource
+		REQUIRE( &res != &$op@_var_2 ); //also different to $op@_var_2
+	}
+	//%   elif mut=='_set'
+	test_case
+	{
+		$op+mut@($op@_var_1, $op@_var_2);
+		//% call loop_(range(dim), '')
+		REQUIRE( get<#>($op@_var_1) == Approx($op@_vec_res[#]) );
+		//% endcall
+	}
+	//%   else
+	test_case
+	{
+		auto &res = $op+mut@($op@_var_1, $op@_var_2);
+		//% call loop_(range(dim), '')
+		REQUIRE( get<#>(res) == Approx($op@_vec_res[#]) );
+		//% endcall
+		REQUIRE( &res == &$op@_var_1 );//result must be $op@_var_1
+		REQUIRE( &res != &$op@_var_2 );//but not $op@_var_2
+		auto &res2 = $op+mut@(res, $op@_scalar);
+		//% call loop_(range(dim), '')
+		REQUIRE( get<#>(res2) == Approx($op@_vec_scalar_res[#]) );
+		//% endcall
+		REQUIRE( &res2 == &$op@_var_1 );//result must be $op@_var_1
+	}
+	//%   endif
+	//% endcall
+	
+	//% call func('// ' + op + mut +' (scalar)', match([2,3,4]))
+	avl_ainl$res@ constexpr auto $op+mut@($if_then(mut=='_mk', 'const ')+vecPar@& vec, const $scalarPar@ scalar) noexcept$if_then(op=='div', '(ndebug||exuse)')+rt@
+	{
+		//% if op=='div'
+		assert(scalar!=cnst<decltype(scalar)>::zero);
+		//% endif
+		
+		//% if mut=='_mk'
+		return rem_const_ref_t< decltype(vec) >
+					{/*% call loop_(range(dim)) %*/get<#>(vec) $s@ scalar/*% endcall %*/ };
+		//% elif mut=='_set'
+		set_all(vec, /*% call loop_(range(dim)) %*/get<#>(vec) $s@ scalar/*% endcall %*/ );
+		//% else
+		set_all(vec, /*% call loop_(range(dim)) %*/get<#>(vec) $s@ scalar/*% endcall %*/ );
+		return vec;
+		//% endif
+	}
+	//%   if mut=='_mk'
+	test_case
+	{
+		auto res = $op+mut@($op@_var_1, $op@_scalar);
+		//% call loop_(range(dim), '')
+		REQUIRE( get<#>(res) == Approx($op@_scalar_res[#]) );
+		//% endcall
+		REQUIRE( &res != &$op@_var_1 ); //result must be a new resource
+	}
+	//%   elif mut=='_set'
+	test_case
+	{
+		$op+mut@($op@_var_1, $op@_scalar);
+		//% call loop_(range(dim), '')
+		REQUIRE( get<#>($op@_var_1) == Approx($op@_scalar_res[#]) );
+		//% endcall
+	}
+	//%   else
+	test_case
+	{
+		auto &res = $op+mut@($op@_var_1, $op@_scalar);
+		//% call loop_(range(dim), '')
+		REQUIRE( get<#>(res) == Approx($op@_scalar_res[#]) );
+		//% endcall
+		REQUIRE( &res == &$op@_var_1 );//result must be $op@_var_1
+		auto &res2 = $op+mut@(res, $op@_var_2);
+		//% call loop_(range(dim), '')
+		REQUIRE( get<#>(res2) == Approx($op@_vec_scalar_res[#]) );
+		//% endcall
+		REQUIRE( &res2 == &$op@_var_1 );//result must be $op@_var_1
+	}
+	//%   endif
+	//% endcall
+	
+//%   endfor
+//% endfor
+//% endcall

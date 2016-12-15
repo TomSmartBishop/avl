@@ -1,0 +1,204 @@
+//% call section('Vector length operations')
+	
+	//% call func('/// Returns a new vector with the requested length', match([0]), true)
+	avl_ainl_res constexpr auto setlen_mk(const $vecPar@& vec, const $scalarPar@ len_to_set) noexcept(ndebug||exuse)
+	{
+		const auto vec_len = len(vec);
+		assert(vec_len!=cnst<decltype(vec_len)>::zero);
+		return mul_mk(vec, len_to_set / vec_len);
+	}
+	test_case
+	{
+		const $vecCreateRnd(vec)@;
+		const $scalarCreateRndPos('len_to_set')@;
+		const auto new_vec = setlen_mk(vec, len_to_set);
+		const auto len_new_vec = len(new_vec);
+		
+		REQUIRE( len_new_vec == Approx(len_to_set) );
+		
+		//test edge case 0.0
+		const auto zero_len_vec = setlen_mk(vec, cnst<$scalarType()@>::zero);
+		//% for i in range(dim)
+		REQUIRE( get<$i@>(zero_len_vec) == Approx( cnst<$scalarType()@>::zero ) );
+		//% endfor
+	}
+	//% endcall
+
+//%for mut, rt, res, info in [('_set', '-> void', '', ''), ('', '-> decltype(vec)', '_res', ' and return the same vector (chained)')]
+	//% call func('/// Set the length of the vector'+info, match([0]), true)
+	avl_ainl$res@ constexpr auto setlen$mut@($vecPar@& vec, const $scalarPar@ len_to_set) noexcept(ndebug||exuse) $rt@
+	{
+		const auto vec_len = len(vec);
+		assert(vec_len!=cnst<decltype(vec_len)>::zero);
+		mul_set(vec, len_to_set / vec_len);
+		//% if mut==''
+		return vec;
+		//% endif
+	}
+	test_case
+	{
+		$vecCreateRnd(vec)@;
+		const $scalarCreateRndPos('len_to_set')@;
+		$if_then(mut=='', 'const auto &ret_vec = ')@setlen$mut@(vec, len_to_set);
+		const auto vec_len = len(vec);
+		
+		REQUIRE( vec_len == Approx(len_to_set) );
+		
+		//% if mut==''
+		REQUIRE( &vec == &ret_vec);
+		//% endif
+		
+		//test edge case 0.0
+		$if_then(mut=='', 'const auto &ret_zero_vec = ')@setlen$mut@(vec, cnst<$scalarType()@>::zero);
+		
+		//% for i in range(dim)
+		REQUIRE( get<$i@>(vec) == Approx( cnst<$scalarType()@>::zero ) );
+		//% endfor
+		
+		//% if mut==''
+		REQUIRE( &vec == &ret_zero_vec);
+		//% endif
+	}
+	//% endcall
+//% endfor
+	
+	//% call func('/// Calculate the length of the vector, prefere len_sqr when comparing distances', match([0]), true)
+	avl_ainl_res constexpr auto len(const $vecPar@& vec) noexcept -> decltype(cmp(vec))
+	{
+		//len_sqr will never return any negativ values so we can gurantee noexcept
+		const auto vec_square_len = len_sqr(vec);
+		return static_cast<decltype(cmp(vec))>( s::sqrt( vec_square_len ) );
+	}
+	test_case
+	{
+		const $vecCreateRnd(vec)@;
+		const auto vec_len = len(vec);
+		const auto vec_square_len = /*% call loop_(range(dim), ' + ') %*/get<#>(vec) * get<#>(vec)/*% endcall %*/;
+		REQUIRE( vec_len == Approx( s::sqrt( vec_square_len ) ) );
+		
+		//test edge case 0.0
+		const $vecCreateZero('zero_vec')@;
+		const auto zero_vec_len = len(zero_vec);
+		REQUIRE( zero_vec_len == Approx( cnst<$scalarType()@>::zero ) );
+	}
+	//% endcall
+	
+	//% call func('/// Calculate the square length of the vector', match([2,3,4]))
+	avl_ainl_res constexpr auto len_sqr(const $vecPar@& vec) noexcept -> decltype(cmp(vec))
+	{
+		//% for i in range(dim)
+		const auto cmp$i@ = get<$i@>(vec);
+		//% endfor
+		return /*% call loop_(range(dim), ' + ') %*/cmp#*cmp#/*% endcall %*/;
+	}
+	test_case
+	{
+		const $vecCreateRnd(vec)@;
+		const auto vec_len_sqr = len_sqr(vec);
+		const auto vec_len_sqr_check = /*% call loop_(range(dim), ' + ') %*/get<#>(vec) * get<#>(vec)/*% endcall %*/;
+		REQUIRE( vec_len_sqr == Approx( vec_len_sqr_check ) );
+		
+		//test edge case 0.0
+		const $vecCreateZero('zero_vec')@;
+		const auto zero_vec_len_sqr = len_sqr(zero_vec);
+		REQUIRE( zero_vec_len_sqr == Approx( cnst<$scalarType()@>::zero ) );
+	}
+	//% endcall
+	
+//%- set altParamDesc = ', use alternative vector if the current vector length is 0'
+//% for zeroLenParam, ex, info in [('', '(ndebug||exuse)', ''), (', const '+vecPar+'& vec_if_zero_len', '', altParamDesc)]
+	//% call func('/// Returns a normalized vector' + info, match([0]), true)
+	avl_ainl_res constexpr auto norm_mk(const $vecPar@& vec $zeroLenParam@) noexcept$ex@
+	{
+		const auto vec_len = len(vec);
+		//% if zeroLenParam!=''
+		if(vec_len==cnst<decltype(vec_len)>::zero)
+			return vec_if_zero_len;
+		//% endif
+		return div_mk(vec, vec_len); //div might assert in debug
+	}
+	//%   if zeroLenParam==''
+	test_case
+	{
+		
+		const $vecCreateRnd(vec)@;
+		const auto new_norm_vec = norm_mk(vec);
+		const auto norm_len = len(new_norm_vec);
+		REQUIRE( norm_len == Approx( cnst<$scalarType()@>::one ) );
+	}
+	//%   else
+	test_case
+	{
+		const $vecCreateZero('zero_vec')@;
+		const auto zero_len = len(zero_vec);
+		REQUIRE( zero_len == Approx( cnst<$scalarType()@>::zero ) );
+		
+		$vecCreateZero(unit_vec)@;
+		set<0>(unit_vec, cnst<$scalarType()@>::one);
+		
+		const auto new_unit_vec = norm_mk(zero_vec, unit_vec);
+		const auto new_unit_vec_len = len(new_unit_vec);
+		REQUIRE( new_unit_vec_len == Approx( cnst<$scalarType()@>::one ) );
+		REQUIRE( get<0>(new_unit_vec) == Approx( cnst<$scalarType()@>::one ) );
+	}
+	//%   endif
+	//% endcall
+//% endfor
+	
+//% for mut, rt, res, info1 in [('_set', '-> void', '', ''), ('', '-> decltype(vec)', '_res', ' and return the same vector (chained)')]
+//%   for zeroLenParam, info2 in [('', ''), (', const '+vecPar+'& vec_if_zero_len', altParamDesc)]
+	//% call func('/// Normalize the current vector' + info1 + info2, match([0]), true)
+	avl_ainl$res@ constexpr auto norm$mut@($vecPar@& vec $zeroLenParam@) noexcept $rt@
+	{
+		const auto vec_len = len(vec);
+		//% if zeroLenParam!=''
+		if(vec_len==cnst<decltype(vec_len)>::zero)
+		{
+			vec = vec_if_zero_len;
+			//% if mut==''
+			return vec;
+			//%else
+			return;
+			//% endif
+		}
+		//% endif
+		div_set(vec, vec_len); //div might assert in debug
+		//% if mut==''
+		return vec;
+		//% endif
+	}
+	//%   if zeroLenParam==''
+	test_case
+	{
+		$vecCreateRnd(vec)@;
+		$if_then(mut=='', 'const auto &ret_vec = ')@norm$mut@(vec);
+		const auto len_of_norm_vec = len(vec);
+		REQUIRE( len_of_norm_vec == Approx( cnst<$scalarType()@>::one ) );
+		//% if mut==''
+		REQUIRE( &vec == &ret_vec);
+		//% endif
+	}
+	//%   else
+	test_case
+	{
+		$vecCreateZero(vec)@;
+		const auto zero_len = len(vec);
+		REQUIRE( zero_len == Approx( cnst<$scalarType()@>::zero ) );
+		
+		$vecCreateZero(unit_vec)@;
+		set<0>(unit_vec, cnst<$scalarType()@>::one);
+		
+		$if_then(mut=='', 'const auto &ret_vec = ')@norm$mut@(vec, unit_vec);
+		const auto vec_len = len(vec);
+		REQUIRE( vec_len == Approx( cnst<$scalarType()@>::one ) );
+		REQUIRE( get<0>(vec) == Approx( cnst<$scalarType()@>::one ) );
+		//% if mut==''
+		REQUIRE( &vec == &ret_vec);
+		//% endif
+	}
+	//%   endif
+	//% endcall
+//%   endfor
+//% endfor
+	
+//% endcall

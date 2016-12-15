@@ -102,6 +102,7 @@ namespace avl {
 
 #include "cfg/cfg.h"
 #include "helper/const.h"
+#include "helper/types.h"
 #include "traits/traits.h"
 #include "vec/v.h"
 #include "vec/v2.h"

@@ -1,3 +1,4 @@
+
 #ifndef AVL_V3_INL
 #define AVL_V3_INL
 
@@ -7,6 +8,7 @@
 /// \author Thomas Pollak
 namespace avl
 {
+
 	/// \defgroup Vector length operations
 	/// \{
 	
@@ -92,7 +94,7 @@ namespace avl
 		vec[2] = scalars[2];
 	}
 	
-	/// Set all vector components individually by an array
+	/// Set all vector components individually by an array of specified size _Dim
 	template <s::size_t _Dim> avl_ainl constexpr auto set_all(v3& vec, const sc* scalars) noexcept -> void
 	{
 		static_assert(_Dim>=3, "Supply at least 3 scalars.");
@@ -105,7 +107,7 @@ namespace avl
 	}
 	
 	/// \}
-	/// \defgroup General vector operations for 3 component vectors
+	/// \defgroup Base math vector operations for 3 component vectors
 	/// \{
 	
 	// add_mk

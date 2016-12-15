@@ -1,0 +1,25 @@
+//% call section('General purpos functions for '+dim|string+' component vectors', match([2,3,4]))
+	
+	//% call func('/// Dot product', match([2,3,4]))
+	avl_ainl constexpr auto dot(const $vecPar@& vec, decltype(vec)& other) noexcept -> decltype(cmp(vec))
+	{
+		return /*% call loop_(range(dim), ' + ') %*/get<#>(vec) * get<#>(other)/*% endcall %*/;
+	}
+	test_case
+	{
+		
+	}
+	//% endcall
+	
+	//% call func('/// Dot product ignoring the w component', match([4]))
+	avl_ainl constexpr auto dot3(const $vecPar@& vec, decltype(vec)& other) noexcept -> decltype(cmp(vec))
+	{
+		return /*% call loop_(range(dim-1), ' + ') %*/get<#>(vec) * get<#>(other)/*% endcall %*/;
+	}
+	test_case
+	{
+		
+	}
+	//% endcall
+	
+//% endcall

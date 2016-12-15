@@ -1,0 +1,15 @@
+//% call section('Helper functions', match([0]), true)
+	
+	//% call func('//Component type helper', match([0]), true)
+	avl_ainl_res constexpr auto cmp(const $vecPar@& vec) noexcept -> $vecRetCmp(vec)@
+	{
+		return $vecReadCmp(vec, 0)@;
+	}
+	test_case
+	{
+		const $vecCreateZero(vec)@;
+		static_assert($checkCmpType(vec, 0, 'cmp(vec)')@, $supplyScalar@);
+	}
+	//% endcall
+	
+//% endcall

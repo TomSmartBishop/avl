@@ -1,3 +1,4 @@
+
 #ifndef AVL_V_H
 #define AVL_V_H
 
@@ -7,6 +8,7 @@
 /// \author Thomas Pollak
 namespace avl
 {
+
 	/// \defgroup Helper functions
 	/// \{
 	
@@ -72,6 +74,12 @@ namespace avl
 	
 	/// Calculate the angle between two vectors in degree
 	avl_ainl_res constexpr auto angle_dg(const v& vec, const decltype(vec) other) noexcept -> decltype(cmp(vec));
+	
+	/// Get the direction relative to another point excluding colinear and opposite-but-colinear (faster than get_dir_col)
+	avl_ainl_res constexpr auto get_dir(const v& vec, const v& other) noexcept -> dir;
+	
+	/// Get the direction relative to another point excluding colinear and opposite-but-colinear (faster than get_dir_col)
+	avl_ainl_res constexpr auto get_dir(const v& vec, const v& other, const sc epsilon) noexcept -> dir;
 	
 	/// \}
 }

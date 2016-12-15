@@ -1,3 +1,4 @@
+
 #ifndef AVL_V4_H
 #define AVL_V4_H
 
@@ -7,6 +8,7 @@
 /// \author Thomas Pollak
 namespace avl
 {
+
 	/// \defgroup Vector length operations
 	/// \{
 	
@@ -42,11 +44,11 @@ namespace avl
 	/// Set all vector components individually by a fixed size array
 	avl_ainl constexpr auto set_all(v4& vec, const sc scalars[ 4 ]) noexcept -> void;
 	
-	/// Set all vector components individually by an array
+	/// Set all vector components individually by an array of specified size _Dim
 	template <s::size_t _Dim> avl_ainl constexpr auto set_all(v4& vec, const sc* scalars) noexcept -> void;
 	
 	/// \}
-	/// \defgroup General vector operations for 4 component vectors
+	/// \defgroup Base math vector operations for 4 component vectors
 	/// \{
 	
 	// add_mk

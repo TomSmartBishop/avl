@@ -1,0 +1,73 @@
+//% call section('Getters and setters for all vectors', match([0]), true)
+	
+	//% call func('/// Access the vector components by a range checked index from 0 to dim-1', match([0]), true)
+	avl_ainl_res constexpr auto get(const $vecPar@& vec, const s::size_t idx) noexcept(ndebug||exuse) -> decltype(cmp(vec))
+	{
+		assert($checkDim(vec, idx)@);
+		return $vecReadCmp(vec, idx)@;
+	}
+	test_case
+	{
+		const $vecCreateSeq(vec)@;
+		
+		//% for i in range(dim)
+		REQUIRE( get(vec, $i@) == Approx( $i@ ) );
+		//% endfor
+	}
+	//% endcall
+	
+	//% call func('/// Access the vector components by a static range checked index from 0 to dim-1', match([0]), true)
+	template<s::size_t _Idx> avl_ainl_res constexpr auto get(const $vecPar@& vec) noexcept -> decltype(cmp(vec))
+	{
+		static_assert($checkDim(vec, _Idx)@, "Index is out of range");
+		return $vecReadCmp(vec, _Idx)@;
+	}
+	test_case
+	{
+		const $vecCreateSeq(vec)@;
+		
+		//% for i in range(dim)
+		REQUIRE( get<$i@>(vec) == Approx( $i@ ) );
+		//% endfor
+	}
+	//% endcall
+	
+	//% call func('/// Set a single component by index from 0 to dim-1', match([0]), true)
+	avl_ainl constexpr auto set($vecPar@& vec, const s::size_t idx, const $scalarPar@ scalar) noexcept(ndebug||exuse) -> void
+	{
+		static_assert($checkCmpType(vec, idx, scalar)@, $supplyScalar@);
+		assert($checkDim(vec, idx)@);
+		$vecWriteCmp(vec, idx, scalar)@;
+	}
+	test_case
+	{
+		$vecCreateZero(vec)@;
+		const $arrCreateRnd(arr)@;
+		
+		//% for i in range(dim)
+		set(vec, $i@, arr[$i@]);
+		REQUIRE( get(vec, $i@) == Approx( arr[$i@] ) );
+		//% endfor
+	}
+	//% endcall
+	
+	//% call func('/// Set a single component by static index from 0 to dim-1', match([0]), true)
+	template<s::size_t _Idx> avl_ainl constexpr auto set($vecPar@& vec, const $scalarPar@ scalar) noexcept -> void
+	{
+		static_assert($checkCmpType(vec, _Idx, scalar)@, $supplyScalar@);
+		static_assert($checkDim(vec, _Idx)@, "Index is out of range");
+		$vecWriteCmp(vec, _Idx, scalar)@;
+	}
+	test_case
+	{
+		$vecCreateSeq(vec)@;
+		const $arrCreateRnd(arr)@;
+		
+		//% for i in range(dim)
+		set<$i@>(vec, arr[ $i@ ]);
+		REQUIRE( get<$i@>(vec) == Approx( arr[$i@] ) );
+		//% endfor
+	}
+	//% endcall
+	
+//% endcall

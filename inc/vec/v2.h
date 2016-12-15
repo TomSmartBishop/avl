@@ -1,3 +1,4 @@
+
 #ifndef AVL_V2_H
 #define AVL_V2_H
 
@@ -7,6 +8,7 @@
 /// \author Thomas Pollak
 namespace avl
 {
+
 	/// \defgroup Vector length operations
 	/// \{
 	
@@ -33,11 +35,11 @@ namespace avl
 	/// Set all vector components individually by a fixed size array
 	avl_ainl constexpr auto set_all(v2& vec, const sc scalars[ 2 ]) noexcept -> void;
 	
-	/// Set all vector components individually by an array
+	/// Set all vector components individually by an array of specified size _Dim
 	template <s::size_t _Dim> avl_ainl constexpr auto set_all(v2& vec, const sc* scalars) noexcept -> void;
 	
 	/// \}
-	/// \defgroup General vector operations for 2 component vectors
+	/// \defgroup Base math vector operations for 2 component vectors
 	/// \{
 	
 	// add_mk
