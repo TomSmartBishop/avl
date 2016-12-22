@@ -205,7 +205,7 @@ namespace avl {
 	template <typename _Tp>
 	concept bool v = 	
 		( is_eu_vec<_Tp>::value && s::extent<_Tp>::value>1) || //for plain arrays
-		( wrapped_v<_Tp> && _Tp::dim>1) || //for anything wrapped
+		( wrapped_v<_Tp> ) || //for anything wrapped
 		is_simd<_Tp>::value;
 
 	/// Concept for a 2D vector
