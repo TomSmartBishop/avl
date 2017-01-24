@@ -7,7 +7,26 @@
 	}
 	test_case
 	{
-		
+		const $vecCreateRnd('vec1')@;
+		const decltype(vec1) vec2 = {/*% call loop_(range(dim)) %*/-get<#>(vec1)/*% endcall %*/};
+		const decltype(vec1) perpendicular = {/*% call loop_(range(dim-2)) %*/get<#>(vec1)/*% endcall %*/$if_then(dim!=2, ', ')@get<$dim-1@>(vec1), -get<$dim-2@>(vec1)};
+		const auto vec1_len = len(vec1);
+		const auto vec2_len = len(vec2);
+
+		REQUIRE( vec1_len == Approx(vec2_len) );
+
+		const auto dot_prod_colinear_opposite = dot(vec1, vec2);
+		REQUIRE( dot_prod_colinear_opposite == Approx(-vec1_len * vec2_len) );
+
+		const auto dot_prod_colinear = dot(vec1, vec1);
+		REQUIRE( dot_prod_colinear == Approx(vec1_len * vec1_len) );
+
+		const auto dot_prod_perp = dot(vec1, perpendicular);
+		//% if dim==2
+		REQUIRE( dot_prod_perp == Approx( cnst<$scalarType()@>::zero ) );
+		//% else
+		REQUIRE( dot_prod_perp == Approx( /*% call loop_(range(dim-2), ' + ') %*/get<#>(vec1) * get<#>(perpendicular)/*% endcall %*/ ) );
+		//% endif
 	}
 	//% endcall
 	

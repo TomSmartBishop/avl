@@ -231,18 +231,18 @@ TEST_CASE( "Spacial operations/2", "[vec2<float>(2)]" )
 		REQUIRE( angle0 == Approx( cnst<float>::zero ) );
 		
 		const auto angle90 = angle_rd(vec_10x, vec_01x);
-		REQUIRE( angle90 == Approx( 1.5707963267948701 ) );
+		REQUIRE( angle90 == Approx( 1.57079632679 ) );
 		
 		const auto angle45a = angle_rd(vec_10x, vec_11x);
-		REQUIRE( angle45a == Approx( 0.7853981633974351 ) );
+		REQUIRE( angle45a == Approx( 0.785398163396 ) );
 		const auto angle45b = angle_rd(vec_01x, vec_11x);
-		REQUIRE( angle45b == Approx( 0.7853981633974351 ) );
+		REQUIRE( angle45b == Approx( 0.785398163396 ) );
 		
 		const auto angle135 = angle_rd(vec_m10x, vec_11x);
-		REQUIRE( angle135 == Approx( 2.356194490192305 ) );
+		REQUIRE( angle135 == Approx( 2.35619449019 ) );
 		
 		const auto angle180 = angle_rd(vec_10x, vec_m10x);
-		REQUIRE( angle180 == Approx( 3.1415926535897403 ) );
+		REQUIRE( angle180 == Approx( 3.14159265358 ) );
 	}
 	
 	SECTION( "Calculate the angle between two vectors in degree/1" )
@@ -627,7 +627,22 @@ TEST_CASE( "General purpos functions for 2 component vectors/2", "[vec2<float>(2
 {
 	SECTION( "Dot product/1" )
 	{
-		
+		const vec2<float> vec1 = { 17.159, -30.164 };
+		const decltype(vec1) vec2 = {-get<0>(vec1), -get<1>(vec1)};
+		const decltype(vec1) perpendicular = {get<1>(vec1), -get<0>(vec1)};
+		const auto vec1_len = len(vec1);
+		const auto vec2_len = len(vec2);
+
+		REQUIRE( vec1_len == Approx(vec2_len) );
+
+		const auto dot_prod_colinear_opposite = dot(vec1, vec2);
+		REQUIRE( dot_prod_colinear_opposite == Approx(-vec1_len * vec2_len) );
+
+		const auto dot_prod_colinear = dot(vec1, vec1);
+		REQUIRE( dot_prod_colinear == Approx(vec1_len * vec1_len) );
+
+		const auto dot_prod_perp = dot(vec1, perpendicular);
+		REQUIRE( dot_prod_perp == Approx( cnst<float>::zero ) );
 	}
 	
 }

@@ -39,7 +39,7 @@ TEST_CASE( "Getters and setters for all vectors/4", "[vec4<float>(4)]" )
 	SECTION( "Set a single component by index from 0 to dim-1/1" )
 	{
 		vec4<float> vec = { 0, 0, 0, 0 };
-		const float arr [] = { 1.285, -91.230, -7.666, 64.986 };
+		const float arr [] = { 74.225, 27.629, 69.916, 65.982 };
 		
 		set(vec, 0, arr[0]);
 		REQUIRE( get(vec, 0) == Approx( arr[0] ) );
@@ -54,7 +54,7 @@ TEST_CASE( "Getters and setters for all vectors/4", "[vec4<float>(4)]" )
 	SECTION( "Set a single component by static index from 0 to dim-1/1" )
 	{
 		vec4<float> vec = { 0, 1, 2, 3 };
-		const float arr [] = { -43.384, 74.225, 27.629, 69.916 };
+		const float arr [] = { -12.719, 13.388, 8.611, -44.171 };
 		
 		set<0>(vec, arr[ 0 ]);
 		REQUIRE( get<0>(vec) == Approx( arr[0] ) );
@@ -71,8 +71,8 @@ TEST_CASE( "Vector length operations/4", "[vec4<float>(4)]" )
 {
 	SECTION( "Returns a new vector with the requested length/1" )
 	{
-		const vec4<float> vec = { 65.982, -12.719, 13.388, 8.611 };
-		const float len_to_set = { 44.171 };
+		const vec4<float> vec = { 17.159, -30.164, -58.525, -63.254 };
+		const float len_to_set = { 97.805 };
 		const auto new_vec = setlen_mk(vec, len_to_set);
 		const auto len_new_vec = len(new_vec);
 		
@@ -88,8 +88,8 @@ TEST_CASE( "Vector length operations/4", "[vec4<float>(4)]" )
 	
 	SECTION( "Set the length of the vector/1" )
 	{
-		vec4<float> vec = { 17.159, -30.164, -58.525, -63.254 };
-		const float len_to_set = { 97.805 };
+		vec4<float> vec = { -2.498, -89.937, 83.113, 76.661 };
+		const float len_to_set = { 54.562 };
 		setlen_set(vec, len_to_set);
 		const auto vec_len = len(vec);
 		
@@ -106,8 +106,8 @@ TEST_CASE( "Vector length operations/4", "[vec4<float>(4)]" )
 	
 	SECTION( "Set the length of the vector and return the same vector (chained)/1" )
 	{
-		vec4<float> vec = { -2.498, -89.937, 83.113, 76.661 };
-		const float len_to_set = { 54.562 };
+		vec4<float> vec = { 89.966, 0.972, 79.548, 60.731 };
+		const float len_to_set = { 84.25 };
 		const auto &ret_vec = setlen(vec, len_to_set);
 		const auto vec_len = len(vec);
 		
@@ -126,7 +126,7 @@ TEST_CASE( "Vector length operations/4", "[vec4<float>(4)]" )
 	
 	SECTION( "Calculate the length of the vector, prefere len_sqr when comparing distances/1" )
 	{
-		const vec4<float> vec = { 89.966, 0.972, 79.548, 60.731 };
+		const vec4<float> vec = { 80.794, 15.910, -56.508, 42.835 };
 		const auto vec_len = len(vec);
 		const auto vec_square_len = get<0>(vec) * get<0>(vec) + get<1>(vec) * get<1>(vec) + get<2>(vec) * get<2>(vec) + get<3>(vec) * get<3>(vec);
 		REQUIRE( vec_len == Approx( s::sqrt( vec_square_len ) ) );
@@ -139,7 +139,7 @@ TEST_CASE( "Vector length operations/4", "[vec4<float>(4)]" )
 	
 	SECTION( "Calculate the square length of the vector/1" )
 	{
-		const vec4<float> vec = { 84.250, 80.794, 15.910, -56.508 };
+		const vec4<float> vec = { 91.443, -80.435, 49.484, -66.180 };
 		const auto vec_len_sqr = len_sqr(vec);
 		const auto vec_len_sqr_check = get<0>(vec) * get<0>(vec) + get<1>(vec) * get<1>(vec) + get<2>(vec) * get<2>(vec) + get<3>(vec) * get<3>(vec);
 		REQUIRE( vec_len_sqr == Approx( vec_len_sqr_check ) );
@@ -153,7 +153,7 @@ TEST_CASE( "Vector length operations/4", "[vec4<float>(4)]" )
 	SECTION( "Returns a normalized vector/1" )
 	{
 		
-		const vec4<float> vec = { 42.835, 91.443, -80.435, 49.484 };
+		const vec4<float> vec = { -81.802, -22.158, -9.729, 77.540 };
 		const auto new_norm_vec = norm_mk(vec);
 		const auto norm_len = len(new_norm_vec);
 		REQUIRE( norm_len == Approx( cnst<float>::one ) );
@@ -176,7 +176,7 @@ TEST_CASE( "Vector length operations/4", "[vec4<float>(4)]" )
 	
 	SECTION( "Normalize the current vector/1" )
 	{
-		vec4<float> vec = { -66.180, -81.802, -22.158, -9.729 };
+		vec4<float> vec = { 8.166, 77.828, -17.454, 86.022 };
 		norm_set(vec);
 		const auto len_of_norm_vec = len(vec);
 		REQUIRE( len_of_norm_vec == Approx( cnst<float>::one ) );
@@ -199,7 +199,7 @@ TEST_CASE( "Vector length operations/4", "[vec4<float>(4)]" )
 	
 	SECTION( "Normalize the current vector and return the same vector (chained)/1" )
 	{
-		vec4<float> vec = { 77.540, 8.166, 77.828, -17.454 };
+		vec4<float> vec = { 2.399, -83.996, 5.982, -14.506 };
 		const auto &ret_vec = norm(vec);
 		const auto len_of_norm_vec = len(vec);
 		REQUIRE( len_of_norm_vec == Approx( cnst<float>::one ) );
@@ -227,10 +227,10 @@ TEST_CASE( "Spacial operations/4", "[vec4<float>(4)]" )
 {
 	SECTION( "Calculate the angle between two vectors in radian/1" )
 	{
-		const float random_len1 = { 86.022 };
-		const float random_len2 = { 2.399 };
-		const float random_len3 = { 83.996 };
-		const float random_len4 = { 5.982 };
+		const float random_len1 = { 64.685 };
+		const float random_len2 = { 97.796 };
+		const float random_len3 = { 83.889 };
+		const float random_len4 = { 76.174 };
 		
 		vec4<float> vec_zero = { 0, 0, 0, 0 };
 		vec4<float> vec_10x = { 0, 0, 0, 0 };
@@ -249,26 +249,26 @@ TEST_CASE( "Spacial operations/4", "[vec4<float>(4)]" )
 		REQUIRE( angle0 == Approx( cnst<float>::zero ) );
 		
 		const auto angle90 = angle_rd(vec_10x, vec_01x);
-		REQUIRE( angle90 == Approx( 1.5707963267948701 ) );
+		REQUIRE( angle90 == Approx( 1.57079632679 ) );
 		
 		const auto angle45a = angle_rd(vec_10x, vec_11x);
-		REQUIRE( angle45a == Approx( 0.7853981633974351 ) );
+		REQUIRE( angle45a == Approx( 0.785398163396 ) );
 		const auto angle45b = angle_rd(vec_01x, vec_11x);
-		REQUIRE( angle45b == Approx( 0.7853981633974351 ) );
+		REQUIRE( angle45b == Approx( 0.785398163396 ) );
 		
 		const auto angle135 = angle_rd(vec_m10x, vec_11x);
-		REQUIRE( angle135 == Approx( 2.356194490192305 ) );
+		REQUIRE( angle135 == Approx( 2.35619449019 ) );
 		
 		const auto angle180 = angle_rd(vec_10x, vec_m10x);
-		REQUIRE( angle180 == Approx( 3.1415926535897403 ) );
+		REQUIRE( angle180 == Approx( 3.14159265358 ) );
 	}
 	
 	SECTION( "Calculate the angle between two vectors in radian/2" )
 	{
-		const float random_len1 = { 14.506 };
-		const float random_len2 = { 64.685 };
-		const float random_len3 = { 97.796 };
-		const float random_len4 = { 83.889 };
+		const float random_len1 = { 87.059 };
+		const float random_len2 = { 91.527 };
+		const float random_len3 = { 46.72 };
+		const float random_len4 = { 39.516 };
 		
 		vec4<float> vec_zero = { 0, 0, 0, 0 };
 		vec4<float> vec_010x = { 0, 0, 0, 0 };
@@ -285,26 +285,26 @@ TEST_CASE( "Spacial operations/4", "[vec4<float>(4)]" )
 		REQUIRE( angle0 == Approx( cnst<float>::zero ) );
 		
 		const auto angle90 = angle_rd(vec_010x, vec_001x);
-		REQUIRE( angle90 == Approx( 1.5707963267948701 ) );
+		REQUIRE( angle90 == Approx( 1.57079632679 ) );
 		
 		const auto angle45a = angle_rd(vec_010x, vec_011x);
-		REQUIRE( angle45a == Approx( 0.7853981633974351 ) );
+		REQUIRE( angle45a == Approx( 0.785398163396 ) );
 		const auto angle45b = angle_rd(vec_001x, vec_011x);
-		REQUIRE( angle45b == Approx( 0.7853981633974351 ) );
+		REQUIRE( angle45b == Approx( 0.785398163396 ) );
 		
 		const auto angle135 = angle_rd(vec_0m10x, vec_011x);
-		REQUIRE( angle135 == Approx( 2.356194490192305 ) );
+		REQUIRE( angle135 == Approx( 2.35619449019 ) );
 		
 		const auto angle180 = angle_rd(vec_010x, vec_0m10x);
-		REQUIRE( angle180 == Approx( 3.1415926535897403 ) );
+		REQUIRE( angle180 == Approx( 3.14159265358 ) );
 	}
 	
 	SECTION( "Calculate the angle between two vectors in radian/3" )
 	{
-		const float random_len1 = { 76.174 };
-		const float random_len2 = { 87.059 };
-		const float random_len3 = { 91.527 };
-		const float random_len4 = { 46.72 };
+		const float random_len1 = { 5.022 };
+		const float random_len2 = { 55.346 };
+		const float random_len3 = { 64.931 };
+		const float random_len4 = { 71.991 };
 		
 		vec4<float> vec_zero = { 0, 0, 0, 0 };
 		vec4<float> vec_0010 = { 0, 0, 0, 0 };
@@ -321,26 +321,26 @@ TEST_CASE( "Spacial operations/4", "[vec4<float>(4)]" )
 		REQUIRE( angle0 == Approx( cnst<float>::zero ) );
 		
 		const auto angle90 = angle_rd(vec_0010, vec_0001);
-		REQUIRE( angle90 == Approx( 1.5707963267948701 ) );
+		REQUIRE( angle90 == Approx( 1.57079632679 ) );
 		
 		const auto angle45a = angle_rd(vec_0010, vec_0011);
-		REQUIRE( angle45a == Approx( 0.7853981633974351 ) );
+		REQUIRE( angle45a == Approx( 0.785398163396 ) );
 		const auto angle45b = angle_rd(vec_0001, vec_0011);
-		REQUIRE( angle45b == Approx( 0.7853981633974351 ) );
+		REQUIRE( angle45b == Approx( 0.785398163396 ) );
 		
 		const auto angle135 = angle_rd(vec_00m10, vec_0011);
-		REQUIRE( angle135 == Approx( 2.356194490192305 ) );
+		REQUIRE( angle135 == Approx( 2.35619449019 ) );
 		
 		const auto angle180 = angle_rd(vec_0010, vec_00m10);
-		REQUIRE( angle180 == Approx( 3.1415926535897403 ) );
+		REQUIRE( angle180 == Approx( 3.14159265358 ) );
 	}
 	
 	SECTION( "Calculate the angle between two vectors in degree/1" )
 	{
-		const float random_len1 = { 39.516 };
-		const float random_len2 = { 5.022 };
-		const float random_len3 = { 55.346 };
-		const float random_len4 = { 64.931 };
+		const float random_len1 = { 18.044 };
+		const float random_len2 = { 30.556 };
+		const float random_len3 = { 30.752 };
+		const float random_len4 = { 44.111 };
 		
 		vec4<float> vec_zero = { 0, 0, 0, 0 };
 		vec4<float> vec_10x = { 0, 0, 0, 0 };
@@ -375,10 +375,10 @@ TEST_CASE( "Spacial operations/4", "[vec4<float>(4)]" )
 	
 	SECTION( "Calculate the angle between two vectors in degree/2" )
 	{
-		const float random_len1 = { 71.991 };
-		const float random_len2 = { 18.044 };
-		const float random_len3 = { 30.556 };
-		const float random_len4 = { 30.752 };
+		const float random_len1 = { 87.757 };
+		const float random_len2 = { 31.643 };
+		const float random_len3 = { 20.87 };
+		const float random_len4 = { 99.803 };
 		
 		vec4<float> vec_zero = { 0, 0, 0, 0 };
 		vec4<float> vec_010x = { 0, 0, 0, 0 };
@@ -411,10 +411,10 @@ TEST_CASE( "Spacial operations/4", "[vec4<float>(4)]" )
 	
 	SECTION( "Calculate the angle between two vectors in degree/3" )
 	{
-		const float random_len1 = { 44.111 };
-		const float random_len2 = { 87.757 };
-		const float random_len3 = { 31.643 };
-		const float random_len4 = { 20.87 };
+		const float random_len1 = { 15.063 };
+		const float random_len2 = { 91.631 };
+		const float random_len3 = { 95.936 };
+		const float random_len4 = { 79.751 };
 		
 		vec4<float> vec_zero = { 0, 0, 0, 0 };
 		vec4<float> vec_0010 = { 0, 0, 0, 0 };
@@ -546,7 +546,7 @@ TEST_CASE( "Getter and setters for 4 component vectors/4", "[vec4<float>(4)]" )
 	{
 		vec4<float> vec = { 0, 0, 0, 0 };
 		
-		const float val = { 99.803 };
+		const float val = { 32.164 };
 		
 		set_all(vec, val);
 		
@@ -559,7 +559,7 @@ TEST_CASE( "Getter and setters for 4 component vectors/4", "[vec4<float>(4)]" )
 	SECTION( "Set all vector components individually/1" )
 	{
 		vec4<float> vec = { 0, 0, 0, 0 };
-		const float arr [] = { 15.063, 91.631, 95.936, 79.751 };
+		const float arr [] = { -98.242, -47.634, 11.530, -23.339 };
 		
 		set_all(vec,arr[0], arr[1], arr[2], arr[3]);
 		
@@ -572,7 +572,7 @@ TEST_CASE( "Getter and setters for 4 component vectors/4", "[vec4<float>(4)]" )
 	SECTION( "Set all vector components individually by a fixed size array/1" )
 	{
 		vec4<float> vec = { 0, 0, 0, 0 };
-		const float arr [] = { 32.164, -98.242, -47.634, 11.530 };
+		const float arr [] = { -20.869, -42.571, -66.230, 96.213 };
 		
 		set_all(vec, arr);
 		
@@ -585,7 +585,7 @@ TEST_CASE( "Getter and setters for 4 component vectors/4", "[vec4<float>(4)]" )
 	SECTION( "Set all vector components individually by an array of specified size _Dim/1" )
 	{
 		vec4<float> vec = { 0, 0, 0, 0 };
-		const float arr [] = { -23.339, -20.869, -42.571, -66.230 };
+		const float arr [] = { 63.923, -29.223, 83.438, -89.235 };
 		const auto* ptr_to_arr = arr;
 		
 		set_all<4>(vec, ptr_to_arr);
@@ -599,9 +599,9 @@ TEST_CASE( "Getter and setters for 4 component vectors/4", "[vec4<float>(4)]" )
 }
 TEST_CASE( "Base math vector operations for 4 component vectors/4", "[vec4<float>(4)]" )
 {
-	vec4<float> add_var_1 = { 96.213, 63.923, -29.223, 83.438 };
-	vec4<float> add_var_2 = { -89.235, 64.109, -5.500, -59.844 };
-	const float add_scalar = { -71.993 };
+	vec4<float> add_var_1 = { 64.109, -5.500, -59.844, -71.993 };
+	vec4<float> add_var_2 = { 35.807, 23.679, -44.516, -17.864 };
+	const float add_scalar = { -55.271 };
 	
 	const float add_vec_res [] =
 		{ get<0>(add_var_1) + get<0>(add_var_2), get<1>(add_var_1) + get<1>(add_var_2), get<2>(add_var_1) + get<2>(add_var_2), get<3>(add_var_1) + get<3>(add_var_2) };
@@ -610,9 +610,9 @@ TEST_CASE( "Base math vector operations for 4 component vectors/4", "[vec4<float
 	const float add_vec_scalar_res [] =
 		{ get<0>(add_var_1) + get<0>(add_var_2) + add_scalar, get<1>(add_var_1) + get<1>(add_var_2) + add_scalar, get<2>(add_var_1) + get<2>(add_var_2) + add_scalar, get<3>(add_var_1) + get<3>(add_var_2) + add_scalar };
 	
-	vec4<float> sub_var_1 = { 35.807, 23.679, -44.516, -17.864 };
-	vec4<float> sub_var_2 = { -55.271, 54.458, 53.365, -77.151 };
-	const float sub_scalar = { 9.297 };
+	vec4<float> sub_var_1 = { 54.458, 53.365, -77.151, 9.297 };
+	vec4<float> sub_var_2 = { 68.259, 31.885, 1.285, -91.230 };
+	const float sub_scalar = { -7.666 };
 	
 	const float sub_vec_res [] =
 		{ get<0>(sub_var_1) - get<0>(sub_var_2), get<1>(sub_var_1) - get<1>(sub_var_2), get<2>(sub_var_1) - get<2>(sub_var_2), get<3>(sub_var_1) - get<3>(sub_var_2) };
@@ -621,9 +621,9 @@ TEST_CASE( "Base math vector operations for 4 component vectors/4", "[vec4<float
 	const float sub_vec_scalar_res [] =
 		{ get<0>(sub_var_1) - get<0>(sub_var_2) - sub_scalar, get<1>(sub_var_1) - get<1>(sub_var_2) - sub_scalar, get<2>(sub_var_1) - get<2>(sub_var_2) - sub_scalar, get<3>(sub_var_1) - get<3>(sub_var_2) - sub_scalar };
 	
-	vec4<float> mul_var_1 = { 68.259, 31.885, 1.285, -91.230 };
-	vec4<float> mul_var_2 = { -7.666, 64.986, -43.384, 74.225 };
-	const float mul_scalar = { 27.629 };
+	vec4<float> mul_var_1 = { 64.986, -43.384, 74.225, 27.629 };
+	vec4<float> mul_var_2 = { 69.916, 65.982, -12.719, 13.388 };
+	const float mul_scalar = { 8.611 };
 	
 	const float mul_vec_res [] =
 		{ get<0>(mul_var_1) * get<0>(mul_var_2), get<1>(mul_var_1) * get<1>(mul_var_2), get<2>(mul_var_1) * get<2>(mul_var_2), get<3>(mul_var_1) * get<3>(mul_var_2) };
@@ -632,9 +632,9 @@ TEST_CASE( "Base math vector operations for 4 component vectors/4", "[vec4<float
 	const float mul_vec_scalar_res [] =
 		{ get<0>(mul_var_1) * get<0>(mul_var_2) * mul_scalar, get<1>(mul_var_1) * get<1>(mul_var_2) * mul_scalar, get<2>(mul_var_1) * get<2>(mul_var_2) * mul_scalar, get<3>(mul_var_1) * get<3>(mul_var_2) * mul_scalar };
 	
-	vec4<float> div_var_1 = { 69.916, 65.982, -12.719, 13.388 };
-	vec4<float> div_var_2 = { 8.611, -44.171, 17.159, -30.164 };
-	const float div_scalar = { -58.525 };
+	vec4<float> div_var_1 = { -44.171, 17.159, -30.164, -58.525 };
+	vec4<float> div_var_2 = { -63.254, -97.805, -2.498, -89.937 };
+	const float div_scalar = { 83.113 };
 	
 	const float div_vec_res [] =
 		{ get<0>(div_var_1) / get<0>(div_var_2), get<1>(div_var_1) / get<1>(div_var_2), get<2>(div_var_1) / get<2>(div_var_2), get<3>(div_var_1) / get<3>(div_var_2) };
@@ -936,7 +936,22 @@ TEST_CASE( "General purpos functions for 4 component vectors/4", "[vec4<float>(4
 {
 	SECTION( "Dot product/1" )
 	{
-		
+		const vec4<float> vec1 = { 76.661, 54.562, 89.966, 0.972 };
+		const decltype(vec1) vec2 = {-get<0>(vec1), -get<1>(vec1), -get<2>(vec1), -get<3>(vec1)};
+		const decltype(vec1) perpendicular = {get<0>(vec1), get<1>(vec1), get<3>(vec1), -get<2>(vec1)};
+		const auto vec1_len = len(vec1);
+		const auto vec2_len = len(vec2);
+
+		REQUIRE( vec1_len == Approx(vec2_len) );
+
+		const auto dot_prod_colinear_opposite = dot(vec1, vec2);
+		REQUIRE( dot_prod_colinear_opposite == Approx(-vec1_len * vec2_len) );
+
+		const auto dot_prod_colinear = dot(vec1, vec1);
+		REQUIRE( dot_prod_colinear == Approx(vec1_len * vec1_len) );
+
+		const auto dot_prod_perp = dot(vec1, perpendicular);
+		REQUIRE( dot_prod_perp == Approx( get<0>(vec1) * get<0>(perpendicular) + get<1>(vec1) * get<1>(perpendicular) ) );
 	}
 	
 	SECTION( "Dot product ignoring the w component/1" )

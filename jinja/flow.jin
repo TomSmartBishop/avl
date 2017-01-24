@@ -10,6 +10,16 @@ $caller()|replace('#', i)@
 //%-  endfor
 //%-endmacro
 
+### Helper for a loop with a separator, will aso replace all '#' occurences with the current loop counter, index is reversed
+//% macro loop_rev(loopRange, separator=', ')
+//%   for i in loopRange
+//%     if not loop.first
+$separator@
+//%-    endif
+$caller()|replace('#', loop.length-1-i)@
+//%-  endfor
+//%-endmacro
+
 ### Helper for conditional loops with separator, will aso replace all '#' occurences with the current loop counter
 //% macro loop_if(cond, loopRange, separator=', ')
 //%   if cond
