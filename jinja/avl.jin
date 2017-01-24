@@ -14,7 +14,7 @@ $(list_supportedDims|join).find(dim|string)!=-1@
 //%   set enTest = (forceTest|string).strip()|upper == 'TRUE'
 //%   set content = caller()
 //%   set indent = content|length - content.lstrip()|length
-//%   if filetype=='h' and en
+//%   if filetype=='hpp' and en
 $'\t'*indent + desc@
 $content.split('\n')|first@;
 $'\t'*indent@

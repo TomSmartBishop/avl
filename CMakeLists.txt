@@ -41,11 +41,11 @@ else()
 endif()
 
 configure_file (
-	  "${PROJECT_SOURCE_DIR}/cmake/cfg.h.in" #The template to generate the actual header
-	  "${PROJECT_SOURCE_DIR}/inc/cfg/cfg.h"
+	  "${PROJECT_SOURCE_DIR}/cmake/cfg.hpp.in" #The template to generate the actual header
+	  "${PROJECT_SOURCE_DIR}/inc/cfg/cfg.hpp"
 	)
 
-file (GLOB_RECURSE TEST "test/*.cpp" "inc/*.h")
+file (GLOB_RECURSE TEST "test/*.cpp" "inc/*.hpp")
 
 #source_group ("test" FILES ${TEST})
 

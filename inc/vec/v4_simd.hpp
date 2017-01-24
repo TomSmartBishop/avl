@@ -1,5 +1,5 @@
-#ifndef AVL_V4_SIMD_H
-#define AVL_V4_SIMD_H
+#ifndef AVL_V4_SIMD_HPP
+#define AVL_V4_SIMD_HPP
 
 #pragma once
 
@@ -58,4 +58,4 @@ namespace avl {
 	
 	/// @}
 }
-#endif // AVL_V4_SIMD_H
+#endif // AVL_V4_SIMD_HPP

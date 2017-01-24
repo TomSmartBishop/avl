@@ -5,17 +5,17 @@ IGNORE_JINJA_TEMPLATES = [
 ]
 
 EXTRA_VARIABLES = {
-    'filename': 'v2',
-    'vecPar': 'v2',
+    'filename': 'v3',
+    'vecPar': 'v3',
     'scalarPar': 'sc',
-    'dim': 2,
-    'param': [ 'x', 'y'],
-    'filetype': 'h'
+    'dim': 3,
+    'param': [ 'x', 'y', 'z'],
+    'filetype': 'hpp'
 }
 EXTRA_VARIABLES.update(TYPE_INFO)
 
 OUTPUT_OPTIONS = {
-    'extension': '2.h',
+    'extension': '3.hpp',
     'remove_double_extension': False
 }
 

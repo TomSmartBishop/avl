@@ -1,6 +1,6 @@
 
-#ifndef AVL_V2_H
-#define AVL_V2_H
+#ifndef AVL_V2_HPP
+#define AVL_V2_HPP
 
 #pragma once
 
@@ -123,4 +123,4 @@ namespace avl
 	
 	/// \}
 }
-#endif // AVL_V2_H
+#endif // AVL_V2_HPP

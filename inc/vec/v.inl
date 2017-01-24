@@ -12,7 +12,7 @@ namespace avl
 	/// \defgroup Helper functions
 	/// \{
 	
-	//Component type helperget
+	//Component type helper
 	avl_ainl_res constexpr auto cmp(const v& vec) noexcept -> rem_const_ref_t<decltype(vec[0])>
 	{
 		return vec[0];

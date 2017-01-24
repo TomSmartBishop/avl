@@ -1,5 +1,5 @@
-#ifndef AVL_AVL_H
-#define AVL_AVL_H
+#ifndef AVL_AVL_HPP
+#define AVL_AVL_HPP
 
 #pragma once
 
@@ -100,16 +100,16 @@ namespace avl {
 #include <cstdint>
 
 
-#include "cfg/cfg.h"
-#include "helper/const.h"
-#include "helper/types.h"
-#include "helper/util.h"
-#include "traits/traits.h"
-#include "vec/v.h"
-#include "vec/v2.h"
-#include "vec/v3.h"
-#include "vec/v4.h"
-#include "vec/v4_simd.h"
+#include "cfg/cfg.hpp"
+#include "helper/const.hpp"
+#include "helper/types.hpp"
+#include "helper/util.hpp"
+#include "traits/traits.hpp"
+#include "vec/v.hpp"
+#include "vec/v2.hpp"
+#include "vec/v3.hpp"
+#include "vec/v4.hpp"
+#include "vec/v4_simd.hpp"
 
 #include "vec/v.inl"
 #include "vec/v2.inl"
@@ -129,4 +129,4 @@ namespace avl {
 #undef avl_nameless
 #undef avl_asm_marker
 
-#endif // AVL_AVL_H
+#endif // AVL_AVL_HPP

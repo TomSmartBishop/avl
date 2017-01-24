@@ -1,7 +1,9 @@
+
 #include "../../ext/catch/catch.hpp"
-#include "../../inc/avl.h"
+#include "../../inc/avl.hpp"
 
 using namespace avl;
+
 
 TEST_CASE( "Helper functions/3", "[vec3<float>(3)]" )
 {
@@ -238,18 +240,18 @@ TEST_CASE( "Spacial operations/3", "[vec3<float>(3)]" )
 		REQUIRE( angle0 == Approx( cnst<float>::zero ) );
 		
 		const auto angle90 = angle_rd(vec_10x, vec_01x);
-		REQUIRE( angle90 == Approx( 1.57079632679 ) );
+		REQUIRE( angle90 == Approx( 1.5707963267948701 ) );
 		
 		const auto angle45a = angle_rd(vec_10x, vec_11x);
-		REQUIRE( angle45a == Approx( 0.785398163396 ) );
+		REQUIRE( angle45a == Approx( 0.7853981633974351 ) );
 		const auto angle45b = angle_rd(vec_01x, vec_11x);
-		REQUIRE( angle45b == Approx( 0.785398163396 ) );
+		REQUIRE( angle45b == Approx( 0.7853981633974351 ) );
 		
 		const auto angle135 = angle_rd(vec_m10x, vec_11x);
-		REQUIRE( angle135 == Approx( 2.35619449019 ) );
+		REQUIRE( angle135 == Approx( 2.356194490192305 ) );
 		
 		const auto angle180 = angle_rd(vec_10x, vec_m10x);
-		REQUIRE( angle180 == Approx( 3.14159265358 ) );
+		REQUIRE( angle180 == Approx( 3.1415926535897403 ) );
 	}
 	
 	SECTION( "Calculate the angle between two vectors in radian/2" )
@@ -274,18 +276,18 @@ TEST_CASE( "Spacial operations/3", "[vec3<float>(3)]" )
 		REQUIRE( angle0 == Approx( cnst<float>::zero ) );
 		
 		const auto angle90 = angle_rd(vec_010x, vec_001x);
-		REQUIRE( angle90 == Approx( 1.57079632679 ) );
+		REQUIRE( angle90 == Approx( 1.5707963267948701 ) );
 		
 		const auto angle45a = angle_rd(vec_010x, vec_011x);
-		REQUIRE( angle45a == Approx( 0.785398163396 ) );
+		REQUIRE( angle45a == Approx( 0.7853981633974351 ) );
 		const auto angle45b = angle_rd(vec_001x, vec_011x);
-		REQUIRE( angle45b == Approx( 0.785398163396 ) );
+		REQUIRE( angle45b == Approx( 0.7853981633974351 ) );
 		
 		const auto angle135 = angle_rd(vec_0m10x, vec_011x);
-		REQUIRE( angle135 == Approx( 2.35619449019 ) );
+		REQUIRE( angle135 == Approx( 2.356194490192305 ) );
 		
 		const auto angle180 = angle_rd(vec_010x, vec_0m10x);
-		REQUIRE( angle180 == Approx( 3.14159265358 ) );
+		REQUIRE( angle180 == Approx( 3.1415926535897403 ) );
 	}
 	
 	SECTION( "Calculate the angle between two vectors in degree/1" )
@@ -490,7 +492,7 @@ TEST_CASE( "Getter and setters for 3 component vectors/3", "[vec3<float>(3)]" )
 		REQUIRE( get<2>(vec)==arr[2] );
 	}
 	
-	SECTION( "Set all vector components individually by an array/1" )
+	SECTION( "Set all vector components individually by an array of specified size _Dim/1" )
 	{
 		vec3<float> vec = { 0, 0, 0 };
 		const float arr [] = { 91.631, 95.936, 79.751 };
@@ -504,7 +506,7 @@ TEST_CASE( "Getter and setters for 3 component vectors/3", "[vec3<float>(3)]" )
 	}
 	
 }
-TEST_CASE( "General vector operations for 3 component vectors/3", "[vec3<float>(3)]" )
+TEST_CASE( "Base math vector operations for 3 component vectors/3", "[vec3<float>(3)]" )
 {
 	vec3<float> add_var_1 = { 32.164, -98.242, -47.634 };
 	vec3<float> add_var_2 = { 11.530, -23.339, -20.869 };

@@ -1,5 +1,5 @@
-#ifndef AVL_TYPES_H
-#define AVL_TYPES_H
+#ifndef AVL_TYPES_HPP
+#define AVL_TYPES_HPP
 
 /// avl: A Vector Library
 /// \author Thomas Pollak
@@ -22,4 +22,4 @@ namespace avl
 	};
 }
 
-#endif // AVL_TYPES_H
+#endif // AVL_TYPES_HPP

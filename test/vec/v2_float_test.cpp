@@ -1,7 +1,9 @@
+
 #include "../../ext/catch/catch.hpp"
-#include "../../inc/avl.h"
+#include "../../inc/avl.hpp"
 
 using namespace avl;
+
 
 TEST_CASE( "Helper functions/2", "[vec2<float>(2)]" )
 {
@@ -229,18 +231,18 @@ TEST_CASE( "Spacial operations/2", "[vec2<float>(2)]" )
 		REQUIRE( angle0 == Approx( cnst<float>::zero ) );
 		
 		const auto angle90 = angle_rd(vec_10x, vec_01x);
-		REQUIRE( angle90 == Approx( 1.57079632679 ) );
+		REQUIRE( angle90 == Approx( 1.5707963267948701 ) );
 		
 		const auto angle45a = angle_rd(vec_10x, vec_11x);
-		REQUIRE( angle45a == Approx( 0.785398163396 ) );
+		REQUIRE( angle45a == Approx( 0.7853981633974351 ) );
 		const auto angle45b = angle_rd(vec_01x, vec_11x);
-		REQUIRE( angle45b == Approx( 0.785398163396 ) );
+		REQUIRE( angle45b == Approx( 0.7853981633974351 ) );
 		
 		const auto angle135 = angle_rd(vec_m10x, vec_11x);
-		REQUIRE( angle135 == Approx( 2.35619449019 ) );
+		REQUIRE( angle135 == Approx( 2.356194490192305 ) );
 		
 		const auto angle180 = angle_rd(vec_10x, vec_m10x);
-		REQUIRE( angle180 == Approx( 3.14159265358 ) );
+		REQUIRE( angle180 == Approx( 3.1415926535897403 ) );
 	}
 	
 	SECTION( "Calculate the angle between two vectors in degree/1" )
@@ -337,7 +339,7 @@ TEST_CASE( "Getter and setters for 2 component vectors/2", "[vec2<float>(2)]" )
 		REQUIRE( get<1>(vec)==arr[1] );
 	}
 	
-	SECTION( "Set all vector components individually by an array/1" )
+	SECTION( "Set all vector components individually by an array of specified size _Dim/1" )
 	{
 		vec2<float> vec = { 0, 0 };
 		const float arr [] = { -44.516, -17.864 };
@@ -350,7 +352,7 @@ TEST_CASE( "Getter and setters for 2 component vectors/2", "[vec2<float>(2)]" )
 	}
 	
 }
-TEST_CASE( "General vector operations for 2 component vectors/2", "[vec2<float>(2)]" )
+TEST_CASE( "Base math vector operations for 2 component vectors/2", "[vec2<float>(2)]" )
 {
 	vec2<float> add_var_1 = { -55.271, 54.458 };
 	vec2<float> add_var_2 = { 53.365, -77.151 };

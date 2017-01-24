@@ -1,5 +1,5 @@
-#ifndef AVL_UTIL_H
-#define AVL_UTIL_H
+#ifndef AVL_UTIL_HPP
+#define AVL_UTIL_HPP
 
 /// avl: A Vector Library
 /// \author Thomas Pollak
@@ -17,4 +17,4 @@ namespace avl {
 	};
 }
 
-#endif // AVL_UTIL_H
+#endif // AVL_UTIL_HPP

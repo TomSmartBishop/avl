@@ -1,6 +1,6 @@
 #include "../../ext/catch/catch.hpp"
 
-#include "../../inc/avl.h"
+#include "../../inc/avl.hpp"
 
 using namespace avl;
 

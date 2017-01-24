@@ -2,22 +2,20 @@
 from jinja_settings import *
 
 IGNORE_JINJA_TEMPLATES = [
-    '.*base.jinja',
-    '.*tests/.*'
 ]
 
 EXTRA_VARIABLES = {
-    'filename': 'v',
-    'vecPar': 'v',
+    'filename': 'v4',
+    'vecPar': 'v4',
     'scalarPar': 'sc',
-    'dim': 0,
-    'filetype': 'h',
-    'param': [ 'x', 'y'] #temp
+    'dim': 4,
+    'param': [ 'x', 'y', 'z', 'w'],
+    'filetype': 'hpp'
 }
 EXTRA_VARIABLES.update(TYPE_INFO)
 
 OUTPUT_OPTIONS = {
-    'extension': '.h',
+    'extension': '4.hpp',
     'remove_double_extension': False
 }
 

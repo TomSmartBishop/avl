@@ -1,5 +1,5 @@
-#ifndef AVL_TRAITS_H
-#define AVL_TRAITS_H
+#ifndef AVL_TRAITS_HPP
+#define AVL_TRAITS_HPP
 
 #pragma once
 
@@ -231,4 +231,4 @@ namespace avl {
 	/// @}
 }
 
-#endif // AVL_TRAITS_H
+#endif // AVL_TRAITS_HPP

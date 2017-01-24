@@ -11,7 +11,7 @@ EXTRA_VARIABLES = {
 EXTRA_VARIABLES.update(TYPE_INFO)
 
 OUTPUT_OPTIONS = {
-    'extension': '.h',
+    'extension': '.hpp',
     'remove_double_extension': False
 }
 

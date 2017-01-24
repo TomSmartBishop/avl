@@ -1,5 +1,5 @@
-#ifndef AVL_CFG_H
-#define AVL_CFG_H
+#ifndef AVL_CFG_HPP
+#define AVL_CFG_HPP
 
 #pragma once
 
@@ -33,4 +33,4 @@
 //#define avl_stl_alias(s)
 namespace s = std;
 
-#endif // AVL_CFG_H_
+#endif // AVL_CFG_HPP
