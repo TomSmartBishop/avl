@@ -1,0 +1,18 @@
+g++ -s -O3 -ftime-report template_expansion_test.cpp -o template_expansion_test.exe
+
+Execution times (seconds)
+ phase setup             :   0.01 (19%) usr    1409 kB (42%) ggc
+ phase opt and generate  :   0.02 (63%) usr    1052 kB (31%) ggc
+ TOTAL                 :   0.03              3348 kB
+ 
+g++ -s -O3 -ftime-report expanded_test.cpp -o expanded_test.exe
+
+Execution times (seconds)
+ phase setup             :   0.01 ( 6%) usr    1409 kB (20%) ggc
+ phase opt and generate  :   0.09 (80%) usr    5086 kB (71%) ggc
+ phase finalize          :   0.01 ( 7%) usr       0 kB ( 0%) ggc
+ tree PTA                :   0.01 ( 6%) usr       9 kB ( 0%) ggc
+ dominance computation   :   0.01 ( 9%) usr       0 kB ( 0%) ggc
+ integrated RA           :   0.01 ( 6%) usr    2443 kB (34%) ggc
+ rest of compilation     :   0.01 ( 8%) usr     239 kB ( 3%) ggc
+ TOTAL                 :   0.12              7134 kB

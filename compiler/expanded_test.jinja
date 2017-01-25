@@ -1,0 +1,17 @@
+
+//%   for i in range(100)
+int get_constant_$i@()
+{
+    return $i@;
+}
+//%   endfor
+
+int main(void)
+{
+    int sum;
+    //%   for i in range(100)
+    sum += get_constant_$i@();
+    //%   endfor
+
+    return sum;
+}

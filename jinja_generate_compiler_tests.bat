@@ -1,0 +1,2 @@
+jinja2_standalone_compiler --path compiler/template_expansion_test.jinja -o compiler/test -s compiler/test/settings/compiler_tests.settings.py 
+jinja2_standalone_compiler --path compiler/expanded_test.jinja -o compiler/test -s compiler/test/settings/compiler_tests.settings.py

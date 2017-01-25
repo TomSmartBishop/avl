@@ -1,0 +1,16 @@
+
+template<int N>
+int get_constant()
+{
+    return N;
+}
+
+int main(void)
+{
+    int sum;
+    //%   for i in range(100)
+    sum += get_constant<$i@>();
+    //%   endfor
+
+    return sum;
+}
