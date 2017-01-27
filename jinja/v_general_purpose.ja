@@ -9,7 +9,12 @@
 	{
 		const $vecCreateRnd('vec1')@;
 		const decltype(vec1) vec2 = {/*% call loop_(range(dim)) %*/-get<#>(vec1)/*% endcall %*/};
-		const decltype(vec1) perpendicular = {/*% call loop_(range(dim-2)) %*/get<#>(vec1)/*% endcall %*/$if_then(dim!=2, ', ')@get<$dim-1@>(vec1), -get<$dim-2@>(vec1)};
+		//% if dim==2
+		const decltype(vec1) perpendicular = {get<1@>(vec1), -get<0>(vec1)};
+		//% else
+		const decltype(vec1) perpendicular1 = {/*% call loop_(range(dim-2)) %*/get<#>(vec1)/*% endcall %*/, @get<$dim-1@>(vec1), -get<$dim-2@>(vec1)};
+		const decltype(vec1) perpendicular2 = {/*% call loop_(range(dim-2)) %*/get<#>(vec1)/*% endcall %*/, -@get<$dim-1@>(vec1), get<$dim-2@>(vec1)};
+		//% endif
 		const auto vec1_len = len(vec1);
 		const auto vec2_len = len(vec2);
 
@@ -25,19 +30,9 @@
 		//% if dim==2
 		REQUIRE( dot_prod_perp == Approx( cnst<$scalarType()@>::zero ) );
 		//% else
-		REQUIRE( dot_prod_perp == Approx( /*% call loop_(range(dim-2), ' + ') %*/get<#>(vec1) * get<#>(perpendicular)/*% endcall %*/ ) );
+		REQUIRE( dot_prod_perp == Approx( /*% call loop_(range(dim-2), ' + ') %*/get<#>(vec1) * get<#>(perpendicular1)/*% endcall %*/ ) );
+		REQUIRE( dot_prod_perp == Approx( /*% call loop_(range(dim-2), ' + ') %*/get<#>(vec1) * get<#>(perpendicular2)/*% endcall %*/ ) );
 		//% endif
-	}
-	//% endcall
-	
-	//% call func('/// Dot product ignoring the w component', match([4]))
-	avl_ainl constexpr auto dot3(const $vecPar@& vec, decltype(vec)& other) noexcept -> decltype(cmp(vec))
-	{
-		return /*% call loop_(range(dim-1), ' + ') %*/get<#>(vec) * get<#>(other)/*% endcall %*/;
-	}
-	test_case
-	{
-		
 	}
 	//% endcall
 	

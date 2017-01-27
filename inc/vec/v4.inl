@@ -12,14 +12,40 @@ namespace avl
 	/// \defgroup Vector length operations
 	/// \{
 	
-	/// Calculate the square length of the vector
-	avl_ainl_res constexpr auto len_sqr(const v4& vec) noexcept -> decltype(cmp(vec))
+	/// Returns a new vector with the requested length
+	template <int _Dim=4> avl_ainl_res constexpr auto setlen_mk(const v4& vec, const sc len_to_set) noexcept(ndebug||exuse)
 	{
-		const auto cmp0 = get<0>(vec);
-		const auto cmp1 = get<1>(vec);
-		const auto cmp2 = get<2>(vec);
-		const auto cmp3 = get<3>(vec);
-		return cmp0*cmp0 + cmp1*cmp1 + cmp2*cmp2 + cmp3*cmp3;
+		static_assert(_Dim>=-4 && _dim!=0 && _Dim<=4 , "Provide a valid dimension parameter [4,4], excluding 0 or remove the template parameter");
+
+		if constexpr( N==-1 )
+			return rem_const_ref_t< decltype(vec) >	{ get<0>(vec), get<1>(vec), get<2>(vec), len_to_set };
+		else if constexpr( N==1 )
+			return rem_const_ref_t< decltype(vec) >	{ len_to_set, get<1>(vec), get<2>(vec), get<3>(vec) };
+
+		const auto vec_len = len<_Dim>(vec);
+		assert(vec_len!=cnst<decltype(vec_len)>::zero);
+		return mul_mk<_Dim>(vec, len_to_set / vec_len);
+	}
+	
+	/// Calculate the square length of the vector
+	template <int _Dim=4> avl_ainl_res constexpr auto len_sqr(const v4& vec) noexcept -> decltype(cmp(vec))
+	{
+		static_assert(_Dim>=-4 && _dim!=0 && _Dim<=4 , "Provide a valid dimension parameter [4,4], excluding 0 or remove the template parameter");
+
+		if constexpr(N==-3)
+		    return get<-3>(vec)*get<-3>(vec) + get<-2>(vec)*get<-2>(vec) + get<-1>(vec)*get<-1>(vec);
+		else if constexpr(N==-2)
+		    return get<-2>(vec)*get<-2>(vec) + get<-1>(vec)*get<-1>(vec);
+		else if constexpr(N==-1)
+		    return get<-1>(vec)*get<-1>(vec);
+		else if constexpr(N==1)
+		    return get<0>(vec)*get<0>(vec);
+		else if constexpr(N==2)
+		    return get<0>(vec)*get<0>(vec) + get<1>(vec)*get<1>(vec);
+		else if constexpr(N==3)
+		    return get<0>(vec)*get<0>(vec) + get<1>(vec)*get<1>(vec) + get<2>(vec)*get<2>(vec);
+		else
+		    return get<0>(vec)*get<0>(vec) + get<1>(vec)*get<1>(vec) + get<2>(vec)*get<2>(vec) + get<3>(vec)*get<3>(vec);
 	}
 	
 	/// \}
@@ -307,12 +333,6 @@ namespace avl
 	avl_ainl constexpr auto dot(const v4& vec, decltype(vec)& other) noexcept -> decltype(cmp(vec))
 	{
 		return get<0>(vec) * get<0>(other) + get<1>(vec) * get<1>(other) + get<2>(vec) * get<2>(other) + get<3>(vec) * get<3>(other);
-	}
-	
-	/// Dot product ignoring the w component
-	avl_ainl constexpr auto dot3(const v4& vec, decltype(vec)& other) noexcept -> decltype(cmp(vec))
-	{
-		return get<0>(vec) * get<0>(other) + get<1>(vec) * get<1>(other) + get<2>(vec) * get<2>(other);
 	}
 	
 	/// \}

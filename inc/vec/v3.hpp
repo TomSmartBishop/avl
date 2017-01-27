@@ -12,8 +12,11 @@ namespace avl
 	/// \defgroup Vector length operations
 	/// \{
 	
+	/// Returns a new vector with the requested length
+	template <int _Dim=3> avl_ainl_res constexpr auto setlen_mk(const v3& vec, const sc len_to_set) noexcept(ndebug||exuse);
+	
 	/// Calculate the square length of the vector
-	avl_ainl_res constexpr auto len_sqr(const v3& vec) noexcept -> decltype(cmp(vec));
+	template <int _Dim=3> avl_ainl_res constexpr auto len_sqr(const v3& vec) noexcept -> decltype(cmp(vec));
 	
 	/// \}
 	/// \defgroup Spacial operations

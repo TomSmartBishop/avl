@@ -35,35 +35,32 @@ namespace avl
 	/// \defgroup Vector length operations
 	/// \{
 	
-	/// Returns a new vector with the requested length
-	avl_ainl_res constexpr auto setlen_mk(const v& vec, const sc len_to_set) noexcept(ndebug||exuse);
-	
 	/// Set the length of the vector
-	avl_ainl constexpr auto setlen_set(v& vec, const sc len_to_set) noexcept(ndebug||exuse) -> void;
+	template <int _Dim=0> avl_ainl constexpr auto setlen_set(v& vec, const sc len_to_set) noexcept(ndebug||exuse) -> void;
 	
 	/// Set the length of the vector and return the same vector (chained)
-	avl_ainl_res constexpr auto setlen(v& vec, const sc len_to_set) noexcept(ndebug||exuse) -> decltype(vec);
+	template <int _Dim=0> avl_ainl_res constexpr auto setlen(v& vec, const sc len_to_set) noexcept(ndebug||exuse) -> decltype(vec);
 	
 	/// Calculate the length of the vector, prefere len_sqr when comparing distances
-	avl_ainl_res constexpr auto len(const v& vec) noexcept -> decltype(cmp(vec));
+	template <int _Dim=0> avl_ainl_res constexpr auto len(const v& vec) noexcept -> decltype(cmp(vec));
 	
 	/// Returns a normalized vector
-	avl_ainl_res constexpr auto norm_mk(const v& vec ) noexcept(ndebug||exuse);
+	template <int _Dim=0> avl_ainl_res constexpr auto norm_mk(const v& vec ) noexcept(ndebug||exuse);
 	
 	/// Returns a normalized vector, use alternative vector if the current vector length is 0
-	avl_ainl_res constexpr auto norm_mk(const v& vec , const v& vec_if_zero_len) noexcept;
+	template <int _Dim=0> avl_ainl_res constexpr auto norm_mk(const v& vec , const v& vec_if_zero_len) noexcept;
 	
 	/// Normalize the current vector
-	avl_ainl constexpr auto norm_set(v& vec ) noexcept -> void;
+	template <int _Dim=0> avl_ainl constexpr auto norm_set(v& vec ) noexcept -> void;
 	
 	/// Normalize the current vector, use alternative vector if the current vector length is 0
-	avl_ainl constexpr auto norm_set(v& vec , const v& vec_if_zero_len) noexcept -> void;
+	template <int _Dim=0> avl_ainl constexpr auto norm_set(v& vec , const v& vec_if_zero_len) noexcept -> void;
 	
 	/// Normalize the current vector and return the same vector (chained)
-	avl_ainl_res constexpr auto norm(v& vec ) noexcept -> decltype(vec);
+	template <int _Dim=0> avl_ainl_res constexpr auto norm(v& vec ) noexcept -> decltype(vec);
 	
 	/// Normalize the current vector and return the same vector (chained), use alternative vector if the current vector length is 0
-	avl_ainl_res constexpr auto norm(v& vec , const v& vec_if_zero_len) noexcept -> decltype(vec);
+	template <int _Dim=0> avl_ainl_res constexpr auto norm(v& vec , const v& vec_if_zero_len) noexcept -> decltype(vec);
 	
 	/// \}
 	/// \defgroup Spacial operations

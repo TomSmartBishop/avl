@@ -12,13 +12,36 @@ namespace avl
 	/// \defgroup Vector length operations
 	/// \{
 	
-	/// Calculate the square length of the vector
-	avl_ainl_res constexpr auto len_sqr(const v3& vec) noexcept -> decltype(cmp(vec))
+	/// Returns a new vector with the requested length
+	template <int _Dim=3> avl_ainl_res constexpr auto setlen_mk(const v3& vec, const sc len_to_set) noexcept(ndebug||exuse)
 	{
-		const auto cmp0 = get<0>(vec);
-		const auto cmp1 = get<1>(vec);
-		const auto cmp2 = get<2>(vec);
-		return cmp0*cmp0 + cmp1*cmp1 + cmp2*cmp2;
+		static_assert(_Dim>=-3 && _dim!=0 && _Dim<=3 , "Provide a valid dimension parameter [3,3], excluding 0 or remove the template parameter");
+
+		if constexpr( N==-1 )
+			return rem_const_ref_t< decltype(vec) >	{ get<0>(vec), get<1>(vec), len_to_set };
+		else if constexpr( N==1 )
+			return rem_const_ref_t< decltype(vec) >	{ len_to_set, get<1>(vec), get<2>(vec) };
+
+		const auto vec_len = len<_Dim>(vec);
+		assert(vec_len!=cnst<decltype(vec_len)>::zero);
+		return mul_mk<_Dim>(vec, len_to_set / vec_len);
+	}
+	
+	/// Calculate the square length of the vector
+	template <int _Dim=3> avl_ainl_res constexpr auto len_sqr(const v3& vec) noexcept -> decltype(cmp(vec))
+	{
+		static_assert(_Dim>=-3 && _dim!=0 && _Dim<=3 , "Provide a valid dimension parameter [3,3], excluding 0 or remove the template parameter");
+
+		if constexpr(N==-2)
+		    return get<-2>(vec)*get<-2>(vec) + get<-1>(vec)*get<-1>(vec);
+		else if constexpr(N==-1)
+		    return get<-1>(vec)*get<-1>(vec);
+		else if constexpr(N==1)
+		    return get<0>(vec)*get<0>(vec);
+		else if constexpr(N==2)
+		    return get<0>(vec)*get<0>(vec) + get<1>(vec)*get<1>(vec);
+		else
+		    return get<0>(vec)*get<0>(vec) + get<1>(vec)*get<1>(vec) + get<2>(vec)*get<2>(vec);
 	}
 	
 	/// \}

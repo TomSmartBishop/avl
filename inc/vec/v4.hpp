@@ -12,8 +12,11 @@ namespace avl
 	/// \defgroup Vector length operations
 	/// \{
 	
+	/// Returns a new vector with the requested length
+	template <int _Dim=4> avl_ainl_res constexpr auto setlen_mk(const v4& vec, const sc len_to_set) noexcept(ndebug||exuse);
+	
 	/// Calculate the square length of the vector
-	avl_ainl_res constexpr auto len_sqr(const v4& vec) noexcept -> decltype(cmp(vec));
+	template <int _Dim=4> avl_ainl_res constexpr auto len_sqr(const v4& vec) noexcept -> decltype(cmp(vec));
 	
 	/// \}
 	/// \defgroup Spacial operations
@@ -129,9 +132,6 @@ namespace avl
 	
 	/// Dot product
 	avl_ainl constexpr auto dot(const v4& vec, decltype(vec)& other) noexcept -> decltype(cmp(vec));
-	
-	/// Dot product ignoring the w component
-	avl_ainl constexpr auto dot3(const v4& vec, decltype(vec)& other) noexcept -> decltype(cmp(vec));
 	
 	/// \}
 }

@@ -56,92 +56,119 @@ namespace avl
 	/// \defgroup Vector length operations
 	/// \{
 	
-	/// Returns a new vector with the requested length
-	avl_ainl_res constexpr auto setlen_mk(const v& vec, const sc len_to_set) noexcept(ndebug||exuse)
-	{
-		const auto vec_len = len(vec);
-		assert(vec_len!=cnst<decltype(vec_len)>::zero);
-		return mul_mk(vec, len_to_set / vec_len);
-	}
-	
 	/// Set the length of the vector
-	avl_ainl constexpr auto setlen_set(v& vec, const sc len_to_set) noexcept(ndebug||exuse) -> void
+	template <int _Dim=0> avl_ainl constexpr auto setlen_set(v& vec, const sc len_to_set) noexcept(ndebug||exuse) -> void
 	{
-		const auto vec_len = len(vec);
-		assert(vec_len!=cnst<decltype(vec_len)>::zero);
-		mul_set(vec, len_to_set / vec_len);
+		static_assert(_Dim>=-0 && _dim!=0 && _Dim<=0 , "Provide a valid dimension parameter [0,0], excluding 0 or remove the template parameter");
+
+		if constexpr( N==-1 || N==1 )
+		{
+			set<N>(vec, len_to_set);
+		}	
+		else
+		{
+			const auto vec_len = len<_Dim>(vec);
+			assert(vec_len!=cnst<decltype(vec_len)>::zero);
+			mul_set<_Dim>(vec, len_to_set / vec_len);
+		}
 	}
 	
 	/// Set the length of the vector and return the same vector (chained)
-	avl_ainl_res constexpr auto setlen(v& vec, const sc len_to_set) noexcept(ndebug||exuse) -> decltype(vec)
+	template <int _Dim=0> avl_ainl_res constexpr auto setlen(v& vec, const sc len_to_set) noexcept(ndebug||exuse) -> decltype(vec)
 	{
-		const auto vec_len = len(vec);
-		assert(vec_len!=cnst<decltype(vec_len)>::zero);
-		mul_set(vec, len_to_set / vec_len);
+		static_assert(_Dim>=-0 && _dim!=0 && _Dim<=0 , "Provide a valid dimension parameter [0,0], excluding 0 or remove the template parameter");
+
+		if constexpr( N==-1 || N==1 )
+		{
+			set<N>(vec, len_to_set);
+		}	
+		else
+		{
+			const auto vec_len = len<_Dim>(vec);
+			assert(vec_len!=cnst<decltype(vec_len)>::zero);
+			mul_set<_Dim>(vec, len_to_set / vec_len);
+		}
 		return vec;
 	}
 	
 	/// Calculate the length of the vector, prefere len_sqr when comparing distances
-	avl_ainl_res constexpr auto len(const v& vec) noexcept -> decltype(cmp(vec))
+	template <int _Dim=0> avl_ainl_res constexpr auto len(const v& vec) noexcept -> decltype(cmp(vec))
 	{
+		static_assert(_Dim>=-0 && _dim!=0 && _Dim<=0 , "Provide a valid dimension parameter [0,0], excluding 0 or remove the template parameter");
+
+		if constexpr( N==-1 || N==1 )
+			return get<N>( vec );
+				
 		//len_sqr will never return any negativ values so we can gurantee noexcept
-		const auto vec_square_len = len_sqr(vec);
+		const auto vec_square_len = len_sqr<_Dim>(vec);
 		return static_cast<decltype(cmp(vec))>( s::sqrt( vec_square_len ) );
 	}
 	
 	/// Returns a normalized vector
-	avl_ainl_res constexpr auto norm_mk(const v& vec ) noexcept(ndebug||exuse)
+	template <int _Dim=0> avl_ainl_res constexpr auto norm_mk(const v& vec ) noexcept(ndebug||exuse)
 	{
-		const auto vec_len = len(vec);
-		return div_mk(vec, vec_len); //div might assert in debug
+		static_assert(_Dim>=-0 && _dim!=0 && _Dim<=0 , "Provide a valid dimension parameter [0,0], excluding 0 or remove the template parameter");
+
+		const auto vec_len = len<_Dim>(vec);
+		return div_mk<_Dim>(vec, vec_len); //div might assert in debug
 	}
 	
 	/// Returns a normalized vector, use alternative vector if the current vector length is 0
-	avl_ainl_res constexpr auto norm_mk(const v& vec , const v& vec_if_zero_len) noexcept
+	template <int _Dim=0> avl_ainl_res constexpr auto norm_mk(const v& vec , const v& vec_if_zero_len) noexcept
 	{
-		const auto vec_len = len(vec);
+		static_assert(_Dim>=-0 && _dim!=0 && _Dim<=0 , "Provide a valid dimension parameter [0,0], excluding 0 or remove the template parameter");
+
+		const auto vec_len = len<_Dim>(vec);
 		if(vec_len==cnst<decltype(vec_len)>::zero)
 			return vec_if_zero_len;
-		return div_mk(vec, vec_len); //div might assert in debug
+		return div_mk<_Dim>(vec, vec_len); //div might assert in debug
 	}
 	
 	/// Normalize the current vector
-	avl_ainl constexpr auto norm_set(v& vec ) noexcept -> void
+	template <int _Dim=0> avl_ainl constexpr auto norm_set(v& vec ) noexcept -> void
 	{
-		const auto vec_len = len(vec);
-		div_set(vec, vec_len); //div might assert in debug
+		static_assert(_Dim>=-0 && _dim!=0 && _Dim<=0 , "Provide a valid dimension parameter [0,0], excluding 0 or remove the template parameter");
+
+		const auto vec_len = len<_Dim>(vec);
+		div_set<_Dim>(vec, vec_len); //div might assert in debug
 	}
 	
 	/// Normalize the current vector, use alternative vector if the current vector length is 0
-	avl_ainl constexpr auto norm_set(v& vec , const v& vec_if_zero_len) noexcept -> void
+	template <int _Dim=0> avl_ainl constexpr auto norm_set(v& vec , const v& vec_if_zero_len) noexcept -> void
 	{
-		const auto vec_len = len(vec);
+		static_assert(_Dim>=-0 && _dim!=0 && _Dim<=0 , "Provide a valid dimension parameter [0,0], excluding 0 or remove the template parameter");
+
+		const auto vec_len = len<_Dim>(vec);
 		if(vec_len==cnst<decltype(vec_len)>::zero)
 		{
 			vec = vec_if_zero_len;
 			return;
 		}
-		div_set(vec, vec_len); //div might assert in debug
+		div_set<_Dim>(vec, vec_len); //div might assert in debug
 	}
 	
 	/// Normalize the current vector and return the same vector (chained)
-	avl_ainl_res constexpr auto norm(v& vec ) noexcept -> decltype(vec)
+	template <int _Dim=0> avl_ainl_res constexpr auto norm(v& vec ) noexcept -> decltype(vec)
 	{
-		const auto vec_len = len(vec);
-		div_set(vec, vec_len); //div might assert in debug
+		static_assert(_Dim>=-0 && _dim!=0 && _Dim<=0 , "Provide a valid dimension parameter [0,0], excluding 0 or remove the template parameter");
+
+		const auto vec_len = len<_Dim>(vec);
+		div_set<_Dim>(vec, vec_len); //div might assert in debug
 		return vec;
 	}
 	
 	/// Normalize the current vector and return the same vector (chained), use alternative vector if the current vector length is 0
-	avl_ainl_res constexpr auto norm(v& vec , const v& vec_if_zero_len) noexcept -> decltype(vec)
+	template <int _Dim=0> avl_ainl_res constexpr auto norm(v& vec , const v& vec_if_zero_len) noexcept -> decltype(vec)
 	{
-		const auto vec_len = len(vec);
+		static_assert(_Dim>=-0 && _dim!=0 && _Dim<=0 , "Provide a valid dimension parameter [0,0], excluding 0 or remove the template parameter");
+
+		const auto vec_len = len<_Dim>(vec);
 		if(vec_len==cnst<decltype(vec_len)>::zero)
 		{
 			vec = vec_if_zero_len;
 			return vec;
 		}
-		div_set(vec, vec_len); //div might assert in debug
+		div_set<_Dim>(vec, vec_len); //div might assert in debug
 		return vec;
 	}
 	
