@@ -15,37 +15,118 @@ namespace avl
 	/// Returns a new vector with the requested length
 	template <int _Dim=4> avl_ainl_res constexpr auto setlen_mk(const v4& vec, const sc len_to_set) noexcept(ndebug||exuse)
 	{
-		static_assert(_Dim>=-4 && _dim!=0 && _Dim<=4 , "Provide a valid dimension parameter [4,4], excluding 0 or remove the template parameter");
-
-		if constexpr( N==-1 )
-			return rem_const_ref_t< decltype(vec) >	{ get<0>(vec), get<1>(vec), get<2>(vec), len_to_set };
-		else if constexpr( N==1 )
-			return rem_const_ref_t< decltype(vec) >	{ len_to_set, get<1>(vec), get<2>(vec), get<3>(vec) };
-
+		static_assert(_Dim>=-4 && _Dim<=-2 && _Dim<=4 && _Dim>=2 , "Provide a valid dimension parameter [4,4], excluding [-1,1] or remove the template parameter");
 		const auto vec_len = len<_Dim>(vec);
 		assert(vec_len!=cnst<decltype(vec_len)>::zero);
 		return mul_mk<_Dim>(vec, len_to_set / vec_len);
 	}
 	
+	/// Set the length of the vector
+	template <int _Dim=4> avl_ainl constexpr auto setlen_set(v4& vec, const sc len_to_set) noexcept(ndebug||exuse) -> void
+	{
+		static_assert(_Dim>=-4 && _Dim<=-2 && _Dim<=4 && _Dim>=2 , "Provide a valid dimension parameter [4,4], excluding [-1,1] or remove the template parameter");
+		const auto vec_len = len<_Dim>(vec);
+		assert(vec_len!=cnst<decltype(vec_len)>::zero);
+		mul_set<_Dim>(vec, len_to_set / vec_len);
+
+	}
+	
+	/// Set the length of the vector and return the same vector (chained)
+	template <int _Dim=4> avl_ainl_res constexpr auto setlen(v4& vec, const sc len_to_set) noexcept(ndebug||exuse) -> decltype(vec)
+	{
+		static_assert(_Dim>=-4 && _Dim<=-2 && _Dim<=4 && _Dim>=2 , "Provide a valid dimension parameter [4,4], excluding [-1,1] or remove the template parameter");
+		const auto vec_len = len<_Dim>(vec);
+		assert(vec_len!=cnst<decltype(vec_len)>::zero);
+		mul_set<_Dim>(vec, len_to_set / vec_len);
+
+		return vec;
+	}
+	
+	/// Calculate the length of the vector, prefere len_sqr when comparing distances
+	template <int _Dim=4> avl_ainl_res constexpr auto len(const v4& vec) noexcept -> decltype(cmp(vec))
+	{
+		static_assert(_Dim>=-4 && _Dim<=-2 && _Dim<=4 && _Dim>=2 , "Provide a valid dimension parameter [4,4], excluding [-1,1] or remove the template parameter");
+		//len_sqr will never return any negativ values so we can gurantee noexcept
+		const auto vec_square_len = len_sqr<_Dim>(vec);
+		return static_cast<decltype(cmp(vec))>( s::sqrt( vec_square_len ) );
+	}
+	
 	/// Calculate the square length of the vector
 	template <int _Dim=4> avl_ainl_res constexpr auto len_sqr(const v4& vec) noexcept -> decltype(cmp(vec))
 	{
-		static_assert(_Dim>=-4 && _dim!=0 && _Dim<=4 , "Provide a valid dimension parameter [4,4], excluding 0 or remove the template parameter");
-
+		static_assert(_Dim>=-4 && _Dim<=-2 && _Dim<=4 && _Dim>=2 , "Provide a valid dimension parameter [4,4], excluding [-1,1] or remove the template parameter");
 		if constexpr(N==-3)
-		    return get<-3>(vec)*get<-3>(vec) + get<-2>(vec)*get<-2>(vec) + get<-1>(vec)*get<-1>(vec);
+		   return get<1>(vec)*get<1>(vec) + get<2>(vec)*get<2>(vec) + get<3>(vec)*get<3>(vec);
 		else if constexpr(N==-2)
-		    return get<-2>(vec)*get<-2>(vec) + get<-1>(vec)*get<-1>(vec);
-		else if constexpr(N==-1)
-		    return get<-1>(vec)*get<-1>(vec);
-		else if constexpr(N==1)
-		    return get<0>(vec)*get<0>(vec);
+		   return get<2>(vec)*get<2>(vec) + get<3>(vec)*get<3>(vec);
 		else if constexpr(N==2)
-		    return get<0>(vec)*get<0>(vec) + get<1>(vec)*get<1>(vec);
+		   return get<0>(vec)*get<0>(vec) + get<1>(vec)*get<1>(vec);
 		else if constexpr(N==3)
-		    return get<0>(vec)*get<0>(vec) + get<1>(vec)*get<1>(vec) + get<2>(vec)*get<2>(vec);
+		   return get<0>(vec)*get<0>(vec) + get<1>(vec)*get<1>(vec) + get<2>(vec)*get<2>(vec);
 		else
-		    return get<0>(vec)*get<0>(vec) + get<1>(vec)*get<1>(vec) + get<2>(vec)*get<2>(vec) + get<3>(vec)*get<3>(vec);
+		   return get<0>(vec)*get<0>(vec) + get<1>(vec)*get<1>(vec) + get<2>(vec)*get<2>(vec) + get<3>(vec)*get<3>(vec);
+	}
+	
+	/// Returns a normalized vector
+	template <int _Dim=4> avl_ainl_res constexpr auto norm_mk(const v4& vec ) noexcept(ndebug||exuse)
+	{
+		static_assert(_Dim>=-4 && _Dim<=-2 && _Dim<=4 && _Dim>=2 , "Provide a valid dimension parameter [4,4], excluding [-1,1] or remove the template parameter");
+		const auto vec_len = len<_Dim>(vec);
+		return div_mk<_Dim>(vec, vec_len); //div might assert in debug
+	}
+	
+	/// Returns a normalized vector, use alternative vector if the current vector length is 0
+	template <int _Dim=4> avl_ainl_res constexpr auto norm_mk(const v4& vec , const v4& vec_if_zero_len) noexcept
+	{
+		static_assert(_Dim>=-4 && _Dim<=-2 && _Dim<=4 && _Dim>=2 , "Provide a valid dimension parameter [4,4], excluding [-1,1] or remove the template parameter");
+		const auto vec_len = len<_Dim>(vec);
+		if(vec_len==cnst<decltype(vec_len)>::zero)
+			return vec_if_zero_len;
+		return div_mk<_Dim>(vec, vec_len); //div might assert in debug
+	}
+	
+	/// Normalize the current vector
+	template <int _Dim=4> avl_ainl constexpr auto norm_set(v4& vec ) noexcept -> void
+	{
+		static_assert(_Dim>=-4 && _Dim<=-2 && _Dim<=4 && _Dim>=2 , "Provide a valid dimension parameter [4,4], excluding [-1,1] or remove the template parameter");
+		const auto vec_len = len<_Dim>(vec);
+		div_set<_Dim>(vec, vec_len); //div might assert in debug
+	}
+	
+	/// Normalize the current vector, use alternative vector if the current vector length is 0
+	template <int _Dim=4> avl_ainl constexpr auto norm_set(v4& vec , const v4& vec_if_zero_len) noexcept -> void
+	{
+		static_assert(_Dim>=-4 && _Dim<=-2 && _Dim<=4 && _Dim>=2 , "Provide a valid dimension parameter [4,4], excluding [-1,1] or remove the template parameter");
+		const auto vec_len = len<_Dim>(vec);
+		if(vec_len==cnst<decltype(vec_len)>::zero)
+		{
+			vec = vec_if_zero_len;
+			return;
+		}
+		div_set<_Dim>(vec, vec_len); //div might assert in debug
+	}
+	
+	/// Normalize the current vector and return the same vector (chained)
+	template <int _Dim=4> avl_ainl_res constexpr auto norm(v4& vec ) noexcept -> decltype(vec)
+	{
+		static_assert(_Dim>=-4 && _Dim<=-2 && _Dim<=4 && _Dim>=2 , "Provide a valid dimension parameter [4,4], excluding [-1,1] or remove the template parameter");
+		const auto vec_len = len<_Dim>(vec);
+		div_set<_Dim>(vec, vec_len); //div might assert in debug
+		return vec;
+	}
+	
+	/// Normalize the current vector and return the same vector (chained), use alternative vector if the current vector length is 0
+	template <int _Dim=4> avl_ainl_res constexpr auto norm(v4& vec , const v4& vec_if_zero_len) noexcept -> decltype(vec)
+	{
+		static_assert(_Dim>=-4 && _Dim<=-2 && _Dim<=4 && _Dim>=2 , "Provide a valid dimension parameter [4,4], excluding [-1,1] or remove the template parameter");
+		const auto vec_len = len<_Dim>(vec);
+		if(vec_len==cnst<decltype(vec_len)>::zero)
+		{
+			vec = vec_if_zero_len;
+			return vec;
+		}
+		div_set<_Dim>(vec, vec_len); //div might assert in debug
+		return vec;
 	}
 	
 	/// \}
@@ -97,53 +178,61 @@ namespace avl
 	/// \{
 	
 	/// Set all vector components to the same scalar
-	avl_ainl constexpr auto set_all(v4& vec, const sc scalar) noexcept -> void
+	template <int _Dim=4> avl_ainl constexpr auto set_all(v4& vec, const sc scalar) noexcept -> void
 	{
+		static_assert(_Dim>=-4 && _Dim<=-2 && _Dim<=4 && _Dim>=2 , "Provide a valid dimension parameter [4,4], excluding [-1,1] or remove the template parameter");
 		static_assert(eq<decltype(vec[0]), decltype(scalar)>::value, "Supply a scalar of the vectors element filetype.");
-		vec[0] = scalar;
-		vec[1] = scalar;
-		vec[2] = scalar;
-		vec[3] = scalar;
+		
+		if constexpr(N==-3)
+		   { vec[1] = scalar; vec[2] = scalar; vec[3] = scalar; }
+		else if constexpr(N==-2)
+		   { vec[2] = scalar; vec[3] = scalar; }
+		else if constexpr(N==2)
+		   { vec[0] = scalar; vec[1] = scalar; }
+		else if constexpr(N==3)
+		   { vec[0] = scalar; vec[1] = scalar; vec[2] = scalar; }
+		else
+		   { vec[0] = scalar; vec[1] = scalar; vec[2] = scalar; vec[3] = scalar; }
 	}
 	
 	/// Set all vector components individually
-	avl_ainl constexpr auto set_all(v4& vec, const sc x, const sc y, const sc z, const sc w) noexcept -> void
+	template <int _Dim=4> avl_ainl constexpr auto set_all(v4& vec, const sc x, const sc y, const sc z, const sc w) noexcept -> void
 	{
+		static_assert(_Dim>=-4 && _Dim<=-2 && _Dim<=4 && _Dim>=2 , "Provide a valid dimension parameter [4,4], excluding [-1,1] or remove the template parameter");
 		static_assert(eq<decltype(vec[ 0 ]), decltype(x)>::value, "Supply a scalar of the vectors element type for x.");
 		static_assert(eq<decltype(vec[ 1 ]), decltype(y)>::value, "Supply a scalar of the vectors element type for y.");
 		static_assert(eq<decltype(vec[ 2 ]), decltype(z)>::value, "Supply a scalar of the vectors element type for z.");
 		static_assert(eq<decltype(vec[ 3 ]), decltype(w)>::value, "Supply a scalar of the vectors element type for w.");
-		vec[0] = x;
-		vec[1] = y;
-		vec[2] = z;
-		vec[3] = w;
+		if constexpr(N==-3)
+		   { vec[1] = y; vec[2] = z; vec[3] = w; }
+		else if constexpr(N==-2)
+		   { vec[2] = z; vec[3] = w; }
+		else if constexpr(N==2)
+		   { vec[0] = x; vec[1] = y; }
+		else if constexpr(N==3)
+		   { vec[0] = x; vec[1] = y; vec[2] = z; }
+		else
+		   { vec[0] = x; vec[1] = y; vec[2] = z; vec[3] = w; }
 	}
 	
 	/// Set all vector components individually by a fixed size array
-	avl_ainl constexpr auto set_all(v4& vec, const sc scalars[ 4 ]) noexcept -> void
+	template <int _Dim=4> avl_ainl constexpr auto set_all(v4& vec, const sc scalars[ 4 ]) noexcept -> void
 	{
+		static_assert(_Dim>=-4 && _Dim<=-2 && _Dim<=4 && _Dim>=2 , "Provide a valid dimension parameter [4,4], excluding [-1,1] or remove the template parameter");
 		static_assert(eq<decltype(vec[ 0 ]), decltype(scalars[ 0 ])>::value, "Supply a scalar of the vectors element filetype.");
 		static_assert(eq<decltype(vec[ 1 ]), decltype(scalars[ 1 ])>::value, "Supply a scalar of the vectors element filetype.");
 		static_assert(eq<decltype(vec[ 2 ]), decltype(scalars[ 2 ])>::value, "Supply a scalar of the vectors element filetype.");
 		static_assert(eq<decltype(vec[ 3 ]), decltype(scalars[ 3 ])>::value, "Supply a scalar of the vectors element filetype.");
-		vec[0] = scalars[0];
-		vec[1] = scalars[1];
-		vec[2] = scalars[2];
-		vec[3] = scalars[3];
-	}
-	
-	/// Set all vector components individually by an array of specified size _Dim
-	template <s::size_t _Dim> avl_ainl constexpr auto set_all(v4& vec, const sc* scalars) noexcept -> void
-	{
-		static_assert(_Dim>=4, "Supply at least 4 scalars.");
-		static_assert(eq<decltype(vec[ 0 ]), decltype(scalars[ 0 ])>::value, "Supply a scalar of the vectors element type.");
-		static_assert(eq<decltype(vec[ 1 ]), decltype(scalars[ 1 ])>::value, "Supply a scalar of the vectors element type.");
-		static_assert(eq<decltype(vec[ 2 ]), decltype(scalars[ 2 ])>::value, "Supply a scalar of the vectors element type.");
-		static_assert(eq<decltype(vec[ 3 ]), decltype(scalars[ 3 ])>::value, "Supply a scalar of the vectors element type.");
-		vec[0] = scalars[0];
-		vec[1] = scalars[1];
-		vec[2] = scalars[2];
-		vec[3] = scalars[3];
+		if constexpr(N==-3)
+		   { vec[1] = scalars[1]; vec[2] = scalars[2]; vec[3] = scalars[3]; }
+		else if constexpr(N==-2)
+		   { vec[2] = scalars[2]; vec[3] = scalars[3]; }
+		else if constexpr(N==2)
+		   { vec[0] = scalars[0]; vec[1] = scalars[1]; }
+		else if constexpr(N==3)
+		   { vec[0] = scalars[0]; vec[1] = scalars[1]; vec[2] = scalars[2]; }
+		else
+		   { vec[0] = scalars[0]; vec[1] = scalars[1]; vec[2] = scalars[2]; vec[3] = scalars[3]; }
 	}
 	
 	/// \}

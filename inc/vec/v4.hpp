@@ -15,8 +15,35 @@ namespace avl
 	/// Returns a new vector with the requested length
 	template <int _Dim=4> avl_ainl_res constexpr auto setlen_mk(const v4& vec, const sc len_to_set) noexcept(ndebug||exuse);
 	
+	/// Set the length of the vector
+	template <int _Dim=4> avl_ainl constexpr auto setlen_set(v4& vec, const sc len_to_set) noexcept(ndebug||exuse) -> void;
+	
+	/// Set the length of the vector and return the same vector (chained)
+	template <int _Dim=4> avl_ainl_res constexpr auto setlen(v4& vec, const sc len_to_set) noexcept(ndebug||exuse) -> decltype(vec);
+	
+	/// Calculate the length of the vector, prefere len_sqr when comparing distances
+	template <int _Dim=4> avl_ainl_res constexpr auto len(const v4& vec) noexcept -> decltype(cmp(vec));
+	
 	/// Calculate the square length of the vector
 	template <int _Dim=4> avl_ainl_res constexpr auto len_sqr(const v4& vec) noexcept -> decltype(cmp(vec));
+	
+	/// Returns a normalized vector
+	template <int _Dim=4> avl_ainl_res constexpr auto norm_mk(const v4& vec ) noexcept(ndebug||exuse);
+	
+	/// Returns a normalized vector, use alternative vector if the current vector length is 0
+	template <int _Dim=4> avl_ainl_res constexpr auto norm_mk(const v4& vec , const v4& vec_if_zero_len) noexcept;
+	
+	/// Normalize the current vector
+	template <int _Dim=4> avl_ainl constexpr auto norm_set(v4& vec ) noexcept -> void;
+	
+	/// Normalize the current vector, use alternative vector if the current vector length is 0
+	template <int _Dim=4> avl_ainl constexpr auto norm_set(v4& vec , const v4& vec_if_zero_len) noexcept -> void;
+	
+	/// Normalize the current vector and return the same vector (chained)
+	template <int _Dim=4> avl_ainl_res constexpr auto norm(v4& vec ) noexcept -> decltype(vec);
+	
+	/// Normalize the current vector and return the same vector (chained), use alternative vector if the current vector length is 0
+	template <int _Dim=4> avl_ainl_res constexpr auto norm(v4& vec , const v4& vec_if_zero_len) noexcept -> decltype(vec);
 	
 	/// \}
 	/// \defgroup Spacial operations
@@ -39,16 +66,13 @@ namespace avl
 	/// \{
 	
 	/// Set all vector components to the same scalar
-	avl_ainl constexpr auto set_all(v4& vec, const sc scalar) noexcept -> void;
+	template <int _Dim=4> avl_ainl constexpr auto set_all(v4& vec, const sc scalar) noexcept -> void;
 	
 	/// Set all vector components individually
-	avl_ainl constexpr auto set_all(v4& vec, const sc x, const sc y, const sc z, const sc w) noexcept -> void;
+	template <int _Dim=4> avl_ainl constexpr auto set_all(v4& vec, const sc x, const sc y, const sc z, const sc w) noexcept -> void;
 	
 	/// Set all vector components individually by a fixed size array
-	avl_ainl constexpr auto set_all(v4& vec, const sc scalars[ 4 ]) noexcept -> void;
-	
-	/// Set all vector components individually by an array of specified size _Dim
-	template <s::size_t _Dim> avl_ainl constexpr auto set_all(v4& vec, const sc* scalars) noexcept -> void;
+	template <int _Dim=4> avl_ainl constexpr auto set_all(v4& vec, const sc scalars[ 4 ]) noexcept -> void;
 	
 	/// \}
 	/// \defgroup Base math vector operations for 4 component vectors

@@ -3,26 +3,29 @@
 //% from 'sequence.jin' import seq, seqRnd with context
 //% from 'flow.jin' import loop_ with context
 
-//% macro all_dim(dim, start, end, separator=', ')
+//% macro all_dim(dim, start, end, separator=', ', indent = 2)
 //%   set stripped = start.lstrip()
-//%   set indent = start|length - stripped|length
 //%   set c = caller()
 //%   for dimIdx in range(-dim+1, dim)
-//%     if dimIdx!=0
+//%     if dimIdx<-1 or dimIdx>1
 //%       if loop.first
 $'\t'*indent@if constexpr(N==$dimIdx@)
 //%       else
 $'\t'*indent@else if constexpr(N==$dimIdx@)
 //%       endif
 //%       if dimIdx<0
-$'\t'*indent@    $stripped@/*% call loop_(range(dimIdx, 0), separator) %*/$c@/*% endcall %*/$end@
+$'\t'*indent@   $stripped@/*% call loop_(range(dim + dimIdx, dim), separator) %*/$c@/*% endcall %*/$end@
 //%       else
-$'\t'*indent@    $stripped@/*% call loop_(range(dimIdx), separator) %*/$c@/*% endcall %*/$end@
+$'\t'*indent@   $stripped@/*% call loop_(range(dimIdx), separator) %*/$c@/*% endcall %*/$end@
 //%       endif
 //%     endif
 //%   endfor
+//%   if dim==2
+$'\t'*indent + stripped@/*% call loop_(range(dim), separator) %*/$c@/*% endcall %*/$end@
+//%   else
 $'\t'*indent@else
-$'\t'*indent@    $stripped@/*% call loop_(range(dim), separator) %*/$c@/*% endcall %*/$end@
+$'\t'*indent@   $stripped@/*% call loop_(range(dim), separator) %*/$c@/*% endcall %*/$end@
+//%   endif
 //% endmacro
 
 ### Macro to read a vector's component

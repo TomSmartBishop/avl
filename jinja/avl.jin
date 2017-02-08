@@ -1,7 +1,7 @@
 ### General AVL helper functions
 
 //% from 'sequence.jin' import seq, seqRnd with context
-//% from 'flow.jin' import loop_ with context
+//% from 'flow.jin' import loop_, if_then with context
 
 ### Match the current demension with the provided list
 //% macro match(list_supportedDims)
@@ -79,3 +79,12 @@ $content + '\t'*indent + '/// \\}'@
 //%   endif
 //% endmacro
 
+### Dimesnion template parameter if dim!=2
+//%-macro dim_tpl_param(dim, idx)
+$if_then(dim!=2,'<%d>'|format(idx))@
+//%-endmacro
+
+### Dimesnion template if dim!=2
+//%-macro dim_tpl(dim)
+$if_then(dim!=2, 'template <int _Dim=%d> '|format(dim))@
+//%-endmacro

@@ -59,82 +59,91 @@ TEST_CASE( "Vector length operations/2", "[vec2<float>(2)]" )
 {
 	SECTION( "Returns a new vector with the requested length/1" )
 	{
-		const vec2<float> vec = { -71.991, 18.044 };
-		const float len_to_set = { 30.556 };
-		const auto new_vec = setlen_mk(vec, len_to_set);
-		const auto len_new_vec = len(new_vec);
-		
-		REQUIRE( len_new_vec == Approx(len_to_set) );
-		
-		//test edge case 0.0
-		const auto zero_len_vec = setlen_mk(vec, cnst<float>::zero);
-		REQUIRE( get<0>(zero_len_vec) == Approx( cnst<float>::zero ) );
-		REQUIRE( get<1>(zero_len_vec) == Approx( cnst<float>::zero ) );
+		{
+			const vec2<float> vec = { -71.991, 18.044 };
+			const float len_to_set = { 30.556 };
+			const auto new_vec = setlen_mk(vec, len_to_set);
+			const auto len_new_vec = len(new_vec);
+			
+			REQUIRE( len_new_vec == Approx(len_to_set) );
+			
+			//test edge case 0.0
+			const auto zero_len_vec = setlen_mk(vec, cnst<float>::zero);
+			REQUIRE( get<0>(zero_len_vec) == Approx( cnst<float>::zero ) );
+			REQUIRE( get<1>(zero_len_vec) == Approx( cnst<float>::zero ) );
+		}
 	}
 	
 	SECTION( "Set the length of the vector/1" )
 	{
-		vec2<float> vec = { -30.752, 44.111 };
-		const float len_to_set = { 87.757 };
-		setlen_set(vec, len_to_set);
-		const auto vec_len = len(vec);
-		
-		REQUIRE( vec_len == Approx(len_to_set) );
-		
-		//test edge case 0.0
-		setlen_set(vec, cnst<float>::zero);
-		
-		REQUIRE( get<0>(vec) == Approx( cnst<float>::zero ) );
-		REQUIRE( get<1>(vec) == Approx( cnst<float>::zero ) );
+		{
+			vec2<float> vec = { -30.752, 44.111 };
+			const float len_to_set = { 87.757 };
+			setlen_set(vec, len_to_set);
+			const auto vec_len = len(vec);
+			
+			REQUIRE( vec_len == Approx(len_to_set) );
+			
+			//test edge case 0.0
+			setlen_set(vec, cnst<float>::zero);
+			
+			REQUIRE( get<0>(vec) == Approx( cnst<float>::zero ) );
+			REQUIRE( get<1>(vec) == Approx( cnst<float>::zero ) );
+		}
 	}
 	
 	SECTION( "Set the length of the vector and return the same vector (chained)/1" )
 	{
-		vec2<float> vec = { 31.643, -20.870 };
-		const float len_to_set = { 99.803 };
-		const auto &ret_vec = setlen(vec, len_to_set);
-		const auto vec_len = len(vec);
-		
-		REQUIRE( vec_len == Approx(len_to_set) );
-		
-		REQUIRE( &vec == &ret_vec);
-		//test edge case 0.0
-		const auto &ret_zero_vec = setlen(vec, cnst<float>::zero);
-		
-		REQUIRE( get<0>(vec) == Approx( cnst<float>::zero ) );
-		REQUIRE( get<1>(vec) == Approx( cnst<float>::zero ) );
-		REQUIRE( &vec == &ret_zero_vec);
+		{
+			vec2<float> vec = { 31.643, -20.870 };
+			const float len_to_set = { 99.803 };
+			const auto &ret_vec = setlen(vec, len_to_set);
+			const auto vec_len = len(vec);
+			
+			REQUIRE( vec_len == Approx(len_to_set) );
+			
+			REQUIRE( &vec == &ret_vec);
+			//test edge case 0.0
+			const auto &ret_zero_vec = setlen(vec, cnst<float>::zero);
+			
+			REQUIRE( get<0>(vec) == Approx( cnst<float>::zero ) );
+			REQUIRE( get<1>(vec) == Approx( cnst<float>::zero ) );
+			REQUIRE( &vec == &ret_zero_vec);
+		}
 	}
 	
 	SECTION( "Calculate the length of the vector, prefere len_sqr when comparing distances/1" )
 	{
-		const vec2<float> vec = { 15.063, 91.631 };
-		const auto vec_len = len(vec);
-		const auto vec_square_len = get<0>(vec) * get<0>(vec) + get<1>(vec) * get<1>(vec);
-		REQUIRE( vec_len == Approx( s::sqrt( vec_square_len ) ) );
-		
-		//test edge case 0.0
-		const vec2<float> zero_vec = { 0, 0 };
-		const auto zero_vec_len = len(zero_vec);
-		REQUIRE( zero_vec_len == Approx( cnst<float>::zero ) );
+		{
+			const vec2<float> vec = { 15.063, 91.631 };
+			const auto vec_len = len(vec);
+			const auto vec_square_len = get<0>(vec) * get<0>(vec) + get<1>(vec) * get<1>(vec);
+			REQUIRE( vec_len == Approx( s::sqrt( vec_square_len ) ) );
+			
+			//test edge case 0.0
+			const vec2<float> zero_vec = { 0, 0 };
+			const auto zero_vec_len = len(zero_vec);
+			REQUIRE( zero_vec_len == Approx( cnst<float>::zero ) );
+		}
 	}
 	
 	SECTION( "Calculate the square length of the vector/1" )
 	{
-		const vec2<float> vec = { 95.936, 79.751 };
-		const auto vec_len_sqr = len_sqr(vec);
-		const auto vec_len_sqr_check = get<0>(vec) * get<0>(vec) + get<1>(vec) * get<1>(vec);
-		REQUIRE( vec_len_sqr == Approx( vec_len_sqr_check ) );
-		
-		//test edge case 0.0
-		const vec2<float> zero_vec = { 0, 0 };
-		const auto zero_vec_len_sqr = len_sqr(zero_vec);
-		REQUIRE( zero_vec_len_sqr == Approx( cnst<float>::zero ) );
+		{
+			const vec2<float> vec = { 95.936, 79.751 };
+			const auto vec_len_sqr = len_sqr(vec);
+			const auto vec_len_sqr_check = get<0>(vec) * get<0>(vec) + get<1>(vec) * get<1>(vec);
+			REQUIRE( vec_len_sqr == Approx( vec_len_sqr_check ) );
+			
+			//test edge case 0.0
+			const vec2<float> zero_vec = { 0, 0 };
+			const auto zero_vec_len_sqr = len_sqr(zero_vec);
+			REQUIRE( zero_vec_len_sqr == Approx( cnst<float>::zero ) );
+		}
 	}
 	
 	SECTION( "Returns a normalized vector/1" )
 	{
-		
 		const vec2<float> vec = { 32.164, -98.242 };
 		const auto new_norm_vec = norm_mk(vec);
 		const auto norm_len = len(new_norm_vec);
@@ -307,56 +316,49 @@ TEST_CASE( "Getter and setters for 2 component vectors/2", "[vec2<float>(2)]" )
 {
 	SECTION( "Set all vector components to the same scalar/1" )
 	{
-		vec2<float> vec = { 0, 0 };
-		
-		const float val = { -5.5 };
-		
-		set_all(vec, val);
-		
-		REQUIRE( get<0>(vec)==val );
-		REQUIRE( get<1>(vec)==val );
+		{
+			vec2<float> vec = { 0, 0 };
+			
+			const float val = { -5.5 };
+			
+			set_all(vec, val);
+			REQUIRE( get<0>(vec)==val );
+			REQUIRE( get<1>(vec)==val );
+		}
 	}
 	
 	SECTION( "Set all vector components individually/1" )
 	{
-		vec2<float> vec = { 0, 0 };
-		const float arr [] = { -59.844, -71.993 };
-		
-		set_all(vec,arr[0], arr[1]);
-		
-		REQUIRE( get<0>(vec)==arr[0] );
-		REQUIRE( get<1>(vec)==arr[1] );
+		{
+			vec2<float> vec = { 0, 0 };
+			const float arr [] = { -59.844, -71.993 };
+			
+			set_all(vec,arr[0], arr[1]);
+			
+			REQUIRE( get<0>(vec)==arr[0] );
+			REQUIRE( get<1>(vec)==arr[1] );
+		}
 	}
 	
 	SECTION( "Set all vector components individually by a fixed size array/1" )
 	{
-		vec2<float> vec = { 0, 0 };
-		const float arr [] = { 35.807, 23.679 };
-		
-		set_all(vec, arr);
-		
-		REQUIRE( get<0>(vec)==arr[0] );
-		REQUIRE( get<1>(vec)==arr[1] );
-	}
-	
-	SECTION( "Set all vector components individually by an array of specified size _Dim/1" )
-	{
-		vec2<float> vec = { 0, 0 };
-		const float arr [] = { -44.516, -17.864 };
-		const auto* ptr_to_arr = arr;
-		
-		set_all<2>(vec, ptr_to_arr);
-		
-		REQUIRE( get<0>(vec)==arr[0] );
-		REQUIRE( get<1>(vec)==arr[1] );
+		{
+			vec2<float> vec = { 0, 0 };
+			const float arr [] = { 35.807, 23.679 };
+			
+			set_all(vec, arr);
+			
+			REQUIRE( get<0>(vec)==arr[0] );
+			REQUIRE( get<1>(vec)==arr[1] );
+		}
 	}
 	
 }
 TEST_CASE( "Base math vector operations for 2 component vectors/2", "[vec2<float>(2)]" )
 {
-	vec2<float> add_var_1 = { -55.271, 54.458 };
-	vec2<float> add_var_2 = { 53.365, -77.151 };
-	const float add_scalar = { 9.297 };
+	vec2<float> add_var_1 = { -44.516, -17.864 };
+	vec2<float> add_var_2 = { -55.271, 54.458 };
+	const float add_scalar = { 53.365 };
 	
 	const float add_vec_res [] =
 		{ get<0>(add_var_1) + get<0>(add_var_2), get<1>(add_var_1) + get<1>(add_var_2) };
@@ -365,9 +367,9 @@ TEST_CASE( "Base math vector operations for 2 component vectors/2", "[vec2<float
 	const float add_vec_scalar_res [] =
 		{ get<0>(add_var_1) + get<0>(add_var_2) + add_scalar, get<1>(add_var_1) + get<1>(add_var_2) + add_scalar };
 	
-	vec2<float> sub_var_1 = { 68.259, 31.885 };
-	vec2<float> sub_var_2 = { 1.285, -91.230 };
-	const float sub_scalar = { -7.666 };
+	vec2<float> sub_var_1 = { -77.151, 9.297 };
+	vec2<float> sub_var_2 = { 68.259, 31.885 };
+	const float sub_scalar = { 1.285 };
 	
 	const float sub_vec_res [] =
 		{ get<0>(sub_var_1) - get<0>(sub_var_2), get<1>(sub_var_1) - get<1>(sub_var_2) };
@@ -376,9 +378,9 @@ TEST_CASE( "Base math vector operations for 2 component vectors/2", "[vec2<float
 	const float sub_vec_scalar_res [] =
 		{ get<0>(sub_var_1) - get<0>(sub_var_2) - sub_scalar, get<1>(sub_var_1) - get<1>(sub_var_2) - sub_scalar };
 	
-	vec2<float> mul_var_1 = { 64.986, -43.384 };
-	vec2<float> mul_var_2 = { 74.225, 27.629 };
-	const float mul_scalar = { 69.916 };
+	vec2<float> mul_var_1 = { -91.230, -7.666 };
+	vec2<float> mul_var_2 = { 64.986, -43.384 };
+	const float mul_scalar = { 74.225 };
 	
 	const float mul_vec_res [] =
 		{ get<0>(mul_var_1) * get<0>(mul_var_2), get<1>(mul_var_1) * get<1>(mul_var_2) };
@@ -387,9 +389,9 @@ TEST_CASE( "Base math vector operations for 2 component vectors/2", "[vec2<float
 	const float mul_vec_scalar_res [] =
 		{ get<0>(mul_var_1) * get<0>(mul_var_2) * mul_scalar, get<1>(mul_var_1) * get<1>(mul_var_2) * mul_scalar };
 	
-	vec2<float> div_var_1 = { 65.982, -12.719 };
-	vec2<float> div_var_2 = { 13.388, 8.611 };
-	const float div_scalar = { -44.171 };
+	vec2<float> div_var_1 = { 27.629, 69.916 };
+	vec2<float> div_var_2 = { 65.982, -12.719 };
+	const float div_scalar = { 13.388 };
 	
 	const float div_vec_res [] =
 		{ get<0>(div_var_1) / get<0>(div_var_2), get<1>(div_var_1) / get<1>(div_var_2) };
@@ -627,9 +629,9 @@ TEST_CASE( "General purpos functions for 2 component vectors/2", "[vec2<float>(2
 {
 	SECTION( "Dot product/1" )
 	{
-		const vec2<float> vec1 = { 17.159, -30.164 };
+		const vec2<float> vec1 = { 8.611, -44.171 };
 		const decltype(vec1) vec2 = {-get<0>(vec1), -get<1>(vec1)};
-		const decltype(vec1) perpendicular = {get<1>(vec1), -get<0>(vec1)};
+		const decltype(vec1) perpendicular = {get<1@>(vec1), -get<0>(vec1)};
 		const auto vec1_len = len(vec1);
 		const auto vec2_len = len(vec2);
 
