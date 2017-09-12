@@ -9,9 +9,9 @@
 //%   for dimIdx in range(-dim+1, dim)
 //%     if dimIdx<-1 or dimIdx>1
 //%       if loop.first
-$'\t'*indent@if constexpr(N==$dimIdx@)
+$'\t'*indent@if constexpr(DIM_N==$dimIdx@)
 //%       else
-$'\t'*indent@else if constexpr(N==$dimIdx@)
+$'\t'*indent@else if constexpr(DIM_N==$dimIdx@)
 //%       endif
 //%       if dimIdx<0
 $'\t'*indent@   $stripped@/*% call loop_(range(dim + dimIdx, dim), separator) %*/$c@/*% endcall %*/$end@

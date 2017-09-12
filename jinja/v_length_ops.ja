@@ -4,11 +4,11 @@
 	$dim_tpl(dim)@avl_ainl_res constexpr auto setlen_mk(const $vecPar@& vec, const $scalarPar@ len_to_set) noexcept(ndebug||exuse)
 	{
 		//% if dim!=2
-		static_assert(_Dim>=-$dim@ && _Dim<=-2 && _Dim<=$dim@ && _Dim>=2 , "Provide a valid dimension parameter [$dim@,$dim@], excluding [-1,1] or remove the template parameter");
+		static_assert((DIM_N>=-$dim@ && DIM_N<=-2) || (DIM_N>=2 && DIM_N<=$dim@) , "Provide a valid dimension parameter [$dim@,$dim@], excluding [-1,1] or remove the template parameter");
 		//% endif
-		const auto vec_len = len$if_then(dim!=2,'<_Dim>')@(vec);
+		const auto vec_len = len$if_then(dim!=2,'<DIM_N>')@(vec);
 		assert(vec_len!=cnst<decltype(vec_len)>::zero);
-		return mul_mk$if_then(dim!=2,'<_Dim>')@(vec, len_to_set / vec_len);
+		return mul_mk$if_then(dim!=2,'<DIM_N>')@(vec, len_to_set / vec_len);
 	}
 	test_case
 	{
@@ -40,11 +40,11 @@
 	$dim_tpl(dim)@avl_ainl$res@ constexpr auto setlen$mut@($vecPar@& vec, const $scalarPar@ len_to_set) noexcept(ndebug||exuse) $rt@
 	{
 		//% if dim!=2
-		static_assert(_Dim>=-$dim@ && _Dim<=-2 && _Dim<=$dim@ && _Dim>=2 , "Provide a valid dimension parameter [$dim@,$dim@], excluding [-1,1] or remove the template parameter");
+		static_assert((DIM_N>=-$dim@ && DIM_N<=-2) || (DIM_N>=2 && DIM_N<=$dim@) , "Provide a valid dimension parameter [$dim@,$dim@], excluding [-1,1] or remove the template parameter");
 		//% endif
-		const auto vec_len = len$if_then(dim!=2,'<_Dim>')@(vec);
+		const auto vec_len = len$if_then(dim!=2,'<DIM_N>')@(vec);
 		assert(vec_len!=cnst<decltype(vec_len)>::zero);
-		mul_set$if_then(dim!=2,'<_Dim>')@(vec, len_to_set / vec_len);
+		mul_set$if_then(dim!=2,'<DIM_N>')@(vec, len_to_set / vec_len);
 
 		//% if mut==''
 		return vec;
@@ -89,10 +89,10 @@
 	$dim_tpl(dim)@avl_ainl_res constexpr auto len(const $vecPar@& vec) noexcept -> decltype(cmp(vec))
 	{
 		//% if dim!=2
-		static_assert(_Dim>=-$dim@ && _Dim<=-2 && _Dim<=$dim@ && _Dim>=2 , "Provide a valid dimension parameter [$dim@,$dim@], excluding [-1,1] or remove the template parameter");
+		static_assert((DIM_N>=-$dim@ && DIM_N<=-2) || (DIM_N>=2 && DIM_N<=$dim@) , "Provide a valid dimension parameter [$dim@,$dim@], excluding [-1,1] or remove the template parameter");
 		//% endif
 		//len_sqr will never return any negativ values so we can gurantee noexcept
-		const auto vec_square_len = len_sqr$if_then(dim!=2,'<_Dim>')@(vec);
+		const auto vec_square_len = len_sqr$if_then(dim!=2,'<DIM_N>')@(vec);
 		return static_cast<decltype(cmp(vec))>( s::sqrt( vec_square_len ) );
 	}
 	test_case
@@ -123,7 +123,7 @@
 	$dim_tpl(dim)@avl_ainl_res constexpr auto len_sqr(const $vecPar@& vec) noexcept -> decltype(cmp(vec))
 	{
 		//% if dim!=2
-		static_assert(_Dim>=-$dim@ && _Dim<=-2 && _Dim<=$dim@ && _Dim>=2 , "Provide a valid dimension parameter [$dim@,$dim@], excluding [-1,1] or remove the template parameter");
+		static_assert((DIM_N>=-$dim@ && DIM_N<=-2) || (DIM_N>=2 && DIM_N<=$dim@) , "Provide a valid dimension parameter [$dim@,$dim@], excluding [-1,1] or remove the template parameter");
 		//% endif
 		/*% call all_dim(dim, '	return ', ';', ' + ') %*/get<#>(vec)*get<#>(vec)/*% endcall %*/
 	}
@@ -157,14 +157,14 @@
 	$dim_tpl(dim)@avl_ainl_res constexpr auto norm_mk(const $vecPar@& vec $zeroLenParam@) noexcept$ex@
 	{
 		//% if dim!=2
-		static_assert(_Dim>=-$dim@ && _Dim<=-2 && _Dim<=$dim@ && _Dim>=2 , "Provide a valid dimension parameter [$dim@,$dim@], excluding [-1,1] or remove the template parameter");
+		static_assert((DIM_N>=-$dim@ && DIM_N<=-2) || (DIM_N>=2 && DIM_N<=$dim@) , "Provide a valid dimension parameter [$dim@,$dim@], excluding [-1,1] or remove the template parameter");
 		//% endif
-		const auto vec_len = len$if_then(dim!=2,'<_Dim>')@(vec);
+		const auto vec_len = len$if_then(dim!=2,'<DIM_N>')@(vec);
 		//% if zeroLenParam!=''
 		if(vec_len==cnst<decltype(vec_len)>::zero)
 			return vec_if_zero_len;
 		//% endif
-		return div_mk$if_then(dim!=2,'<_Dim>')@(vec, vec_len); //div might assert in debug
+		return div_mk$if_then(dim!=2,'<DIM_N>')@(vec, vec_len); //div might assert in debug
 	}
 	//%   if zeroLenParam==''
 	test_case
@@ -207,9 +207,9 @@
 	$dim_tpl(dim)@avl_ainl$res@ constexpr auto norm$mut@($vecPar@& vec $zeroLenParam@) noexcept $rt@
 	{
 		//% if dim!=2
-		static_assert(_Dim>=-$dim@ && _Dim<=-2 && _Dim<=$dim@ && _Dim>=2 , "Provide a valid dimension parameter [$dim@,$dim@], excluding [-1,1] or remove the template parameter");
+		static_assert((DIM_N>=-$dim@ && DIM_N<=-2) || (DIM_N>=2 && DIM_N<=$dim@) , "Provide a valid dimension parameter [$dim@,$dim@], excluding [-1,1] or remove the template parameter");
 		//% endif
-		const auto vec_len = len$if_then(dim!=2,'<_Dim>')@(vec);
+		const auto vec_len = len$if_then(dim!=2,'<DIM_N>')@(vec);
 		//% if zeroLenParam!=''
 		if(vec_len==cnst<decltype(vec_len)>::zero)
 		{
@@ -221,7 +221,7 @@
 			//% endif
 		}
 		//% endif
-		div_set$if_then(dim!=2,'<_Dim>')@(vec, vec_len); //div might assert in debug
+		div_set$if_then(dim!=2,'<DIM_N>')@(vec, vec_len); //div might assert in debug
 		//% if mut==''
 		return vec;
 		//% endif

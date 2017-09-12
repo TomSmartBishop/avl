@@ -1,4 +1,4 @@
-
+// NOTICE: This file is generated using the template file v.jinja
 #ifndef AVL_V2_INL
 #define AVL_V2_INL
 
@@ -130,25 +130,22 @@ namespace avl
 	/// Set all vector components to the same scalar
 	avl_ainl constexpr auto set_all(v2& vec, const sc scalar) noexcept -> void
 	{
-		static_assert(_Dim>=-2 && _Dim<=-2 && _Dim<=2 && _Dim>=2 , "Provide a valid dimension parameter [2,2], excluding [-1,1] or remove the template parameter");
 		static_assert(eq<decltype(vec[0]), decltype(scalar)>::value, "Supply a scalar of the vectors element filetype.");
-		
+
 		{ vec[0] = scalar; vec[1] = scalar; }
 	}
 	
 	/// Set all vector components individually
 	avl_ainl constexpr auto set_all(v2& vec, const sc x, const sc y) noexcept -> void
 	{
-		static_assert(_Dim>=-2 && _Dim<=-2 && _Dim<=2 && _Dim>=2 , "Provide a valid dimension parameter [2,2], excluding [-1,1] or remove the template parameter");
 		static_assert(eq<decltype(vec[ 0 ]), decltype(x)>::value, "Supply a scalar of the vectors element type for x.");
 		static_assert(eq<decltype(vec[ 1 ]), decltype(y)>::value, "Supply a scalar of the vectors element type for y.");
-		{ vec[0] = x; vec[1] = y; }
+ 		{ vec[0] = x; vec[1] = y; }
 	}
 	
 	/// Set all vector components individually by a fixed size array
 	avl_ainl constexpr auto set_all(v2& vec, const sc scalars[ 2 ]) noexcept -> void
 	{
-		static_assert(_Dim>=-2 && _Dim<=-2 && _Dim<=2 && _Dim>=2 , "Provide a valid dimension parameter [2,2], excluding [-1,1] or remove the template parameter");
 		static_assert(eq<decltype(vec[ 0 ]), decltype(scalars[ 0 ])>::value, "Supply a scalar of the vectors element filetype.");
 		static_assert(eq<decltype(vec[ 1 ]), decltype(scalars[ 1 ])>::value, "Supply a scalar of the vectors element filetype.");
 		{ vec[0] = scalars[0]; vec[1] = scalars[1]; }
@@ -332,9 +329,9 @@ namespace avl
 	/// \{
 	
 	/// Dot product
-	avl_ainl constexpr auto dot(const v2& vec, decltype(vec)& other) noexcept -> decltype(cmp(vec))
+	avl_ainl constexpr auto dot(const v2& vec, const v2& other) noexcept -> decltype(cmp(vec))
 	{
-		return get<0>(vec) * get<0>(other) + get<1>(vec) * get<1>(other);
+		return get<0>(vec)*get<0>(other) + get<1>(vec)*get<1>(other);
 	}
 	
 	/// \}

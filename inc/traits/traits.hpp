@@ -10,58 +10,58 @@ namespace avl {
 
 
 	//temp vec
-	template<typename _Ty, s::size_t _Dim>
+	template<typename TYPE, s::size_t DIM_N>
 	struct vec {
-		static constexpr s::size_t dim = _Dim;
-		using cmp_t = _Ty;
-		_Ty val[_Dim];
+		static constexpr s::size_t dim = DIM_N;
+		using cmp_t = TYPE;
+		TYPE val[DIM_N];
 
-		avl_ainl_res auto operator[](const s::size_t idx) const noexcept -> const _Ty
+		avl_ainl_res auto operator[](const s::size_t idx) const noexcept -> const TYPE
 		{
 			return val[idx];
 		}
 
-		avl_ainl_res auto operator[](const s::size_t idx) noexcept -> _Ty &
+		avl_ainl_res auto operator[](const s::size_t idx) noexcept -> TYPE &
 		{
 			return val[idx];
 		}
 	};
 	
-	template<typename _Ty>
-	using vec2 = vec<_Ty,2>;
+	template<typename TYPE>
+	using vec2 = vec<TYPE,2>;
 
-	template<typename _Ty>
-	using vec3 = vec<_Ty,3>;
+	template<typename TYPE>
+	using vec3 = vec<TYPE,3>;
 
-	template<typename _Ty>
-	using vec4 = vec<_Ty,4>;
+	template<typename TYPE>
+	using vec4 = vec<TYPE,4>;
 	
 	//temp wrapper
-	template<typename _Ty, s::size_t _Dim>
+	template<typename TYPE, s::size_t DIM_N>
 	struct vec_w {
-		static constexpr s::size_t dim = _Dim;
-		using cmp_t = _Ty;
-		_Ty * val;
+		static constexpr s::size_t dim = DIM_N;
+		using cmp_t = TYPE;
+		TYPE * val;
 
-		avl_ainl_res auto operator[](const s::size_t idx) const noexcept -> const _Ty
+		avl_ainl_res auto operator[](const s::size_t idx) const noexcept -> const TYPE
 		{
 			return val[idx];
 		}
 
-		avl_ainl_res auto operator[](const s::size_t idx) noexcept -> _Ty &
+		avl_ainl_res auto operator[](const s::size_t idx) noexcept -> TYPE &
 		{
 			return val[idx];
 		}
 	};
 
-	template<typename _Ty>
-	using vec2_w = vec_w<_Ty,2>;
+	template<typename TYPE>
+	using vec2_w = vec_w<TYPE,2>;
 
-	template<typename _Ty>
-	using vec3_w = vec_w<_Ty,3>;
+	template<typename TYPE>
+	using vec3_w = vec_w<TYPE,3>;
 
-	template<typename _Ty>
-	using vec4_w = vec_w<_Ty,4>;
+	template<typename TYPE>
+	using vec4_w = vec_w<TYPE,4>;
 
 	/// \defgroup Type Traits
 	/// @{
@@ -70,22 +70,22 @@ namespace avl {
 	/// @{
 
 			/// Get the component type of the vector	
-//  	template<typename _Tp>
-//  	struct cmp_ret { decltype(s::declval<_Tp>()[0]) type; };
+//  	template<typename TYPE>
+//  	struct cmp_ret { decltype(s::declval<TYPE>()[0]) type; };
 	
 //  	//template<>
 //  	//struct cmp_ret<__m128> { float type; };
 	
-// 	template<typename _Tp>
-// 	using cmp_ret_t = typename cmp_ret<_Tp>::type;
+// 	template<typename TYPE>
+// 	using cmp_ret_t = typename cmp_ret<TYPE>::type;
 	
 	/// Get the component type of the vector (remove extent)
-	template<typename _Tp>
-	using cmp_t = s::remove_extent_t<_Tp>;
+	template<typename TYPE>
+	using cmp_t = s::remove_extent_t<TYPE>;
 
 	/// Is scaler
-	template<typename _Tp>
-	using is_sc = typename s::is_arithmetic<_Tp>;
+	template<typename TYPE>
+	using is_sc = typename s::is_arithmetic<TYPE>;
 
 	/// True type
 	using true_t = s::true_type;
@@ -107,39 +107,39 @@ namespace avl {
 	template<typename>
 	struct is_eu_vec : public false_t {};
 
-	template<typename _Tp, s::size_t _Size>
-	struct is_eu_vec<_Tp[_Size]> : true_t_if< is_sc< cmp_t<_Tp> >::value > {};
+	template<typename TYPE, s::size_t _Size>
+	struct is_eu_vec<TYPE[_Size]> : true_t_if< is_sc< cmp_t<TYPE> >::value > {};
 
-	template<typename _Tp>
-	struct is_eu_vec<_Tp[]> : true_t_if< is_sc< cmp_t<_Tp> >::value > {};
+	template<typename TYPE>
+	struct is_eu_vec<TYPE[]> : true_t_if< is_sc< cmp_t<TYPE> >::value > {};
 
 	/// @}
 	/// @name Helpers
 	/// @{
 
-    template <typename _Tp>
-	using rem_const_ref_t = s::remove_const_t< s::remove_reference_t<_Tp> >;
+    template <typename TYPE>
+	using rem_const_ref_t = s::remove_const_t< s::remove_reference_t<TYPE> >;
     
 	/// Vector component type equals scalar type
-	template <typename _Cmp, typename _Sclr>
-	struct eq : s::is_same< rem_const_ref_t<_Cmp> , rem_const_ref_t<_Sclr> > {};
+	template <typename COMPONENT, typename SCALAR>
+	struct eq : s::is_same< rem_const_ref_t<COMPONENT> , rem_const_ref_t<SCALAR> > {};
 
 	#include "../compiler/push"
 	#include "../compiler/ignore_warning/ignored_attributes"
-	template <typename _Tp>
-	struct is_simd : eq<_Tp, __m128> {}; //this is still fuzzy
+	template <typename TYPE>
+	struct is_simd : eq<TYPE, __m128> {}; //this is still fuzzy
 	#include "../compiler/pop"
 
-	template <typename _Tp, typename _Sclr>
-	struct is_m128f : true_false_t_if<is_simd<_Tp>::value &&  eq<_Sclr, float>::value> {};
+	template <typename TYPE, typename SCALAR>
+	struct is_m128f : true_false_t_if<is_simd<TYPE>::value &&  eq<SCALAR, float>::value> {};
 
-// 	template<typename _Tp, s::size_t _Size>
-// 	avl_inl constexpr auto dim(_Tp(&)[_Size]) noexcept -> s::size_t
+// 	template<typename TYPE, s::size_t _Size>
+// 	avl_inl constexpr auto dim(TYPE(&)[_Size]) noexcept -> s::size_t
 // 	{
 // 		return _Size;
 // 	}
 
-// 	template<typename _Tp>
+// 	template<typename TYPE>
 // 	avl_inl constexpr auto dim() noexcept -> s::size_t
 // 	{
 // 		return decltype(vec)::dim;
@@ -159,8 +159,8 @@ namespace avl {
 		static constexpr s::size_t value = T::dim;
 	};
 	
-		template<typename _Tp, s::size_t _Size>   // array
-	struct dim<_Tp[_Size]>
+		template<typename TYPE, s::size_t _Size>   // array
+	struct dim<TYPE[_Size]>
 	{
 		static constexpr s::size_t value = _Size;
 	};
@@ -187,46 +187,46 @@ namespace avl {
 	/// @{
 
 	/// Concept for scalar types
-	template <typename _Tp>
-	concept bool sc = is_sc<_Tp>::value;
+	template <typename TYPE>
+	concept bool sc = is_sc<TYPE>::value;
 
 	/// Concept for wrapped foreign or wrapped vectors.
 	/// There needs to be a static member 'dim' of size_t, a type cmp_t for the vectors component type
 	/// and the components need to be accessible via the operator[] (const & non-const).
-	template <typename _Tp>
-	concept bool wrapped_v = requires(_Tp v)
+	template <typename TYPE>
+	concept bool wrapped_v = requires(TYPE v)
 	{
-		{ _Tp::dim } -> s::size_t;
-		{ v[0] } -> typename _Tp::cmp_t;
+		{ TYPE::dim } -> s::size_t;
+		{ v[0] } -> typename TYPE::cmp_t;
 		{ v[0] = v[1] }
 	};
 
 	/// Concept for vectors (no specific dimension requirement)
-	template <typename _Tp>
+	template <typename TYPE>
 	concept bool v = 	
-		( is_eu_vec<_Tp>::value && s::extent<_Tp>::value>1) || //for plain arrays
-		( wrapped_v<_Tp> ) || //for anything wrapped
-		is_simd<_Tp>::value;
+		( is_eu_vec<TYPE>::value && s::extent<TYPE>::value>1) || //for plain arrays
+		( wrapped_v<TYPE> ) || //for anything wrapped
+		is_simd<TYPE>::value;
 
 	/// Concept for a 2D vector
-	template <typename _Tp>
+	template <typename TYPE>
 	concept bool v2 = 
-		(is_eu_vec<_Tp>::value && s::extent<_Tp>::value==2) || //for plain arrays
-		( wrapped_v<_Tp> && _Tp::dim==2 ); //for anything wrapped
+		(is_eu_vec<TYPE>::value && s::extent<TYPE>::value==2) || //for plain arrays
+		( wrapped_v<TYPE> && TYPE::dim==2 ); //for anything wrapped
 
 	/// Concept for a 3D vector
-	template <typename _Tp>
+	template <typename TYPE>
 	concept bool v3 = 
-		(is_eu_vec<_Tp>::value && s::extent<_Tp>::value==3) || //for plain arrays
-		( wrapped_v<_Tp> && _Tp::dim==3 ); //for anything wrapped
+		(is_eu_vec<TYPE>::value && s::extent<TYPE>::value==3) || //for plain arrays
+		( wrapped_v<TYPE> && TYPE::dim==3 ); //for anything wrapped
 
 
 	/// Concept for a 4D vector
-	template <typename _Tp>
+	template <typename TYPE>
 	concept bool v4 =
-		(is_eu_vec<_Tp>::value && s::extent<_Tp>::value==4) || //for plain arrays
-		( wrapped_v<_Tp> && _Tp::dim==4 ) || //for anything wrapped
-		is_simd<_Tp>::value;
+		(is_eu_vec<TYPE>::value && s::extent<TYPE>::value==4) || //for plain arrays
+		( wrapped_v<TYPE> && TYPE::dim==4 ) || //for anything wrapped
+		is_simd<TYPE>::value;
 
 	/// @}
 }

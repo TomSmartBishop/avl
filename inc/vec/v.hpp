@@ -1,4 +1,4 @@
-
+// NOTICE: This file is generated using the template file v.jinja
 #ifndef AVL_V_HPP
 #define AVL_V_HPP
 
@@ -23,13 +23,13 @@ namespace avl
 	avl_ainl_res constexpr auto get(const v& vec, const s::size_t idx) noexcept(ndebug||exuse) -> decltype(cmp(vec));
 	
 	/// Access the vector components by a static range checked index from 0 to dim-1
-	template<s::size_t _Idx> avl_ainl_res constexpr auto get(const v& vec) noexcept -> decltype(cmp(vec));
+	template<s::size_t INDEX> avl_ainl_res constexpr auto get(const v& vec) noexcept -> decltype(cmp(vec));
 	
 	/// Set a single component by index from 0 to dim-1
 	avl_ainl constexpr auto set(v& vec, const s::size_t idx, const sc scalar) noexcept(ndebug||exuse) -> void;
 	
 	/// Set a single component by static index from 0 to dim-1
-	template<s::size_t _Idx> avl_ainl constexpr auto set(v& vec, const sc scalar) noexcept -> void;
+	template<s::size_t INDEX> avl_ainl constexpr auto set(v& vec, const sc scalar) noexcept -> void;
 	
 	/// \}
 /// \defgroup Vector length operations

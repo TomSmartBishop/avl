@@ -1,4 +1,4 @@
-
+// NOTICE: This file is generated using the template file v.jinja
 #ifndef AVL_V2_HPP
 #define AVL_V2_HPP
 
@@ -146,7 +146,7 @@ namespace avl
 	/// \{
 	
 	/// Dot product
-	avl_ainl constexpr auto dot(const v2& vec, decltype(vec)& other) noexcept -> decltype(cmp(vec));
+	avl_ainl constexpr auto dot(const v2& vec, const v2& other) noexcept -> decltype(cmp(vec));
 	
 	/// \}
 }

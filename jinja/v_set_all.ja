@@ -3,9 +3,11 @@
 	//% call func('/// Set all vector components to the same scalar', match([2,3,4]))
 	$dim_tpl(dim)@avl_ainl constexpr auto set_all($vecPar@& vec, const $scalarPar@ scalar) noexcept -> void
 	{
-		static_assert(_Dim>=-$dim@ && _Dim<=-2 && _Dim<=$dim@ && _Dim>=2 , "Provide a valid dimension parameter [$dim@,$dim@], excluding [-1,1] or remove the template parameter");
+		//% if dim>2
+		static_assert((DIM_N>=-$dim@ && DIM_N<=-2) || (DIM_N>=2 && DIM_N<=$dim@) , "Provide a valid dimension parameter [$dim@,$dim@], excluding [-1,1] or remove the template parameter");
+		//% endif
 		static_assert(eq<decltype(vec[0]), decltype(scalar)>::value, "Supply a scalar of the vectors element filetype.");
-		
+
 		/*% call all_dim(dim, '{ ', '}', '') %*/$vecWriteCmp(vec, '#', scalar)@; /*% endcall %*/
 	}
 	test_case
@@ -32,19 +34,17 @@
 	//% call func('/// Set all vector components individually', match([2,3,4]))
 	$dim_tpl(dim)@avl_ainl constexpr auto set_all($vecPar@& vec/*% for name in param %*/, const $scalarPar@ $name@/*% endfor %*/) noexcept -> void
 	{
-		static_assert(_Dim>=-$dim@ && _Dim<=-2 && _Dim<=$dim@ && _Dim>=2 , "Provide a valid dimension parameter [$dim@,$dim@], excluding [-1,1] or remove the template parameter");
+		//% if dim>2
+		static_assert((DIM_N>=-$dim@ && DIM_N<=-2) || (DIM_N>=2 && DIM_N<=$dim@) , "Provide a valid dimension parameter [$dim@,$dim@], excluding [-1,1] or remove the template parameter");
+		//% endif
+
 		//% for i in range(dim)
 		static_assert(eq<decltype(vec[ $i@ ]), decltype($param[i]@)>::value, "Supply a scalar of the vectors element type for $param[i]@.");
 		//% endfor
 		
-		//% set s2 = 'scalar2'
-		//% set s3 = 'scalar3'
-		//% if param|length>2
-		//%   set s2 = param[2]
-		//% endif
-		//% if param|length>3
-		//%   set s3 = param[3]
-		//% endif
+		/*% set s2 = 'scalar2' %*/ /*% set s3 = 'scalar3' %*/
+		/*% if param|length>2 %*/ /*% set s2 = param[2] %*/ /*% endif %*/
+		/*% if param|length>3 %*/ /*% set s3 = param[3] %*/ /*% endif %*/
 		//% filter replace('scalar0', param[0])|replace('scalar1', param[1])|replace('scalar2', s2)|replace('scalar3', s3)
 		/*%   call all_dim(dim, '{ ', '}', '') %*/$vecWriteCmp(vec, '#', 'scalar#')@; /*% endcall %*/
 		//% endfilter
@@ -73,7 +73,10 @@
 	//% call func('/// Set all vector components individually by a fixed size array', match([2,3,4]))
 	$dim_tpl(dim)@avl_ainl constexpr auto set_all($vecPar@& vec, const $scalarPar@ scalars[ $dim@ ]) noexcept -> void
 	{
-		static_assert(_Dim>=-$dim@ && _Dim<=-2 && _Dim<=$dim@ && _Dim>=2 , "Provide a valid dimension parameter [$dim@,$dim@], excluding [-1,1] or remove the template parameter");
+		//% if dim>2
+		static_assert((DIM_N>=-$dim@ && DIM_N<=-2) || (DIM_N>=2 && DIM_N<=$dim@) , "Provide a valid dimension parameter [$dim@,$dim@], excluding [-1,1] or remove the template parameter");
+		//% endif
+		
 		//% for i in range(dim)
 		static_assert(eq<decltype(vec[ $i@ ]), decltype(scalars[ $i@ ])>::value, "Supply a scalar of the vectors element filetype.");
 		//% endfor

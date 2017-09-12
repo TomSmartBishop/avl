@@ -1,4 +1,4 @@
-
+// NOTICE: This file is generated using the template file v.jinja
 #ifndef AVL_V_INL
 #define AVL_V_INL
 
@@ -30,10 +30,10 @@ namespace avl
 	}
 	
 	/// Access the vector components by a static range checked index from 0 to dim-1
-	template<s::size_t _Idx> avl_ainl_res constexpr auto get(const v& vec) noexcept -> decltype(cmp(vec))
+	template<s::size_t INDEX> avl_ainl_res constexpr auto get(const v& vec) noexcept -> decltype(cmp(vec))
 	{
-		static_assert(_Idx < dim< rem_const_ref_t< decltype( vec ) > >::value, "Index is out of range");
-		return vec[_Idx];
+		static_assert(INDEX < dim< rem_const_ref_t< decltype( vec ) > >::value, "Index is out of range");
+		return vec[INDEX];
 	}
 	
 	/// Set a single component by index from 0 to dim-1
@@ -45,11 +45,11 @@ namespace avl
 	}
 	
 	/// Set a single component by static index from 0 to dim-1
-	template<s::size_t _Idx> avl_ainl constexpr auto set(v& vec, const sc scalar) noexcept -> void
+	template<s::size_t INDEX> avl_ainl constexpr auto set(v& vec, const sc scalar) noexcept -> void
 	{
-		static_assert(eq< decltype( vec[_Idx] ), decltype( scalar ) >::value, "Supply a scalar of the vectors element type.");
-		static_assert(_Idx < dim< rem_const_ref_t< decltype( vec ) > >::value, "Index is out of range");
-		vec[_Idx] = scalar;
+		static_assert(eq< decltype( vec[INDEX] ), decltype( scalar ) >::value, "Supply a scalar of the vectors element type.");
+		static_assert(INDEX < dim< rem_const_ref_t< decltype( vec ) > >::value, "Index is out of range");
+		vec[INDEX] = scalar;
 	}
 	
 	/// \}

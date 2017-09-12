@@ -1,4 +1,4 @@
-
+// NOTICE: This file is generated using the template file v.jinja
 #include "../../ext/catch/catch.hpp"
 #include "../../inc/avl.hpp"
 
@@ -629,22 +629,32 @@ TEST_CASE( "General purpos functions for 2 component vectors/2", "[vec2<float>(2
 {
 	SECTION( "Dot product/1" )
 	{
-		const vec2<float> vec1 = { 8.611, -44.171 };
-		const decltype(vec1) vec2 = {-get<0>(vec1), -get<1>(vec1)};
-		const decltype(vec1) perpendicular = {get<1@>(vec1), -get<0>(vec1)};
-		const auto vec1_len = len(vec1);
-		const auto vec2_len = len(vec2);
+		const int idx[] = { 1, 0, 2, 3 };
+		const int signs1[] = { 1,-1, 1, 1 };
+		const int signs2[] = {-1, 1, 1, 1 };
 
-		REQUIRE( vec1_len == Approx(vec2_len) );
+		{
 
-		const auto dot_prod_colinear_opposite = dot(vec1, vec2);
-		REQUIRE( dot_prod_colinear_opposite == Approx(-vec1_len * vec2_len) );
+			const vec2<float> test_vec1 = { 8.611, -44.171 };
+			const vec2<float> test_vec2 = {-get<0>(test_vec1), -get<1>(test_vec1)};
+			const vec2<float> perpendicular1 = { get<1>(test_vec1), -get<0>(test_vec1) };
+			const vec2<float> perpendicular2 = { -get<1>(test_vec1), get<0>(test_vec1) };
+			const auto test_vec1_len = len(test_vec1);
+			const auto test_vec2_len = len(test_vec2);
 
-		const auto dot_prod_colinear = dot(vec1, vec1);
-		REQUIRE( dot_prod_colinear == Approx(vec1_len * vec1_len) );
+			REQUIRE( test_vec1_len == Approx(test_vec2_len) );
 
-		const auto dot_prod_perp = dot(vec1, perpendicular);
-		REQUIRE( dot_prod_perp == Approx( cnst<float>::zero ) );
+			const auto dot_prod_colinear_opposite = dot(test_vec1, test_vec2);
+			REQUIRE( dot_prod_colinear_opposite == Approx(-test_vec1_len * test_vec2_len) );
+
+			const auto dot_prod_colinear = dot(test_vec1, test_vec1);
+			REQUIRE( dot_prod_colinear == Approx(test_vec1_len * test_vec1_len) );
+
+			const auto dot_prod_perp1 = dot(test_vec1, perpendicular1);
+			REQUIRE( dot_prod_perp1 == Approx( get<0>(test_vec1) * get<0>(perpendicular1) + get<1>(test_vec1) * get<1>(perpendicular1) ) );
+			const auto dot_prod_perp2 = dot(test_vec1, perpendicular2);
+			REQUIRE( dot_prod_perp2 == Approx( get<0>(test_vec1) * get<0>(perpendicular2) + get<1>(test_vec1) * get<1>(perpendicular2) ) );
+		}
 	}
 	
 }
