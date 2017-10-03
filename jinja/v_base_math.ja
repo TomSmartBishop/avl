@@ -18,19 +18,19 @@
 //%   for mut, rt, res in [('_mk', '', '_res'), ('_set', ' -> void', ''), ('', ' -> decltype(vec)', '_res')]
 	
 	//% call func('// ' + op + mut, match([2,3,4]))
-	avl_ainl$res@ constexpr auto $op+mut@($if_then(mut=='_mk', 'const ')+vecPar@& vec, const $vecPar@& other) noexcept$if_then(op=='div', '(ndebug||exuse)')+rt@
+	$dim_tpl(dim)@avl_ainl$res@ constexpr auto $op+mut@($if_then(mut=='_mk', 'const ')+vecPar@& vec, const $vecPar@& other) noexcept$if_then(op=='div', '(ndebug||exuse)')+rt@
 	{
 		//% call loop_if(op=='div', range(dim), '')
 		assert(get<#>(other)!=cnst<decltype(cmp(other))>::zero);
 		//% endcall
 		
+		//% set dim_ext='<'+dim|string+'>' if dim!=2 else ''
 		//% if mut=='_mk'
-		return rem_const_ref_t< decltype(vec) >
-					{/*% call loop_(range(dim)) %*/get<#>(vec) $s@ get<#>(other)/*% endcall %*/ };
+		/*% call all_dim(dim, 'return rem_const_ref_t< decltype(vec) >{', '};', ', ', 'cnst<decltype(cmp(other))>::zero') %*/get<#>(vec) $s@ get<#>(other)/*% endcall %*/
 		//% elif mut=='_set'
-		set_all(vec, /*% call loop_(range(dim)) %*/get<#>(vec) $s@ get<#>(other)/*% endcall %*/ );
+		/*% call all_dim(dim, 'set_all'+dim_ext+'(vec, ', ');') %*/get<#>(vec) $s@ get<#>(other)/*% endcall %*/
 		//% else
-		set_all(vec, /*% call loop_(range(dim)) %*/get<#>(vec) $s@ get<#>(other)/*% endcall %*/ );
+		/*% call all_dim(dim, 'set_all'+dim_ext+'(vec, ', ');') %*/get<#>(vec) $s@ get<#>(other)/*% endcall %*/
 		return vec;
 		//% endif
 	}
@@ -71,19 +71,19 @@
 	//% endcall
 	
 	//% call func('// ' + op + mut +' (scalar)', match([2,3,4]))
-	avl_ainl$res@ constexpr auto $op+mut@($if_then(mut=='_mk', 'const ')+vecPar@& vec, const $scalarPar@ scalar) noexcept$if_then(op=='div', '(ndebug||exuse)')+rt@
+	$dim_tpl(dim)@avl_ainl$res@ constexpr auto $op+mut@($if_then(mut=='_mk', 'const ')+vecPar@& vec, const $scalarPar@ scalar) noexcept$if_then(op=='div', '(ndebug||exuse)')+rt@
 	{
 		//% if op=='div'
 		assert(scalar!=cnst<decltype(scalar)>::zero);
 		//% endif
 		
+		//% set dim_ext='<'+dim|string+'>' if dim!=2 else ''
 		//% if mut=='_mk'
-		return rem_const_ref_t< decltype(vec) >
-					{/*% call loop_(range(dim)) %*/get<#>(vec) $s@ scalar/*% endcall %*/ };
+		/*% call all_dim(dim, 'return rem_const_ref_t< decltype(vec) >{', '};', ', ', 'cnst<decltype(scalar)>::zero') %*/get<#>(vec) $s@ scalar/*% endcall %*/
 		//% elif mut=='_set'
-		set_all(vec, /*% call loop_(range(dim)) %*/get<#>(vec) $s@ scalar/*% endcall %*/ );
+		/*% call all_dim(dim, 'set_all'+dim_ext+'(vec, ', ');') %*/get<#>(vec) $s@ scalar/*% endcall %*/
 		//% else
-		set_all(vec, /*% call loop_(range(dim)) %*/get<#>(vec) $s@ scalar/*% endcall %*/ );
+		/*% call all_dim(dim, 'set_all'+dim_ext+'(vec, ', ');') %*/get<#>(vec) $s@ scalar/*% endcall %*/
 		return vec;
 		//% endif
 	}

@@ -158,120 +158,114 @@ namespace avl
 	// add_mk
 	avl_ainl_res constexpr auto add_mk(const v2& vec, const v2& other) noexcept
 	{
-		return rem_const_ref_t< decltype(vec) >
-					{get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other) };
+		return rem_const_ref_t< decltype(vec) >{get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other)};
 	}
 	
 	// add_mk (scalar)
 	avl_ainl_res constexpr auto add_mk(const v2& vec, const sc scalar) noexcept
 	{
-		return rem_const_ref_t< decltype(vec) >
-					{get<0>(vec) + scalar, get<1>(vec) + scalar };
+		return rem_const_ref_t< decltype(vec) >{get<0>(vec) + scalar, get<1>(vec) + scalar};
 	}
 	
 	// add_set
 	avl_ainl constexpr auto add_set(v2& vec, const v2& other) noexcept -> void
 	{
-		set_all(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other) );
+		set_all(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other));
 	}
 	
 	// add_set (scalar)
 	avl_ainl constexpr auto add_set(v2& vec, const sc scalar) noexcept -> void
 	{
-		set_all(vec, get<0>(vec) + scalar, get<1>(vec) + scalar );
+		set_all(vec, get<0>(vec) + scalar, get<1>(vec) + scalar);
 	}
 	
 	// add
 	avl_ainl_res constexpr auto add(v2& vec, const v2& other) noexcept -> decltype(vec)
 	{
-		set_all(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other) );
+		set_all(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other));
 		return vec;
 	}
 	
 	// add (scalar)
 	avl_ainl_res constexpr auto add(v2& vec, const sc scalar) noexcept -> decltype(vec)
 	{
-		set_all(vec, get<0>(vec) + scalar, get<1>(vec) + scalar );
+		set_all(vec, get<0>(vec) + scalar, get<1>(vec) + scalar);
 		return vec;
 	}
 	
 	// sub_mk
 	avl_ainl_res constexpr auto sub_mk(const v2& vec, const v2& other) noexcept
 	{
-		return rem_const_ref_t< decltype(vec) >
-					{get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other) };
+		return rem_const_ref_t< decltype(vec) >{get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other)};
 	}
 	
 	// sub_mk (scalar)
 	avl_ainl_res constexpr auto sub_mk(const v2& vec, const sc scalar) noexcept
 	{
-		return rem_const_ref_t< decltype(vec) >
-					{get<0>(vec) - scalar, get<1>(vec) - scalar };
+		return rem_const_ref_t< decltype(vec) >{get<0>(vec) - scalar, get<1>(vec) - scalar};
 	}
 	
 	// sub_set
 	avl_ainl constexpr auto sub_set(v2& vec, const v2& other) noexcept -> void
 	{
-		set_all(vec, get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other) );
+		set_all(vec, get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other));
 	}
 	
 	// sub_set (scalar)
 	avl_ainl constexpr auto sub_set(v2& vec, const sc scalar) noexcept -> void
 	{
-		set_all(vec, get<0>(vec) - scalar, get<1>(vec) - scalar );
+		set_all(vec, get<0>(vec) - scalar, get<1>(vec) - scalar);
 	}
 	
 	// sub
 	avl_ainl_res constexpr auto sub(v2& vec, const v2& other) noexcept -> decltype(vec)
 	{
-		set_all(vec, get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other) );
+		set_all(vec, get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other));
 		return vec;
 	}
 	
 	// sub (scalar)
 	avl_ainl_res constexpr auto sub(v2& vec, const sc scalar) noexcept -> decltype(vec)
 	{
-		set_all(vec, get<0>(vec) - scalar, get<1>(vec) - scalar );
+		set_all(vec, get<0>(vec) - scalar, get<1>(vec) - scalar);
 		return vec;
 	}
 	
 	// mul_mk
 	avl_ainl_res constexpr auto mul_mk(const v2& vec, const v2& other) noexcept
 	{
-		return rem_const_ref_t< decltype(vec) >
-					{get<0>(vec) * get<0>(other), get<1>(vec) * get<1>(other) };
+		return rem_const_ref_t< decltype(vec) >{get<0>(vec) * get<0>(other), get<1>(vec) * get<1>(other)};
 	}
 	
 	// mul_mk (scalar)
 	avl_ainl_res constexpr auto mul_mk(const v2& vec, const sc scalar) noexcept
 	{
-		return rem_const_ref_t< decltype(vec) >
-					{get<0>(vec) * scalar, get<1>(vec) * scalar };
+		return rem_const_ref_t< decltype(vec) >{get<0>(vec) * scalar, get<1>(vec) * scalar};
 	}
 	
 	// mul_set
 	avl_ainl constexpr auto mul_set(v2& vec, const v2& other) noexcept -> void
 	{
-		set_all(vec, get<0>(vec) * get<0>(other), get<1>(vec) * get<1>(other) );
+		set_all(vec, get<0>(vec) * get<0>(other), get<1>(vec) * get<1>(other));
 	}
 	
 	// mul_set (scalar)
 	avl_ainl constexpr auto mul_set(v2& vec, const sc scalar) noexcept -> void
 	{
-		set_all(vec, get<0>(vec) * scalar, get<1>(vec) * scalar );
+		set_all(vec, get<0>(vec) * scalar, get<1>(vec) * scalar);
 	}
 	
 	// mul
 	avl_ainl_res constexpr auto mul(v2& vec, const v2& other) noexcept -> decltype(vec)
 	{
-		set_all(vec, get<0>(vec) * get<0>(other), get<1>(vec) * get<1>(other) );
+		set_all(vec, get<0>(vec) * get<0>(other), get<1>(vec) * get<1>(other));
 		return vec;
 	}
 	
 	// mul (scalar)
 	avl_ainl_res constexpr auto mul(v2& vec, const sc scalar) noexcept -> decltype(vec)
 	{
-		set_all(vec, get<0>(vec) * scalar, get<1>(vec) * scalar );
+		set_all(vec, get<0>(vec) * scalar, get<1>(vec) * scalar);
 		return vec;
 	}
 	
@@ -280,16 +274,14 @@ namespace avl
 	{
 		assert(get<0>(other)!=cnst<decltype(cmp(other))>::zero);
 		assert(get<1>(other)!=cnst<decltype(cmp(other))>::zero);
-		return rem_const_ref_t< decltype(vec) >
-					{get<0>(vec) / get<0>(other), get<1>(vec) / get<1>(other) };
+		return rem_const_ref_t< decltype(vec) >{get<0>(vec) / get<0>(other), get<1>(vec) / get<1>(other)};
 	}
 	
 	// div_mk (scalar)
 	avl_ainl_res constexpr auto div_mk(const v2& vec, const sc scalar) noexcept(ndebug||exuse)
 	{
 		assert(scalar!=cnst<decltype(scalar)>::zero);
-		return rem_const_ref_t< decltype(vec) >
-					{get<0>(vec) / scalar, get<1>(vec) / scalar };
+		return rem_const_ref_t< decltype(vec) >{get<0>(vec) / scalar, get<1>(vec) / scalar};
 	}
 	
 	// div_set
@@ -297,14 +289,14 @@ namespace avl
 	{
 		assert(get<0>(other)!=cnst<decltype(cmp(other))>::zero);
 		assert(get<1>(other)!=cnst<decltype(cmp(other))>::zero);
-		set_all(vec, get<0>(vec) / get<0>(other), get<1>(vec) / get<1>(other) );
+		set_all(vec, get<0>(vec) / get<0>(other), get<1>(vec) / get<1>(other));
 	}
 	
 	// div_set (scalar)
 	avl_ainl constexpr auto div_set(v2& vec, const sc scalar) noexcept(ndebug||exuse) -> void
 	{
 		assert(scalar!=cnst<decltype(scalar)>::zero);
-		set_all(vec, get<0>(vec) / scalar, get<1>(vec) / scalar );
+		set_all(vec, get<0>(vec) / scalar, get<1>(vec) / scalar);
 	}
 	
 	// div
@@ -312,7 +304,7 @@ namespace avl
 	{
 		assert(get<0>(other)!=cnst<decltype(cmp(other))>::zero);
 		assert(get<1>(other)!=cnst<decltype(cmp(other))>::zero);
-		set_all(vec, get<0>(vec) / get<0>(other), get<1>(vec) / get<1>(other) );
+		set_all(vec, get<0>(vec) / get<0>(other), get<1>(vec) / get<1>(other));
 		return vec;
 	}
 	
@@ -320,7 +312,7 @@ namespace avl
 	avl_ainl_res constexpr auto div(v2& vec, const sc scalar) noexcept(ndebug||exuse) -> decltype(vec)
 	{
 		assert(scalar!=cnst<decltype(scalar)>::zero);
-		set_all(vec, get<0>(vec) / scalar, get<1>(vec) / scalar );
+		set_all(vec, get<0>(vec) / scalar, get<1>(vec) / scalar);
 		return vec;
 	}
 	

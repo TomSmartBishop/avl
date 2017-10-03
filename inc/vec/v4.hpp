@@ -79,76 +79,76 @@ namespace avl
 	/// \{
 	
 	// add_mk
-	avl_ainl_res constexpr auto add_mk(const v4& vec, const v4& other) noexcept;
+	template <int DIM_N=4> avl_ainl_res constexpr auto add_mk(const v4& vec, const v4& other) noexcept;
 	
 	// add_mk (scalar)
-	avl_ainl_res constexpr auto add_mk(const v4& vec, const sc scalar) noexcept;
+	template <int DIM_N=4> avl_ainl_res constexpr auto add_mk(const v4& vec, const sc scalar) noexcept;
 	
 	// add_set
-	avl_ainl constexpr auto add_set(v4& vec, const v4& other) noexcept -> void;
+	template <int DIM_N=4> avl_ainl constexpr auto add_set(v4& vec, const v4& other) noexcept -> void;
 	
 	// add_set (scalar)
-	avl_ainl constexpr auto add_set(v4& vec, const sc scalar) noexcept -> void;
+	template <int DIM_N=4> avl_ainl constexpr auto add_set(v4& vec, const sc scalar) noexcept -> void;
 	
 	// add
-	avl_ainl_res constexpr auto add(v4& vec, const v4& other) noexcept -> decltype(vec);
+	template <int DIM_N=4> avl_ainl_res constexpr auto add(v4& vec, const v4& other) noexcept -> decltype(vec);
 	
 	// add (scalar)
-	avl_ainl_res constexpr auto add(v4& vec, const sc scalar) noexcept -> decltype(vec);
+	template <int DIM_N=4> avl_ainl_res constexpr auto add(v4& vec, const sc scalar) noexcept -> decltype(vec);
 	
 	// sub_mk
-	avl_ainl_res constexpr auto sub_mk(const v4& vec, const v4& other) noexcept;
+	template <int DIM_N=4> avl_ainl_res constexpr auto sub_mk(const v4& vec, const v4& other) noexcept;
 	
 	// sub_mk (scalar)
-	avl_ainl_res constexpr auto sub_mk(const v4& vec, const sc scalar) noexcept;
+	template <int DIM_N=4> avl_ainl_res constexpr auto sub_mk(const v4& vec, const sc scalar) noexcept;
 	
 	// sub_set
-	avl_ainl constexpr auto sub_set(v4& vec, const v4& other) noexcept -> void;
+	template <int DIM_N=4> avl_ainl constexpr auto sub_set(v4& vec, const v4& other) noexcept -> void;
 	
 	// sub_set (scalar)
-	avl_ainl constexpr auto sub_set(v4& vec, const sc scalar) noexcept -> void;
+	template <int DIM_N=4> avl_ainl constexpr auto sub_set(v4& vec, const sc scalar) noexcept -> void;
 	
 	// sub
-	avl_ainl_res constexpr auto sub(v4& vec, const v4& other) noexcept -> decltype(vec);
+	template <int DIM_N=4> avl_ainl_res constexpr auto sub(v4& vec, const v4& other) noexcept -> decltype(vec);
 	
 	// sub (scalar)
-	avl_ainl_res constexpr auto sub(v4& vec, const sc scalar) noexcept -> decltype(vec);
+	template <int DIM_N=4> avl_ainl_res constexpr auto sub(v4& vec, const sc scalar) noexcept -> decltype(vec);
 	
 	// mul_mk
-	avl_ainl_res constexpr auto mul_mk(const v4& vec, const v4& other) noexcept;
+	template <int DIM_N=4> avl_ainl_res constexpr auto mul_mk(const v4& vec, const v4& other) noexcept;
 	
 	// mul_mk (scalar)
-	avl_ainl_res constexpr auto mul_mk(const v4& vec, const sc scalar) noexcept;
+	template <int DIM_N=4> avl_ainl_res constexpr auto mul_mk(const v4& vec, const sc scalar) noexcept;
 	
 	// mul_set
-	avl_ainl constexpr auto mul_set(v4& vec, const v4& other) noexcept -> void;
+	template <int DIM_N=4> avl_ainl constexpr auto mul_set(v4& vec, const v4& other) noexcept -> void;
 	
 	// mul_set (scalar)
-	avl_ainl constexpr auto mul_set(v4& vec, const sc scalar) noexcept -> void;
+	template <int DIM_N=4> avl_ainl constexpr auto mul_set(v4& vec, const sc scalar) noexcept -> void;
 	
 	// mul
-	avl_ainl_res constexpr auto mul(v4& vec, const v4& other) noexcept -> decltype(vec);
+	template <int DIM_N=4> avl_ainl_res constexpr auto mul(v4& vec, const v4& other) noexcept -> decltype(vec);
 	
 	// mul (scalar)
-	avl_ainl_res constexpr auto mul(v4& vec, const sc scalar) noexcept -> decltype(vec);
+	template <int DIM_N=4> avl_ainl_res constexpr auto mul(v4& vec, const sc scalar) noexcept -> decltype(vec);
 	
 	// div_mk
-	avl_ainl_res constexpr auto div_mk(const v4& vec, const v4& other) noexcept(ndebug||exuse);
+	template <int DIM_N=4> avl_ainl_res constexpr auto div_mk(const v4& vec, const v4& other) noexcept(ndebug||exuse);
 	
 	// div_mk (scalar)
-	avl_ainl_res constexpr auto div_mk(const v4& vec, const sc scalar) noexcept(ndebug||exuse);
+	template <int DIM_N=4> avl_ainl_res constexpr auto div_mk(const v4& vec, const sc scalar) noexcept(ndebug||exuse);
 	
 	// div_set
-	avl_ainl constexpr auto div_set(v4& vec, const v4& other) noexcept(ndebug||exuse) -> void;
+	template <int DIM_N=4> avl_ainl constexpr auto div_set(v4& vec, const v4& other) noexcept(ndebug||exuse) -> void;
 	
 	// div_set (scalar)
-	avl_ainl constexpr auto div_set(v4& vec, const sc scalar) noexcept(ndebug||exuse) -> void;
+	template <int DIM_N=4> avl_ainl constexpr auto div_set(v4& vec, const sc scalar) noexcept(ndebug||exuse) -> void;
 	
 	// div
-	avl_ainl_res constexpr auto div(v4& vec, const v4& other) noexcept(ndebug||exuse) -> decltype(vec);
+	template <int DIM_N=4> avl_ainl_res constexpr auto div(v4& vec, const v4& other) noexcept(ndebug||exuse) -> decltype(vec);
 	
 	// div (scalar)
-	avl_ainl_res constexpr auto div(v4& vec, const sc scalar) noexcept(ndebug||exuse) -> decltype(vec);
+	template <int DIM_N=4> avl_ainl_res constexpr auto div(v4& vec, const sc scalar) noexcept(ndebug||exuse) -> decltype(vec);
 	
 	/// \}
 	/// \defgroup General purpos functions for 4 component vectors

@@ -3,20 +3,20 @@
 //% from 'sequence.jin' import seq, seqRnd with context
 //% from 'flow.jin' import loop_ with context
 
-//% macro all_dim(dim, start, end, separator=', ', indent = 2)
+//% macro all_dim(dim, start, end, separator=', ', dim_fill='', indent = 2)
 //%   set stripped = start.lstrip()
 //%   set c = caller()
-//%   for dimIdx in range(-dim+1, dim)
-//%     if dimIdx<-1 or dimIdx>1
+//%   for dim_index in range(-dim+1, dim)
+//%     if dim_index<-1 or dim_index>1
 //%       if loop.first
-$'\t'*indent@if constexpr(DIM_N==$dimIdx@)
+$'\t'*indent@if constexpr(DIM_N==$dim_index@)
 //%       else
-$'\t'*indent@else if constexpr(DIM_N==$dimIdx@)
+$'\t'*indent@else if constexpr(DIM_N==$dim_index@)
 //%       endif
-//%       if dimIdx<0
-$'\t'*indent@   $stripped@/*% call loop_(range(dim + dimIdx, dim), separator) %*/$c@/*% endcall %*/$end@
+//%       if dim_index<0
+$'\t'*indent@   $stripped@/*% call loop_if(dim_fill!='', range(dim+dim_index),'') %*/$dim_fill@$separator@/*% endcall %*//*% call loop_(range(dim + dim_index, dim), separator) %*/$c@/*% endcall %*/$end@
 //%       else
-$'\t'*indent@   $stripped@/*% call loop_(range(dimIdx), separator) %*/$c@/*% endcall %*/$end@
+$'\t'*indent@   $stripped@/*% call loop_(range(dim_index), separator) %*/$c@/*% endcall %*//*% call loop_if(dim_fill!='', range(dim-dim_index),'') %*/$separator@$dim_fill@/*% endcall %*/$end@
 //%       endif
 //%     endif
 //%   endfor

@@ -240,177 +240,385 @@ namespace avl
 	/// \{
 	
 	// add_mk
-	avl_ainl_res constexpr auto add_mk(const v4& vec, const v4& other) noexcept
+	template <int DIM_N=4> avl_ainl_res constexpr auto add_mk(const v4& vec, const v4& other) noexcept
 	{
-		return rem_const_ref_t< decltype(vec) >
-					{get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other), get<2>(vec) + get<2>(other), get<3>(vec) + get<3>(other) };
+		if constexpr(DIM_N==-3)
+		   return rem_const_ref_t< decltype(vec) >{cnst<decltype(cmp(other))>::zero, get<1>(vec) + get<1>(other), get<2>(vec) + get<2>(other), get<3>(vec) + get<3>(other)};
+		else if constexpr(DIM_N==-2)
+		   return rem_const_ref_t< decltype(vec) >{cnst<decltype(cmp(other))>::zero, cnst<decltype(cmp(other))>::zero, get<2>(vec) + get<2>(other), get<3>(vec) + get<3>(other)};
+		else if constexpr(DIM_N==2)
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other), cnst<decltype(cmp(other))>::zero, cnst<decltype(cmp(other))>::zero};
+		else if constexpr(DIM_N==3)
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other), get<2>(vec) + get<2>(other), cnst<decltype(cmp(other))>::zero};
+		else
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other), get<2>(vec) + get<2>(other), get<3>(vec) + get<3>(other)};
 	}
 	
 	// add_mk (scalar)
-	avl_ainl_res constexpr auto add_mk(const v4& vec, const sc scalar) noexcept
+	template <int DIM_N=4> avl_ainl_res constexpr auto add_mk(const v4& vec, const sc scalar) noexcept
 	{
-		return rem_const_ref_t< decltype(vec) >
-					{get<0>(vec) + scalar, get<1>(vec) + scalar, get<2>(vec) + scalar, get<3>(vec) + scalar };
+		if constexpr(DIM_N==-3)
+		   return rem_const_ref_t< decltype(vec) >{cnst<decltype(scalar)>::zero, get<1>(vec) + scalar, get<2>(vec) + scalar, get<3>(vec) + scalar};
+		else if constexpr(DIM_N==-2)
+		   return rem_const_ref_t< decltype(vec) >{cnst<decltype(scalar)>::zero, cnst<decltype(scalar)>::zero, get<2>(vec) + scalar, get<3>(vec) + scalar};
+		else if constexpr(DIM_N==2)
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) + scalar, get<1>(vec) + scalar, cnst<decltype(scalar)>::zero, cnst<decltype(scalar)>::zero};
+		else if constexpr(DIM_N==3)
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) + scalar, get<1>(vec) + scalar, get<2>(vec) + scalar, cnst<decltype(scalar)>::zero};
+		else
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) + scalar, get<1>(vec) + scalar, get<2>(vec) + scalar, get<3>(vec) + scalar};
 	}
 	
 	// add_set
-	avl_ainl constexpr auto add_set(v4& vec, const v4& other) noexcept -> void
+	template <int DIM_N=4> avl_ainl constexpr auto add_set(v4& vec, const v4& other) noexcept -> void
 	{
-		set_all(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other), get<2>(vec) + get<2>(other), get<3>(vec) + get<3>(other) );
+		if constexpr(DIM_N==-3)
+		   set_all<4>(vec, get<1>(vec) + get<1>(other), get<2>(vec) + get<2>(other), get<3>(vec) + get<3>(other));
+		else if constexpr(DIM_N==-2)
+		   set_all<4>(vec, get<2>(vec) + get<2>(other), get<3>(vec) + get<3>(other));
+		else if constexpr(DIM_N==2)
+		   set_all<4>(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other));
+		else if constexpr(DIM_N==3)
+		   set_all<4>(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other), get<2>(vec) + get<2>(other));
+		else
+		   set_all<4>(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other), get<2>(vec) + get<2>(other), get<3>(vec) + get<3>(other));
 	}
 	
 	// add_set (scalar)
-	avl_ainl constexpr auto add_set(v4& vec, const sc scalar) noexcept -> void
+	template <int DIM_N=4> avl_ainl constexpr auto add_set(v4& vec, const sc scalar) noexcept -> void
 	{
-		set_all(vec, get<0>(vec) + scalar, get<1>(vec) + scalar, get<2>(vec) + scalar, get<3>(vec) + scalar );
+		if constexpr(DIM_N==-3)
+		   set_all<4>(vec, get<1>(vec) + scalar, get<2>(vec) + scalar, get<3>(vec) + scalar);
+		else if constexpr(DIM_N==-2)
+		   set_all<4>(vec, get<2>(vec) + scalar, get<3>(vec) + scalar);
+		else if constexpr(DIM_N==2)
+		   set_all<4>(vec, get<0>(vec) + scalar, get<1>(vec) + scalar);
+		else if constexpr(DIM_N==3)
+		   set_all<4>(vec, get<0>(vec) + scalar, get<1>(vec) + scalar, get<2>(vec) + scalar);
+		else
+		   set_all<4>(vec, get<0>(vec) + scalar, get<1>(vec) + scalar, get<2>(vec) + scalar, get<3>(vec) + scalar);
 	}
 	
 	// add
-	avl_ainl_res constexpr auto add(v4& vec, const v4& other) noexcept -> decltype(vec)
+	template <int DIM_N=4> avl_ainl_res constexpr auto add(v4& vec, const v4& other) noexcept -> decltype(vec)
 	{
-		set_all(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other), get<2>(vec) + get<2>(other), get<3>(vec) + get<3>(other) );
+		if constexpr(DIM_N==-3)
+		   set_all<4>(vec, get<1>(vec) + get<1>(other), get<2>(vec) + get<2>(other), get<3>(vec) + get<3>(other));
+		else if constexpr(DIM_N==-2)
+		   set_all<4>(vec, get<2>(vec) + get<2>(other), get<3>(vec) + get<3>(other));
+		else if constexpr(DIM_N==2)
+		   set_all<4>(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other));
+		else if constexpr(DIM_N==3)
+		   set_all<4>(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other), get<2>(vec) + get<2>(other));
+		else
+		   set_all<4>(vec, get<0>(vec) + get<0>(other), get<1>(vec) + get<1>(other), get<2>(vec) + get<2>(other), get<3>(vec) + get<3>(other));
 		return vec;
 	}
 	
 	// add (scalar)
-	avl_ainl_res constexpr auto add(v4& vec, const sc scalar) noexcept -> decltype(vec)
+	template <int DIM_N=4> avl_ainl_res constexpr auto add(v4& vec, const sc scalar) noexcept -> decltype(vec)
 	{
-		set_all(vec, get<0>(vec) + scalar, get<1>(vec) + scalar, get<2>(vec) + scalar, get<3>(vec) + scalar );
+		if constexpr(DIM_N==-3)
+		   set_all<4>(vec, get<1>(vec) + scalar, get<2>(vec) + scalar, get<3>(vec) + scalar);
+		else if constexpr(DIM_N==-2)
+		   set_all<4>(vec, get<2>(vec) + scalar, get<3>(vec) + scalar);
+		else if constexpr(DIM_N==2)
+		   set_all<4>(vec, get<0>(vec) + scalar, get<1>(vec) + scalar);
+		else if constexpr(DIM_N==3)
+		   set_all<4>(vec, get<0>(vec) + scalar, get<1>(vec) + scalar, get<2>(vec) + scalar);
+		else
+		   set_all<4>(vec, get<0>(vec) + scalar, get<1>(vec) + scalar, get<2>(vec) + scalar, get<3>(vec) + scalar);
 		return vec;
 	}
 	
 	// sub_mk
-	avl_ainl_res constexpr auto sub_mk(const v4& vec, const v4& other) noexcept
+	template <int DIM_N=4> avl_ainl_res constexpr auto sub_mk(const v4& vec, const v4& other) noexcept
 	{
-		return rem_const_ref_t< decltype(vec) >
-					{get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other), get<2>(vec) - get<2>(other), get<3>(vec) - get<3>(other) };
+		if constexpr(DIM_N==-3)
+		   return rem_const_ref_t< decltype(vec) >{cnst<decltype(cmp(other))>::zero, get<1>(vec) - get<1>(other), get<2>(vec) - get<2>(other), get<3>(vec) - get<3>(other)};
+		else if constexpr(DIM_N==-2)
+		   return rem_const_ref_t< decltype(vec) >{cnst<decltype(cmp(other))>::zero, cnst<decltype(cmp(other))>::zero, get<2>(vec) - get<2>(other), get<3>(vec) - get<3>(other)};
+		else if constexpr(DIM_N==2)
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other), cnst<decltype(cmp(other))>::zero, cnst<decltype(cmp(other))>::zero};
+		else if constexpr(DIM_N==3)
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other), get<2>(vec) - get<2>(other), cnst<decltype(cmp(other))>::zero};
+		else
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other), get<2>(vec) - get<2>(other), get<3>(vec) - get<3>(other)};
 	}
 	
 	// sub_mk (scalar)
-	avl_ainl_res constexpr auto sub_mk(const v4& vec, const sc scalar) noexcept
+	template <int DIM_N=4> avl_ainl_res constexpr auto sub_mk(const v4& vec, const sc scalar) noexcept
 	{
-		return rem_const_ref_t< decltype(vec) >
-					{get<0>(vec) - scalar, get<1>(vec) - scalar, get<2>(vec) - scalar, get<3>(vec) - scalar };
+		if constexpr(DIM_N==-3)
+		   return rem_const_ref_t< decltype(vec) >{cnst<decltype(scalar)>::zero, get<1>(vec) - scalar, get<2>(vec) - scalar, get<3>(vec) - scalar};
+		else if constexpr(DIM_N==-2)
+		   return rem_const_ref_t< decltype(vec) >{cnst<decltype(scalar)>::zero, cnst<decltype(scalar)>::zero, get<2>(vec) - scalar, get<3>(vec) - scalar};
+		else if constexpr(DIM_N==2)
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) - scalar, get<1>(vec) - scalar, cnst<decltype(scalar)>::zero, cnst<decltype(scalar)>::zero};
+		else if constexpr(DIM_N==3)
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) - scalar, get<1>(vec) - scalar, get<2>(vec) - scalar, cnst<decltype(scalar)>::zero};
+		else
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) - scalar, get<1>(vec) - scalar, get<2>(vec) - scalar, get<3>(vec) - scalar};
 	}
 	
 	// sub_set
-	avl_ainl constexpr auto sub_set(v4& vec, const v4& other) noexcept -> void
+	template <int DIM_N=4> avl_ainl constexpr auto sub_set(v4& vec, const v4& other) noexcept -> void
 	{
-		set_all(vec, get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other), get<2>(vec) - get<2>(other), get<3>(vec) - get<3>(other) );
+		if constexpr(DIM_N==-3)
+		   set_all<4>(vec, get<1>(vec) - get<1>(other), get<2>(vec) - get<2>(other), get<3>(vec) - get<3>(other));
+		else if constexpr(DIM_N==-2)
+		   set_all<4>(vec, get<2>(vec) - get<2>(other), get<3>(vec) - get<3>(other));
+		else if constexpr(DIM_N==2)
+		   set_all<4>(vec, get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other));
+		else if constexpr(DIM_N==3)
+		   set_all<4>(vec, get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other), get<2>(vec) - get<2>(other));
+		else
+		   set_all<4>(vec, get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other), get<2>(vec) - get<2>(other), get<3>(vec) - get<3>(other));
 	}
 	
 	// sub_set (scalar)
-	avl_ainl constexpr auto sub_set(v4& vec, const sc scalar) noexcept -> void
+	template <int DIM_N=4> avl_ainl constexpr auto sub_set(v4& vec, const sc scalar) noexcept -> void
 	{
-		set_all(vec, get<0>(vec) - scalar, get<1>(vec) - scalar, get<2>(vec) - scalar, get<3>(vec) - scalar );
+		if constexpr(DIM_N==-3)
+		   set_all<4>(vec, get<1>(vec) - scalar, get<2>(vec) - scalar, get<3>(vec) - scalar);
+		else if constexpr(DIM_N==-2)
+		   set_all<4>(vec, get<2>(vec) - scalar, get<3>(vec) - scalar);
+		else if constexpr(DIM_N==2)
+		   set_all<4>(vec, get<0>(vec) - scalar, get<1>(vec) - scalar);
+		else if constexpr(DIM_N==3)
+		   set_all<4>(vec, get<0>(vec) - scalar, get<1>(vec) - scalar, get<2>(vec) - scalar);
+		else
+		   set_all<4>(vec, get<0>(vec) - scalar, get<1>(vec) - scalar, get<2>(vec) - scalar, get<3>(vec) - scalar);
 	}
 	
 	// sub
-	avl_ainl_res constexpr auto sub(v4& vec, const v4& other) noexcept -> decltype(vec)
+	template <int DIM_N=4> avl_ainl_res constexpr auto sub(v4& vec, const v4& other) noexcept -> decltype(vec)
 	{
-		set_all(vec, get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other), get<2>(vec) - get<2>(other), get<3>(vec) - get<3>(other) );
+		if constexpr(DIM_N==-3)
+		   set_all<4>(vec, get<1>(vec) - get<1>(other), get<2>(vec) - get<2>(other), get<3>(vec) - get<3>(other));
+		else if constexpr(DIM_N==-2)
+		   set_all<4>(vec, get<2>(vec) - get<2>(other), get<3>(vec) - get<3>(other));
+		else if constexpr(DIM_N==2)
+		   set_all<4>(vec, get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other));
+		else if constexpr(DIM_N==3)
+		   set_all<4>(vec, get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other), get<2>(vec) - get<2>(other));
+		else
+		   set_all<4>(vec, get<0>(vec) - get<0>(other), get<1>(vec) - get<1>(other), get<2>(vec) - get<2>(other), get<3>(vec) - get<3>(other));
 		return vec;
 	}
 	
 	// sub (scalar)
-	avl_ainl_res constexpr auto sub(v4& vec, const sc scalar) noexcept -> decltype(vec)
+	template <int DIM_N=4> avl_ainl_res constexpr auto sub(v4& vec, const sc scalar) noexcept -> decltype(vec)
 	{
-		set_all(vec, get<0>(vec) - scalar, get<1>(vec) - scalar, get<2>(vec) - scalar, get<3>(vec) - scalar );
+		if constexpr(DIM_N==-3)
+		   set_all<4>(vec, get<1>(vec) - scalar, get<2>(vec) - scalar, get<3>(vec) - scalar);
+		else if constexpr(DIM_N==-2)
+		   set_all<4>(vec, get<2>(vec) - scalar, get<3>(vec) - scalar);
+		else if constexpr(DIM_N==2)
+		   set_all<4>(vec, get<0>(vec) - scalar, get<1>(vec) - scalar);
+		else if constexpr(DIM_N==3)
+		   set_all<4>(vec, get<0>(vec) - scalar, get<1>(vec) - scalar, get<2>(vec) - scalar);
+		else
+		   set_all<4>(vec, get<0>(vec) - scalar, get<1>(vec) - scalar, get<2>(vec) - scalar, get<3>(vec) - scalar);
 		return vec;
 	}
 	
 	// mul_mk
-	avl_ainl_res constexpr auto mul_mk(const v4& vec, const v4& other) noexcept
+	template <int DIM_N=4> avl_ainl_res constexpr auto mul_mk(const v4& vec, const v4& other) noexcept
 	{
-		return rem_const_ref_t< decltype(vec) >
-					{get<0>(vec) * get<0>(other), get<1>(vec) * get<1>(other), get<2>(vec) * get<2>(other), get<3>(vec) * get<3>(other) };
+		if constexpr(DIM_N==-3)
+		   return rem_const_ref_t< decltype(vec) >{cnst<decltype(cmp(other))>::zero, get<1>(vec) * get<1>(other), get<2>(vec) * get<2>(other), get<3>(vec) * get<3>(other)};
+		else if constexpr(DIM_N==-2)
+		   return rem_const_ref_t< decltype(vec) >{cnst<decltype(cmp(other))>::zero, cnst<decltype(cmp(other))>::zero, get<2>(vec) * get<2>(other), get<3>(vec) * get<3>(other)};
+		else if constexpr(DIM_N==2)
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) * get<0>(other), get<1>(vec) * get<1>(other), cnst<decltype(cmp(other))>::zero, cnst<decltype(cmp(other))>::zero};
+		else if constexpr(DIM_N==3)
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) * get<0>(other), get<1>(vec) * get<1>(other), get<2>(vec) * get<2>(other), cnst<decltype(cmp(other))>::zero};
+		else
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) * get<0>(other), get<1>(vec) * get<1>(other), get<2>(vec) * get<2>(other), get<3>(vec) * get<3>(other)};
 	}
 	
 	// mul_mk (scalar)
-	avl_ainl_res constexpr auto mul_mk(const v4& vec, const sc scalar) noexcept
+	template <int DIM_N=4> avl_ainl_res constexpr auto mul_mk(const v4& vec, const sc scalar) noexcept
 	{
-		return rem_const_ref_t< decltype(vec) >
-					{get<0>(vec) * scalar, get<1>(vec) * scalar, get<2>(vec) * scalar, get<3>(vec) * scalar };
+		if constexpr(DIM_N==-3)
+		   return rem_const_ref_t< decltype(vec) >{cnst<decltype(scalar)>::zero, get<1>(vec) * scalar, get<2>(vec) * scalar, get<3>(vec) * scalar};
+		else if constexpr(DIM_N==-2)
+		   return rem_const_ref_t< decltype(vec) >{cnst<decltype(scalar)>::zero, cnst<decltype(scalar)>::zero, get<2>(vec) * scalar, get<3>(vec) * scalar};
+		else if constexpr(DIM_N==2)
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) * scalar, get<1>(vec) * scalar, cnst<decltype(scalar)>::zero, cnst<decltype(scalar)>::zero};
+		else if constexpr(DIM_N==3)
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) * scalar, get<1>(vec) * scalar, get<2>(vec) * scalar, cnst<decltype(scalar)>::zero};
+		else
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) * scalar, get<1>(vec) * scalar, get<2>(vec) * scalar, get<3>(vec) * scalar};
 	}
 	
 	// mul_set
-	avl_ainl constexpr auto mul_set(v4& vec, const v4& other) noexcept -> void
+	template <int DIM_N=4> avl_ainl constexpr auto mul_set(v4& vec, const v4& other) noexcept -> void
 	{
-		set_all(vec, get<0>(vec) * get<0>(other), get<1>(vec) * get<1>(other), get<2>(vec) * get<2>(other), get<3>(vec) * get<3>(other) );
+		if constexpr(DIM_N==-3)
+		   set_all<4>(vec, get<1>(vec) * get<1>(other), get<2>(vec) * get<2>(other), get<3>(vec) * get<3>(other));
+		else if constexpr(DIM_N==-2)
+		   set_all<4>(vec, get<2>(vec) * get<2>(other), get<3>(vec) * get<3>(other));
+		else if constexpr(DIM_N==2)
+		   set_all<4>(vec, get<0>(vec) * get<0>(other), get<1>(vec) * get<1>(other));
+		else if constexpr(DIM_N==3)
+		   set_all<4>(vec, get<0>(vec) * get<0>(other), get<1>(vec) * get<1>(other), get<2>(vec) * get<2>(other));
+		else
+		   set_all<4>(vec, get<0>(vec) * get<0>(other), get<1>(vec) * get<1>(other), get<2>(vec) * get<2>(other), get<3>(vec) * get<3>(other));
 	}
 	
 	// mul_set (scalar)
-	avl_ainl constexpr auto mul_set(v4& vec, const sc scalar) noexcept -> void
+	template <int DIM_N=4> avl_ainl constexpr auto mul_set(v4& vec, const sc scalar) noexcept -> void
 	{
-		set_all(vec, get<0>(vec) * scalar, get<1>(vec) * scalar, get<2>(vec) * scalar, get<3>(vec) * scalar );
+		if constexpr(DIM_N==-3)
+		   set_all<4>(vec, get<1>(vec) * scalar, get<2>(vec) * scalar, get<3>(vec) * scalar);
+		else if constexpr(DIM_N==-2)
+		   set_all<4>(vec, get<2>(vec) * scalar, get<3>(vec) * scalar);
+		else if constexpr(DIM_N==2)
+		   set_all<4>(vec, get<0>(vec) * scalar, get<1>(vec) * scalar);
+		else if constexpr(DIM_N==3)
+		   set_all<4>(vec, get<0>(vec) * scalar, get<1>(vec) * scalar, get<2>(vec) * scalar);
+		else
+		   set_all<4>(vec, get<0>(vec) * scalar, get<1>(vec) * scalar, get<2>(vec) * scalar, get<3>(vec) * scalar);
 	}
 	
 	// mul
-	avl_ainl_res constexpr auto mul(v4& vec, const v4& other) noexcept -> decltype(vec)
+	template <int DIM_N=4> avl_ainl_res constexpr auto mul(v4& vec, const v4& other) noexcept -> decltype(vec)
 	{
-		set_all(vec, get<0>(vec) * get<0>(other), get<1>(vec) * get<1>(other), get<2>(vec) * get<2>(other), get<3>(vec) * get<3>(other) );
+		if constexpr(DIM_N==-3)
+		   set_all<4>(vec, get<1>(vec) * get<1>(other), get<2>(vec) * get<2>(other), get<3>(vec) * get<3>(other));
+		else if constexpr(DIM_N==-2)
+		   set_all<4>(vec, get<2>(vec) * get<2>(other), get<3>(vec) * get<3>(other));
+		else if constexpr(DIM_N==2)
+		   set_all<4>(vec, get<0>(vec) * get<0>(other), get<1>(vec) * get<1>(other));
+		else if constexpr(DIM_N==3)
+		   set_all<4>(vec, get<0>(vec) * get<0>(other), get<1>(vec) * get<1>(other), get<2>(vec) * get<2>(other));
+		else
+		   set_all<4>(vec, get<0>(vec) * get<0>(other), get<1>(vec) * get<1>(other), get<2>(vec) * get<2>(other), get<3>(vec) * get<3>(other));
 		return vec;
 	}
 	
 	// mul (scalar)
-	avl_ainl_res constexpr auto mul(v4& vec, const sc scalar) noexcept -> decltype(vec)
+	template <int DIM_N=4> avl_ainl_res constexpr auto mul(v4& vec, const sc scalar) noexcept -> decltype(vec)
 	{
-		set_all(vec, get<0>(vec) * scalar, get<1>(vec) * scalar, get<2>(vec) * scalar, get<3>(vec) * scalar );
+		if constexpr(DIM_N==-3)
+		   set_all<4>(vec, get<1>(vec) * scalar, get<2>(vec) * scalar, get<3>(vec) * scalar);
+		else if constexpr(DIM_N==-2)
+		   set_all<4>(vec, get<2>(vec) * scalar, get<3>(vec) * scalar);
+		else if constexpr(DIM_N==2)
+		   set_all<4>(vec, get<0>(vec) * scalar, get<1>(vec) * scalar);
+		else if constexpr(DIM_N==3)
+		   set_all<4>(vec, get<0>(vec) * scalar, get<1>(vec) * scalar, get<2>(vec) * scalar);
+		else
+		   set_all<4>(vec, get<0>(vec) * scalar, get<1>(vec) * scalar, get<2>(vec) * scalar, get<3>(vec) * scalar);
 		return vec;
 	}
 	
 	// div_mk
-	avl_ainl_res constexpr auto div_mk(const v4& vec, const v4& other) noexcept(ndebug||exuse)
+	template <int DIM_N=4> avl_ainl_res constexpr auto div_mk(const v4& vec, const v4& other) noexcept(ndebug||exuse)
 	{
 		assert(get<0>(other)!=cnst<decltype(cmp(other))>::zero);
 		assert(get<1>(other)!=cnst<decltype(cmp(other))>::zero);
 		assert(get<2>(other)!=cnst<decltype(cmp(other))>::zero);
 		assert(get<3>(other)!=cnst<decltype(cmp(other))>::zero);
-		return rem_const_ref_t< decltype(vec) >
-					{get<0>(vec) / get<0>(other), get<1>(vec) / get<1>(other), get<2>(vec) / get<2>(other), get<3>(vec) / get<3>(other) };
+		if constexpr(DIM_N==-3)
+		   return rem_const_ref_t< decltype(vec) >{cnst<decltype(cmp(other))>::zero, get<1>(vec) / get<1>(other), get<2>(vec) / get<2>(other), get<3>(vec) / get<3>(other)};
+		else if constexpr(DIM_N==-2)
+		   return rem_const_ref_t< decltype(vec) >{cnst<decltype(cmp(other))>::zero, cnst<decltype(cmp(other))>::zero, get<2>(vec) / get<2>(other), get<3>(vec) / get<3>(other)};
+		else if constexpr(DIM_N==2)
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) / get<0>(other), get<1>(vec) / get<1>(other), cnst<decltype(cmp(other))>::zero, cnst<decltype(cmp(other))>::zero};
+		else if constexpr(DIM_N==3)
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) / get<0>(other), get<1>(vec) / get<1>(other), get<2>(vec) / get<2>(other), cnst<decltype(cmp(other))>::zero};
+		else
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) / get<0>(other), get<1>(vec) / get<1>(other), get<2>(vec) / get<2>(other), get<3>(vec) / get<3>(other)};
 	}
 	
 	// div_mk (scalar)
-	avl_ainl_res constexpr auto div_mk(const v4& vec, const sc scalar) noexcept(ndebug||exuse)
+	template <int DIM_N=4> avl_ainl_res constexpr auto div_mk(const v4& vec, const sc scalar) noexcept(ndebug||exuse)
 	{
 		assert(scalar!=cnst<decltype(scalar)>::zero);
-		return rem_const_ref_t< decltype(vec) >
-					{get<0>(vec) / scalar, get<1>(vec) / scalar, get<2>(vec) / scalar, get<3>(vec) / scalar };
+		if constexpr(DIM_N==-3)
+		   return rem_const_ref_t< decltype(vec) >{cnst<decltype(scalar)>::zero, get<1>(vec) / scalar, get<2>(vec) / scalar, get<3>(vec) / scalar};
+		else if constexpr(DIM_N==-2)
+		   return rem_const_ref_t< decltype(vec) >{cnst<decltype(scalar)>::zero, cnst<decltype(scalar)>::zero, get<2>(vec) / scalar, get<3>(vec) / scalar};
+		else if constexpr(DIM_N==2)
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) / scalar, get<1>(vec) / scalar, cnst<decltype(scalar)>::zero, cnst<decltype(scalar)>::zero};
+		else if constexpr(DIM_N==3)
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) / scalar, get<1>(vec) / scalar, get<2>(vec) / scalar, cnst<decltype(scalar)>::zero};
+		else
+		   return rem_const_ref_t< decltype(vec) >{get<0>(vec) / scalar, get<1>(vec) / scalar, get<2>(vec) / scalar, get<3>(vec) / scalar};
 	}
 	
 	// div_set
-	avl_ainl constexpr auto div_set(v4& vec, const v4& other) noexcept(ndebug||exuse) -> void
+	template <int DIM_N=4> avl_ainl constexpr auto div_set(v4& vec, const v4& other) noexcept(ndebug||exuse) -> void
 	{
 		assert(get<0>(other)!=cnst<decltype(cmp(other))>::zero);
 		assert(get<1>(other)!=cnst<decltype(cmp(other))>::zero);
 		assert(get<2>(other)!=cnst<decltype(cmp(other))>::zero);
 		assert(get<3>(other)!=cnst<decltype(cmp(other))>::zero);
-		set_all(vec, get<0>(vec) / get<0>(other), get<1>(vec) / get<1>(other), get<2>(vec) / get<2>(other), get<3>(vec) / get<3>(other) );
+		if constexpr(DIM_N==-3)
+		   set_all<4>(vec, get<1>(vec) / get<1>(other), get<2>(vec) / get<2>(other), get<3>(vec) / get<3>(other));
+		else if constexpr(DIM_N==-2)
+		   set_all<4>(vec, get<2>(vec) / get<2>(other), get<3>(vec) / get<3>(other));
+		else if constexpr(DIM_N==2)
+		   set_all<4>(vec, get<0>(vec) / get<0>(other), get<1>(vec) / get<1>(other));
+		else if constexpr(DIM_N==3)
+		   set_all<4>(vec, get<0>(vec) / get<0>(other), get<1>(vec) / get<1>(other), get<2>(vec) / get<2>(other));
+		else
+		   set_all<4>(vec, get<0>(vec) / get<0>(other), get<1>(vec) / get<1>(other), get<2>(vec) / get<2>(other), get<3>(vec) / get<3>(other));
 	}
 	
 	// div_set (scalar)
-	avl_ainl constexpr auto div_set(v4& vec, const sc scalar) noexcept(ndebug||exuse) -> void
+	template <int DIM_N=4> avl_ainl constexpr auto div_set(v4& vec, const sc scalar) noexcept(ndebug||exuse) -> void
 	{
 		assert(scalar!=cnst<decltype(scalar)>::zero);
-		set_all(vec, get<0>(vec) / scalar, get<1>(vec) / scalar, get<2>(vec) / scalar, get<3>(vec) / scalar );
+		if constexpr(DIM_N==-3)
+		   set_all<4>(vec, get<1>(vec) / scalar, get<2>(vec) / scalar, get<3>(vec) / scalar);
+		else if constexpr(DIM_N==-2)
+		   set_all<4>(vec, get<2>(vec) / scalar, get<3>(vec) / scalar);
+		else if constexpr(DIM_N==2)
+		   set_all<4>(vec, get<0>(vec) / scalar, get<1>(vec) / scalar);
+		else if constexpr(DIM_N==3)
+		   set_all<4>(vec, get<0>(vec) / scalar, get<1>(vec) / scalar, get<2>(vec) / scalar);
+		else
+		   set_all<4>(vec, get<0>(vec) / scalar, get<1>(vec) / scalar, get<2>(vec) / scalar, get<3>(vec) / scalar);
 	}
 	
 	// div
-	avl_ainl_res constexpr auto div(v4& vec, const v4& other) noexcept(ndebug||exuse) -> decltype(vec)
+	template <int DIM_N=4> avl_ainl_res constexpr auto div(v4& vec, const v4& other) noexcept(ndebug||exuse) -> decltype(vec)
 	{
 		assert(get<0>(other)!=cnst<decltype(cmp(other))>::zero);
 		assert(get<1>(other)!=cnst<decltype(cmp(other))>::zero);
 		assert(get<2>(other)!=cnst<decltype(cmp(other))>::zero);
 		assert(get<3>(other)!=cnst<decltype(cmp(other))>::zero);
-		set_all(vec, get<0>(vec) / get<0>(other), get<1>(vec) / get<1>(other), get<2>(vec) / get<2>(other), get<3>(vec) / get<3>(other) );
+		if constexpr(DIM_N==-3)
+		   set_all<4>(vec, get<1>(vec) / get<1>(other), get<2>(vec) / get<2>(other), get<3>(vec) / get<3>(other));
+		else if constexpr(DIM_N==-2)
+		   set_all<4>(vec, get<2>(vec) / get<2>(other), get<3>(vec) / get<3>(other));
+		else if constexpr(DIM_N==2)
+		   set_all<4>(vec, get<0>(vec) / get<0>(other), get<1>(vec) / get<1>(other));
+		else if constexpr(DIM_N==3)
+		   set_all<4>(vec, get<0>(vec) / get<0>(other), get<1>(vec) / get<1>(other), get<2>(vec) / get<2>(other));
+		else
+		   set_all<4>(vec, get<0>(vec) / get<0>(other), get<1>(vec) / get<1>(other), get<2>(vec) / get<2>(other), get<3>(vec) / get<3>(other));
 		return vec;
 	}
 	
 	// div (scalar)
-	avl_ainl_res constexpr auto div(v4& vec, const sc scalar) noexcept(ndebug||exuse) -> decltype(vec)
+	template <int DIM_N=4> avl_ainl_res constexpr auto div(v4& vec, const sc scalar) noexcept(ndebug||exuse) -> decltype(vec)
 	{
 		assert(scalar!=cnst<decltype(scalar)>::zero);
-		set_all(vec, get<0>(vec) / scalar, get<1>(vec) / scalar, get<2>(vec) / scalar, get<3>(vec) / scalar );
+		if constexpr(DIM_N==-3)
+		   set_all<4>(vec, get<1>(vec) / scalar, get<2>(vec) / scalar, get<3>(vec) / scalar);
+		else if constexpr(DIM_N==-2)
+		   set_all<4>(vec, get<2>(vec) / scalar, get<3>(vec) / scalar);
+		else if constexpr(DIM_N==2)
+		   set_all<4>(vec, get<0>(vec) / scalar, get<1>(vec) / scalar);
+		else if constexpr(DIM_N==3)
+		   set_all<4>(vec, get<0>(vec) / scalar, get<1>(vec) / scalar, get<2>(vec) / scalar);
+		else
+		   set_all<4>(vec, get<0>(vec) / scalar, get<1>(vec) / scalar, get<2>(vec) / scalar, get<3>(vec) / scalar);
 		return vec;
 	}
 	
